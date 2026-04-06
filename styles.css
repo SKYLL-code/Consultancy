@@ -17,10 +17,10 @@ h2{font-size:2rem}
 h3{font-size:1.75rem}
 
 /* colorful headings for home page */
-.hero h2{color:#2E8B57} /* Sea Green for hero title */
-.services h3{color:#4169E1} /* Royal Blue for services */
-.about h3{color:#DC143C} /* Crimson for about */
-.contact h3{color:#FF8C00} /* Dark Orange for contact */
+section.hero h2{color:#2E8B57 !important} /* Sea Green for hero title */
+section#services h3{color:#4169E1 !important} /* Royal Blue for services */
+section#about h3{color:#DC143C !important} /* Crimson for about */
+section#contact h3{color:#FF8C00 !important} /* Dark Orange for contact */
 
 .container{max-width:900px;margin:0 auto;padding:32px}
 .container{max-width:1000px;margin:0 auto;padding:24px}.hero .container{max-width:700px}.site-header{background:rgba(255,255,255,0.9);border-bottom:1px solid #e6eef9}
