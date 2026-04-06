@@ -17,7 +17,7 @@ h2{font-size:2rem}
 h3{font-size:1.75rem}
 
 /* colorful headings for home page */
-section.hero h2{color:#2E8B57 !important} /* Sea Green for hero title */
+section.hero h2{color:#FFFFFF !important} /* White text for hero title */
 section#services h3{color:#4169E1 !important} /* Royal Blue for services */
 section#about h3{color:#DC143C !important} /* Crimson for about */
 section#contact h3{color:#FF8C00 !important} /* Dark Orange for contact */
@@ -33,6 +33,11 @@ section#contact h3{color:#FF8C00 !important} /* Dark Orange for contact */
 .brand{margin:0;font-size:2rem;color:var(--brand);text-align:center}
 .nav a{margin-left:24px;color:var(--muted);text-decoration:none;font-family:serif;font-size:1.1rem}
 .nav a:hover{text-decoration:underline}
+
+/* colorful navigation links */
+.nav a:nth-child(1){color:#FF6B35 !important} /* Red Orange for Services */
+.nav a:nth-child(2){color:#4ECDC4 !important} /* Teal for About */
+.nav a:nth-child(3){color:#45B7D1 !important} /* Sky Blue for Contact */
 .header-cap {
   font-size: 1.5rem;
   color: var(--brand);
