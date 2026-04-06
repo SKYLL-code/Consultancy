@@ -29,7 +29,7 @@ section#contact h3{color:#FF8C00 !important} /* Dark Orange for contact */
 .back-arrow{font-size:1.5rem;color:var(--brand);text-decoration:none;margin-right:12px;transition:transform 0.3s,color 0.3s}
 .back-arrow:hover{color:#0787a4;transform:scale(1.1)}
 .brand-wrap{display:flex;align-items:center}
-.logo{height:72px;max-height:80px;margin-right:12px}
+.logo{height:90px;max-height:95px;margin-right:14px}
 .brand{margin:0;font-size:2rem;color:var(--brand);text-align:center}
 .nav a{margin-left:24px;color:var(--muted);text-decoration:none;font-family:serif;font-size:1.1rem}
 .nav a:hover{text-decoration:underline}
@@ -92,7 +92,7 @@ section#contact h3{color:#FF8C00 !important} /* Dark Orange for contact */
   .site-header .container{display:block;text-align:center;padding:12px 16px}
   .site-header .header-inner{margin-bottom:12px}
   .brand-wrap{flex-direction:column;margin-bottom:8px}
-  .logo{height:48px;margin-right:0;margin-bottom:8px}
+  .logo{height:56px;margin-right:0;margin-bottom:8px}
   .brand{font-size:1.4rem;margin:0}
   .header-cap{font-size:1rem;margin-left:4px}
   .nav{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:12px}
@@ -133,7 +133,7 @@ section#contact h3{color:#FF8C00 !important} /* Dark Orange for contact */
   .hero h2{font-size:1.1rem}
   .hero p{font-size:0.85rem}
   .brand{font-size:1.3rem}
-  .logo{height:44px}
+  .logo{height:48px}
   .header-cap{font-size:0.9rem}
   .contact-btn{max-width:240px;padding:12px 16px;font-size:0.95rem}
   .btn{padding:10px 16px;font-size:0.85rem}
@@ -153,12 +153,12 @@ section#contact h3{color:#FF8C00 !important} /* Dark Orange for contact */
 /* service list links */
 .service-list{list-style:none !important;padding:0;margin:0}
 .service-list li{margin-bottom:20px;list-style:none !important;padding-left:0;text-indent:0}
-.service-link{display:block;width:100%;text-align:left;padding:14px 20px;border:2px solid rgba(0,0,0,0.1);border-radius:8px;background:transparent;color:#111;text-decoration:none;font-size:1.05rem;backdrop-filter:blur(4px);transition:background 0.3s,transform 0.2s;position:relative}
-.service-link:hover{background:rgba(11,108,255,0.2);transform:scale(1.02);box-shadow:0 4px 12px rgba(11,108,255,0.15)}
+.service-link{display:block;width:100%;text-align:left;padding:14px 20px;border:2px solid rgba(0,0,0,0.1);border-radius:8px;background:rgba(11,108,255,0.12);color:#111;text-decoration:none;font-size:1.05rem;backdrop-filter:blur(4px);transition:background 0.3s,transform 0.2s;position:relative}
+.service-link:hover{background:rgba(11,108,255,0.2);transform:scale(1.02);box-shadow:0 4px 12px rgba(11,108,255,0.18)}
 
 /* add right arrow to service links */
-.service-link::after{content:'→';position:absolute;right:15px;top:50%;transform:translateY(-50%);font-size:1.2rem;color:#111;transition:color 0.3s}
-.service-link:hover::after{color:#0b9d8f}
+.service-link::after{content:'→';position:absolute;right:15px;top:50%;transform:translateY(-50%);font-size:1.2rem;color:rgba(11,108,255,0.9);transition:color 0.3s}
+.service-link:hover::after{color:rgba(11,108,255,0.9)}
 
 /* service page images and headings */
 .service-page img{max-width:100%;height:auto;border-radius:8px;margin:16px 0}
