@@ -141,7 +141,7 @@ h3{font-size:1.75rem}
 
 /* service list links */
 .service-list{list-style:none;padding:0;margin:0}
-.service-list li{margin-bottom:20px}
+.service-list li{margin-bottom:20px;list-style:none}
 .service-link{display:block;width:100%;text-align:left;padding:14px 20px;border:2px solid rgba(0,0,0,0.1);border-radius:8px;background:rgba(255,255,255,0.4);color:#111;text-decoration:none;font-size:1.05rem;backdrop-filter:blur(4px);transition:background 0.3s,transform 0.2s}
 .service-link:hover{background:rgba(11,108,255,0.2);transform:scale(1.02);box-shadow:0 4px 12px rgba(11,108,255,0.15)}
 
