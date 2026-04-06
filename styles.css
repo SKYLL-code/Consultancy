@@ -153,19 +153,12 @@ section#contact h3{color:#FF8C00 !important} /* Dark Orange for contact */
 /* service list links */
 .service-list{list-style:none !important;padding:0;margin:0}
 .service-list li{margin-bottom:20px;list-style:none !important;padding-left:0;text-indent:0}
-.service-link{display:block;width:100%;text-align:left;padding:14px 20px;border:2px solid rgba(0,0,0,0.1);border-radius:8px;color:#111;text-decoration:none;font-size:1.05rem;backdrop-filter:blur(4px);transition:background 0.3s,transform 0.2s}
-.service-link:hover{transform:scale(1.02);box-shadow:0 4px 12px rgba(11,108,255,0.15)}
+.service-link{display:block;width:100%;text-align:left;padding:14px 20px;border:2px solid rgba(0,0,0,0.1);border-radius:8px;background:transparent;color:#111;text-decoration:none;font-size:1.05rem;backdrop-filter:blur(4px);transition:background 0.3s,transform 0.2s;position:relative}
+.service-link:hover{background:rgba(11,108,255,0.2);transform:scale(1.02);box-shadow:0 4px 12px rgba(11,108,255,0.15)}
 
-/* colorful service rectangles */
-.service-list li:nth-child(1) .service-link{background:#FF6B35 !important} /* Web Development - Red Orange */
-.service-list li:nth-child(2) .service-link{background:#4ECDC4 !important} /* GIS - Teal */
-.service-list li:nth-child(3) .service-link{background:#45B7D1 !important} /* Remote Sensing - Sky Blue */
-.service-list li:nth-child(4) .service-link{background:#96CEB4 !important} /* Statistics - Sage Green */
-.service-list li:nth-child(5) .service-link{background:#FFEAA7 !important} /* EIA - Light Yellow */
-.service-list li:nth-child(6) .service-link{background:#DDA0DD !important} /* Sustainability - Plum */
-.service-list li:nth-child(7) .service-link{background:#98D8C8 !important} /* Academic Support - Mint */
-.service-list li:nth-child(8) .service-link{background:#F7DC6F !important} /* Data Visualization - Golden Yellow */
-.service-list li:nth-child(9) .service-link{background:#BB8FCE !important} /* Training - Light Purple */
+/* add right arrow to service links */
+.service-link::after{content:'→';position:absolute;right:15px;top:50%;transform:translateY(-50%);font-size:1.2rem;color:#111;transition:color 0.3s}
+.service-link:hover::after{color:#0b9d8f}
 
 /* service page images and headings */
 .service-page img{max-width:100%;height:auto;border-radius:8px;margin:16px 0}
