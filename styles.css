@@ -153,12 +153,12 @@ section#contact h3{color:#FF8C00 !important} /* Dark Orange for contact */
 /* service list links */
 .service-list{list-style:none !important;padding:0;margin:0}
 .service-list li{margin-bottom:20px;list-style:none !important;padding-left:0;text-indent:0}
-.service-link{display:block;width:100%;text-align:left;padding:14px 20px;border:2px solid rgba(0,0,0,0.1);border-radius:8px;background:rgba(11,108,255,0.12);color:#111;text-decoration:none;font-size:1.05rem;backdrop-filter:blur(4px);transition:background 0.3s,transform 0.2s;position:relative}
-.service-link:hover{background:rgba(11,108,255,0.2);transform:scale(1.02);box-shadow:0 4px 12px rgba(11,108,255,0.18)}
+.service-link{display:block;width:100%;text-align:left;padding:14px 20px;border:2px solid rgba(0,0,0,0.1);border-radius:8px;background:rgba(10,108,255,0.15);color:#111;text-decoration:none;font-size:1.05rem;backdrop-filter:blur(4px);transition:background 0.3s,transform 0.2s;position:relative}
+.service-link:hover{background:rgba(10,108,255,0.24);transform:scale(1.02);box-shadow:0 4px 12px rgba(10,108,255,0.22)}
 
 /* add right arrow to service links */
-.service-link::after{content:'→';position:absolute;right:15px;top:50%;transform:translateY(-50%);font-size:1.2rem;color:rgba(11,108,255,0.9);transition:color 0.3s}
-.service-link:hover::after{color:rgba(11,108,255,0.9)}
+.service-link::after{content:'→';position:absolute;right:15px;top:50%;transform:translateY(-50%);font-size:1.2rem;color:rgba(10,108,255,0.75);transition:color 0.3s}
+.service-link:hover::after{color:rgba(10,108,255,0.9)}
 
 /* service page images and headings */
 .service-page img{max-width:100%;height:auto;border-radius:8px;margin:16px 0}
