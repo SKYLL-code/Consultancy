@@ -110,6 +110,8 @@ h3{font-size:1.75rem}
   .service-page{max-width:100%;padding:16px;text-align:justify}
   .service-page h2{text-align:center}
   .service-page p{text-align:justify}
+  .service-image{max-width:95%;margin:16px auto}
+}
 }
 
 /* Small mobile devices */
@@ -133,6 +135,8 @@ h3{font-size:1.75rem}
   p, .about p, .contact p{text-align:justify;line-height:1.5}
   .service-page{text-align:justify}
   .service-page p{text-align:justify}
+  .service-image{max-width:98%;margin:12px auto}
+}
 }
 
 /* service list links */
@@ -143,7 +147,7 @@ h3{font-size:1.75rem}
 
 /* service page images and headings */
 .service-page img{max-width:100%;height:auto;border-radius:8px;margin:16px 0}
-.service-image{max-width:100%;height:auto;border-radius:8px;margin:16px 0}
+.service-image{max-width:90%;height:auto;border-radius:8px;margin:20px auto;display:block}
 .service-page h2{margin-top:24px;text-align:center}
 .service-page p{margin:12px 0;text-align:justify;line-height:1.6}
 
