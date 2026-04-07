@@ -36,7 +36,12 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
 .container{max-width:1000px;margin:0 auto;padding:24px}.hero .container{max-width:700px}
 .site-header{background:rgba(255,255,255,0.95);border-bottom:1px solid rgba(11,157,143,0.1);box-shadow:var(--shadow-sm);backdrop-filter:blur(10px);position:static;margin:0;padding:0}
 .site-header .container{display:flex;align-items:center;justify-content:space-between}
-.site-header .header-inner{display:flex;align-items:center;justify-content:center}
+.site-header .header-inner{display:flex;align-items:center}
+
+/* Service page header adjustments - when back-arrow is present */
+.back-arrow ~ .brand-wrap{order:2;margin:0 auto}
+.back-arrow ~ .nav{order:3}
+.back-arrow{order:1}
 .back-arrow{font-size:1.3rem;color:var(--brand);text-decoration:none;margin-right:18px;transition:var(--transition);display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:8px;background:rgba(11,157,143,0.1)}
 .back-arrow:hover{color:var(--brand-dark);background:rgba(11,157,143,0.15);transform:translateX(-4px)}
 .brand-wrap{display:flex;align-items:center}
