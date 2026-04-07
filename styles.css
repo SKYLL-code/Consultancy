@@ -99,37 +99,37 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
 
 /* Mobile Responsiveness */
 @media(max-width:768px){
-  html{font-size:16px}
+  html{font-size:17px}
   .container{max-width:100%;padding:20px;text-align:justify}
   .hero .container{max-width:100%;padding:28px 20px;text-align:center}
   .hero{padding:40px 0;background-position:center;background-attachment:scroll}
-  .hero h2{font-size:1.5rem;margin:0 0 12px;font-weight:700}
-  .hero p{font-size:1rem;margin:0 0 20px;line-height:1.6}
+  .hero h2{font-size:1.7rem;margin:0 0 12px;font-weight:700}
+  .hero p{font-size:1.1rem;margin:0 0 20px;line-height:1.6}
   
   /* Header adjustments for mobile */
   .site-header .container{display:block;text-align:center;padding:16px 20px}
   .site-header .header-inner{margin-bottom:16px}
   .brand-wrap{flex-direction:column;margin-bottom:12px}
   .logo{height:60px;margin-right:0;margin-bottom:12px}
-  .brand{font-size:1.6rem;margin:0;font-weight:700}
+  .brand{font-size:1.8rem;margin:0;font-weight:700}
   .header-cap{font-size:1.1rem;margin-left:4px}
   .nav{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin-top:16px}
-  .nav a{margin-left:0;font-size:1rem;font-weight:500}
+  .nav a{margin-left:0;font-size:1.1rem;font-weight:500}
   
   /* Adjust headings for mobile */
-  h1{font-size:2rem;text-align:center}
-  h2{font-size:1.6rem;text-align:center}
-  h3{font-size:1.3rem;text-align:center;margin:24px 0 16px}
+  h1{font-size:2.2rem;text-align:center}
+  h2{font-size:1.8rem;text-align:center}
+  h3{font-size:1.5rem;text-align:center;margin:24px 0 16px}
   
   /* Content text alignment */
-  p, .about p, .contact p{text-align:justify;line-height:1.7}
+  p, .about p, .contact p{text-align:justify;line-height:1.7;font-size:1.05rem}
   
   /* Service links mobile */
-  .service-link{padding:16px 20px 16px 20px;padding-right:80px;font-size:1rem;text-align:left}
+  .service-link{padding:16px 20px 16px 20px;padding-right:80px;font-size:1.1rem;text-align:left}
   
   /* Contact buttons stack on mobile */
   .contact-links{flex-direction:column;gap:10px;align-items:stretch;max-width:100%}
-  .contact-btn{width:100%;max-width:none;padding:16px 20px;font-size:1rem;justify-content:center}
+  .contact-btn{width:100%;max-width:none;padding:16px 20px;font-size:1.1rem;justify-content:center}
   .contact-btn i{margin-right:10px}
   
   /* About and Contact sections */
@@ -140,24 +140,24 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
   
   /* Service page adjustments */
   .service-page{max-width:100%;padding:20px;text-align:justify}
-  .service-page h2{text-align:center;margin-top:20px}
-  .service-page h3{text-align:left;margin-top:20px}
-  .service-page p{text-align:justify;line-height:1.7}
+  .service-page h2{text-align:center;margin-top:20px;font-size:1.9rem}
+  .service-page h3{text-align:left;margin-top:20px;font-size:1.4rem}
+  .service-page p{text-align:justify;line-height:1.7;font-size:1.05rem}
   .service-image{max-width:100%;margin:24px auto}
 }
 }
 
 /* Small mobile devices */
 @media(max-width:480px){
-  html{font-size:15px}
+  html{font-size:16px}
   .container{padding:16px;text-align:justify}
   .hero .container{padding:24px 16px;text-align:center}
-  .hero h2{font-size:1.3rem;font-weight:700}
-  .hero p{font-size:0.95rem}
-  .brand{font-size:1.4rem;font-weight:700}
+  .hero h2{font-size:1.5rem;font-weight:700}
+  .hero p{font-size:1rem}
+  .brand{font-size:1.6rem;font-weight:700}
   .logo{height:52px}
   .header-cap{font-size:1rem;margin-left:3px}
-  .contact-btn{max-width:none;padding:14px 18px;font-size:0.95rem}
+  .contact-btn{max-width:none;padding:14px 18px;font-size:1rem}
   .btn{padding:12px 18px;font-size:0.95rem;font-weight:600}
   
   /* Mobile background adjustments */
@@ -165,15 +165,15 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
   body{background-attachment:scroll;background-position:center}
   
   /* Content alignment */
-  p, .about p, .contact p{text-align:justify;line-height:1.6}
+  p, .about p, .contact p{text-align:justify;line-height:1.6;font-size:1rem}
   .service-page{text-align:justify}
-  .service-page p{text-align:justify}
+  .service-page p{text-align:justify;font-size:1rem}
   .service-image{max-width:100%;margin:16px auto}
   
   /* Headings */
-  h1{font-size:1.5rem}
-  h2{font-size:1.2rem}
-  h3{font-size:1.1rem}
+  h1{font-size:1.8rem}
+  h2{font-size:1.4rem}
+  h3{font-size:1.2rem}
 }
 }
 
