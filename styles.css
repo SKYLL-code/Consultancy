@@ -34,10 +34,10 @@ section#about h3{color:#0b7a6f !important;font-weight:700} /* Match brand color 
 section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand color for contact */
 
 .container{max-width:1000px;margin:0 auto;padding:24px}.hero .container{max-width:700px}
-.site-header{background:rgba(255,255,255,0.95);border-bottom:1px solid rgba(11,157,143,0.1);box-shadow:var(--shadow-sm);backdrop-filter:blur(10px);position:relative}
+.site-header{background:rgba(255,255,255,0.95);border-bottom:1px solid rgba(11,157,143,0.1);box-shadow:var(--shadow-sm);backdrop-filter:blur(10px);position:static}
 .site-header .container{display:flex;align-items:center;justify-content:space-between}
 .site-header .header-inner{display:flex;align-items:center;justify-content:center}
-.back-arrow{font-size:1.3rem;color:var(--brand);text-decoration:none;margin-right:12px;transition:var(--transition);display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:8px;background:rgba(11,157,143,0.1)}
+.back-arrow{font-size:1.3rem;color:var(--brand);text-decoration:none;margin-right:18px;transition:var(--transition);display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:8px;background:rgba(11,157,143,0.1)}
 .back-arrow:hover{color:var(--brand-dark);background:rgba(11,157,143,0.15);transform:translateX(-4px)}
 .brand-wrap{display:flex;align-items:center}
 .logo{height:90px;max-height:95px;margin-right:14px}
@@ -80,7 +80,7 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
 .about h3, .about p { color: #1a1a1a;line-height:1.7 }
 .contact{margin-top:24px;background:rgba(11,157,143,0.04);padding:32px;border-radius:16px;text-align:center;border-left:4px solid var(--brand);box-shadow:var(--shadow-sm);backdrop-filter:blur(4px)}
 .contact h3, .contact p { color: #1a1a1a;line-height:1.7 }
-.contact-links{display:flex;justify-content:center;gap:12px;margin:20px 0;flex-wrap:wrap}
+.contact-links{display:flex;justify-content:center;gap:12px;margin:20px auto;flex-wrap:wrap}
 .contact-btn{padding:14px 24px;border-radius:10px;text-decoration:none;color:#fff;display:inline-flex;align-items:center;justify-content:center;text-align:center;font-size:1rem;font-weight:600;transition:var(--transition);margin:0;box-shadow:var(--shadow-md);border:none;cursor:pointer;letter-spacing:0.3px}
 .contact-btn.fb{background:linear-gradient(135deg, #1877F2 0%, #4A7FDC 100%)}
 .contact-btn.wa{background:linear-gradient(135deg, #25D366 0%, #1FA85A 100%)}
@@ -125,7 +125,7 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
   p, .about p, .contact p{text-align:justify;line-height:1.7}
   
   /* Service links mobile */
-  .service-link{padding:16px 20px;font-size:1rem;text-align:left}
+  .service-link{padding:16px 20px 16px 20px;padding-right:80px;font-size:1rem;text-align:left}
   
   /* Contact buttons stack on mobile */
   .contact-links{flex-direction:column;gap:10px;align-items:stretch;max-width:100%}
@@ -184,13 +184,13 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
 .service-link:hover{background:linear-gradient(135deg, rgba(11,157,143,0.15) 0%, rgba(11,157,143,0.08) 100%);transform:translateX(8px);box-shadow:var(--shadow-md);border-color:rgba(11,157,143,0.3)}
 
 /* add right arrow to service links */
-.service-link::after{content:'→';position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:1.3rem;color:var(--brand);transition:var(--transition);font-weight:600}
+.service-link::after{content:'→';position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:1.3rem;color:var(--brand);transition:var(--transition);font-weight:600}
 .service-link:hover::after{color:var(--brand-dark);transform:translateY(-50%) translateX(4px)}
 
 /* service page images and headings */
 .service-page img{max-width:100%;height:auto;border-radius:12px;margin:20px 0;box-shadow:var(--shadow-md);transition:var(--transition)}
 .service-page img:hover{transform:scale(1.02)}
-.service-image{max-width:70%;height:auto;border-radius:12px;margin:28px auto;display:block;box-shadow:var(--shadow-lg)}
+.service-image{max-width:60%;height:auto;border-radius:12px;margin:28px auto;display:block;box-shadow:var(--shadow-lg)}
 .service-page h2{margin-top:28px;text-align:center;color:var(--brand-dark);font-weight:700}
 .service-page h3{color:var(--brand);margin-top:24px;margin-bottom:16px}
 .service-page p{margin:16px 0;text-align:justify;line-height:1.8;color:#1a1a1a}
