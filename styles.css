@@ -81,8 +81,8 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
 .services .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:16px}
 .card{background:var(--card);padding:20px;border:1px solid #ddd;border-radius:4px;box-shadow:none}
 .card h4{margin:0 0 8px}
-.about{margin-top:24px;background:rgba(11,157,143,0.04);padding:32px;border-radius:16px;text-align:justify;border-left:4px solid var(--brand);box-shadow:var(--shadow-sm);backdrop-filter:blur(4px)}
-.about h3, .about p { color: #1a1a1a;line-height:1.7 }
+.about{margin-top:24px;background:rgba(11,157,143,0.04);padding:32px;border-radius:16px;text-align:center;border-left:4px solid var(--brand);box-shadow:var(--shadow-sm);backdrop-filter:blur(4px)}
+.about h3, .about p { color: #1a1a1a;line-height:1.7;text-align:center }
 .contact{margin-top:24px;background:rgba(11,157,143,0.04);padding:32px;border-radius:16px;text-align:center;border-left:4px solid var(--brand);box-shadow:var(--shadow-sm);backdrop-filter:blur(4px)}
 .contact h3, .contact p { color: #1a1a1a;line-height:1.7 }
 .contact-links{display:flex;justify-content:center;gap:12px;margin:20px auto;flex-wrap:wrap}
