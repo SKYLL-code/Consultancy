@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://skyll-code.github.io/Consultancy/sitemap.xml
