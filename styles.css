@@ -151,7 +151,6 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
   .service-page p{text-align:justify;line-height:1.7;font-size:1.05rem}
   .service-image{max-width:100%;margin:24px auto}
 }
-}
 
 /* Small mobile devices */
 @media(max-width:480px){
@@ -180,7 +179,6 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
   h1{font-size:1.8rem}
   h2{font-size:1.4rem}
   h3{font-size:1.2rem}
-}
 }
 
 /* service list links */

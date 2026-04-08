@@ -38,6 +38,6 @@ if(form){
     const subject = encodeURIComponent('Website contact from ' + name);
     const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`);
     // opens user's mail client; keep WhatsApp/Facebook links for direct contact
-    window.location.href = `mailto:deedoc90@gmail.com?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:skylltechconsult@gmail.com?subject=${subject}&body=${body}`;
   });
 }
