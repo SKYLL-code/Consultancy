@@ -38,7 +38,7 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
 
 .container{max-width:1000px;margin:0 auto;padding:24px}.hero .container{max-width:700px}
 .site-header{background:linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 100%);border-bottom:1px solid rgba(11,157,143,0.1);box-shadow:var(--shadow-lg);backdrop-filter:blur(20px);position:static;margin:0;padding:0;border-radius:0 0 20px 20px}
-.site-header .container{display:flex;align-items:center;justify-content:space-between}
+.site-header .container{display:flex;align-items:center;justify-content:space-between;padding:0 24px !important}
 .site-header .header-inner{display:flex;align-items:center}
 
 /* Service page header adjustments - when back-arrow is present */
