@@ -193,7 +193,7 @@
     const checkoutOptions = {
       public_key: PAYCHANGU_PUBLIC_KEY,
       tx_ref: txRef,
-      amount: 100,
+      amount: 5000,
       currency: 'MWK',
       country: 'MW',
       payment_options: 'mobilemoney,card',
