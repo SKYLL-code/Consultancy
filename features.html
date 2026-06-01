@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SKYLL TECH - Features</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="assets/LOGO2.png">
+</head>
+<body class="features-page">
+  <header class="features-header">
+    <div class="container">
+      <a class="btn" href="index.html">← Back</a>
+      <h1>SKYLL TECH — Features</h1>
+      <p class="muted">Explore free scripts, premium unlocks, and request custom GEE code.</p>
+    </div>
+  </header>
+
+  <main class="features-main container">
+    <section class="feature-grid">
+      <!-- Free Plan column (starter; will expand on confirmation) -->
+      <article class="feature-card">
+        <h2>Free Plan</h2>
+        <p class="muted">Open-source script categories — copy or expand snippets.</p>
+        <ul class="snippet-list">
+          <li>
+            <strong>Study Area Codes</strong>
+            <div class="snippet-actions">
+              <button class="btn small copy-btn" data-snippet="// Study Area sample code\nprint('study area')">Copy</button>
+              <button class="btn small expand-btn">Expand</button>
+            </div>
+          </li>
+          <li>
+            <strong>Watershed Codes</strong>
+            <div class="snippet-actions">
+              <button class="btn small copy-btn" data-snippet="// Watershed sample code\nprint('watershed')">Copy</button>
+              <button class="btn small expand-btn">Expand</button>
+            </div>
+          </li>
+          <li>
+            <strong>River Codes</strong>
+            <div class="snippet-actions">
+              <button class="btn small copy-btn" data-snippet="// River sample code\nprint('river')">Copy</button>
+              <button class="btn small expand-btn">Expand</button>
+            </div>
+          </li>
+        </ul>
+      </article>
+
+      <!-- Premium Plan column (placeholder for Paychangu hooks) -->
+      <article class="feature-card">
+        <h2>Premium Plan</h2>
+        <p class="muted">Advanced scripts — unlock via Paychangu.</p>
+        <ul class="premium-list">
+          <li><button class="btn unlock-btn" data-script-id="lulc">LULC (Supervised Classification) Codes</button></li>
+          <li><button class="btn unlock-btn" data-script-id="hydro">Hydrological Modelling Codes</button></li>
+          <li><button class="btn unlock-btn" data-script-id="drought">Drought Mapping Codes</button></li>
+          <li><button class="btn unlock-btn" data-script-id="flood">Flood Risk Mapping Codes</button></li>
+          <li><button class="btn unlock-btn" data-script-id="landslide">Landslide Codes</button></li>
+          <li><button class="btn unlock-btn" data-script-id="msi">Multi-Spectral Indices Codes</button></li>
+          <li><button class="btn unlock-btn" data-script-id="rusle">Soil Erosion (RUSLE) Codes</button></li>
+        </ul>
+      </article>
+
+      <!-- Request custom codes -->
+      <article class="feature-card">
+        <h2>Request Custom Codes</h2>
+        <p class="muted">Need a tailored script? Email us with details.</p>
+        <a class="btn primary-button" href="mailto:skylltechconsult@gmail.com?subject=Request%20for%20Custom%20GEE%20Script%20-%20SKYLL-TECH&body=Hello%20SKYLL-TECH%20Team,%0A%0AI%20am%20reaching%20out%20to%20request%20a%20customized%20Google%20Earth%20Engine%20script.%20My%20specific%20project%20requirements%20are:%0A%0A[Please%20describe%20your%20study%20area,%20datasets,%20and%20objectives%20here]%0A%0AThank%20you.">Request Custom Code</a>
+      </article>
+    </section>
+
+    <section id="expandedArea" class="expanded-area" hidden>
+      <pre id="expandedCode" class="code-block"></pre>
+      <button id="closeExpanded" class="btn">Close</button>
+    </section>
+  </main>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="scripts.js"></script>
+  <script>
+    // Copy buttons
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const txt = btn.dataset.snippet || '';
+        navigator.clipboard.writeText(txt).then(() => {
+          btn.textContent = 'Copied';
+          setTimeout(() => btn.textContent = 'Copy', 1200);
+        });
+      });
+    });
+
+    // Expand buttons
+    document.querySelectorAll('.expand-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const li = btn.closest('li');
+        const snippet = li.querySelector('.copy-btn')?.dataset.snippet || '// No snippet';
+        document.getElementById('expandedCode').textContent = snippet;
+        document.getElementById('expandedArea').hidden = false;
+      });
+    });
+
+    document.getElementById('closeExpanded').addEventListener('click', () => {
+      document.getElementById('expandedArea').hidden = true;
+    });
+
+    // Premium unlock handlers: call existing startPaychanguCheckout if available
+    document.querySelectorAll('.unlock-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.scriptId;
+        if (typeof startPaychanguCheckout === 'function') {
+          startPaychanguCheckout(id);
+        } else if (window.paychangu && typeof window.paychangu.open === 'function') {
+          window.paychangu.open({ tx_ref: 'demo_'+Date.now(), amount: 100 });
+        } else {
+          alert('Payment unavailable in this environment — startPaychanguCheckout not found.');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
