@@ -38,7 +38,7 @@ section#about h3{color:#0b7a6f !important;font-weight:700} /* Match brand color 
 section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand color for contact */
 
 .container{max-width:1000px;margin:0 auto;padding:24px}.hero .container{max-width:700px}
-.site-header{background:rgba(4, 10, 22, 0.94);border-bottom:1px solid rgba(255,255,255,0.08);box-shadow:0 24px 80px rgba(0,0,0,0.25);backdrop-filter:blur(24px);position:static;margin:0;padding:18px 0;border-radius:0 0 24px 24px}
+.site-header{background:rgba(255, 255, 255, 0.95);border-bottom:1px solid rgba(11,157,143,0.12);box-shadow:0 16px 48px rgba(0,0,0,0.08);backdrop-filter:blur(18px);position:static;margin:0;padding:18px 0;border-radius:0 0 24px 24px}
 .site-header .container{display:flex;align-items:center;justify-content:space-between;padding:0 32px !important;gap:32px}
 .site-header .header-inner{display:flex;align-items:center;gap:16px;flex:1}
 
@@ -48,11 +48,32 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
 .back-arrow{order:1}
 .back-arrow{font-size:1.2rem;color:rgba(255,255,255,0.82);text-decoration:none;margin-right:12px;transition:var(--transition);display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.06)}
 .back-arrow:hover{color:#fff;background:rgba(255,255,255,0.16);transform:translateX(-3px)}
+
+/* Dark header for service pages */
+.back-arrow {
+  color: rgba(255,255,255,0.82);
+}
+
+.back-arrow ~ .site-header,
+.site-header:has(.back-arrow) {
+  background: rgba(4, 10, 22, 0.94);
+  border-bottom-color: rgba(255,255,255,0.08);
+  box-shadow: 0 24px 80px rgba(0,0,0,0.25);
+}
+
+.site-header:has(.back-arrow) .brand {
+  color: #fff;
+  text-shadow: 0 4px 18px rgba(0,0,0,0.25);
+}
+
+.site-header:has(.back-arrow) .nav a {
+  color: rgba(255,255,255,0.82);
+}
 .brand-wrap{display:flex;align-items:center;gap:16px;margin-right:auto}
 .nav{display:flex;align-items:center;gap:20px;flex-shrink:0}
 .logo{height:78px;max-height:78px;margin-right:8px}
-.brand{margin:0;font-size:2.2rem;color:#fff;text-align:left;font-weight:700;letter-spacing:-0.02em;text-shadow:0 4px 18px rgba(0,0,0,0.25)}
-.nav a{margin-left:0;color:rgba(255,255,255,0.82);text-decoration:none;font-family:'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;font-size:1rem;font-weight:600;transition:var(--transition);position:relative;padding:10px 0}
+.brand{margin:0;font-size:2.2rem;color:var(--brand);text-align:left;font-weight:700;letter-spacing:-0.02em}
+.nav a{margin-left:0;color:var(--muted);text-decoration:none;font-family:'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;font-size:1rem;font-weight:600;transition:var(--transition);position:relative;padding:10px 0}
 .nav a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--brand);transition:width 0.3s ease}
 .nav a:hover{color:#fff}
 .nav a:hover::after{width:100%}
@@ -63,6 +84,12 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
     top: 0;
     z-index: 1000;
     padding: 20px 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.94));
+    border-bottom: 1px solid rgba(11, 157, 143, 0.12);
+    box-shadow: 0 16px 60px rgba(0, 0, 0, 0.08);
+  }
+
+  .site-header:has(.back-arrow) {
     background: linear-gradient(135deg, rgba(4, 10, 22, 0.96), rgba(8, 18, 40, 0.92));
     border-bottom: 1px solid rgba(255, 255, 255, 0.12);
     box-shadow: 0 28px 100px rgba(0, 0, 0, 0.28);
@@ -92,6 +119,11 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
     white-space: nowrap;
   }
 
+  .site-header:has(.back-arrow) .brand {
+    color: #fff;
+    text-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+  }
+
   .nav {
     padding: 12px 20px;
     background: rgba(255, 255, 255, 0.06);
@@ -103,18 +135,34 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
     flex-shrink: 0;
   }
 
+  .site-header:not(:has(.back-arrow)) .nav {
+    background: rgba(11, 157, 143, 0.08);
+    border: 1px solid rgba(11, 157, 143, 0.15);
+  }
+
   .nav a {
     margin-left: 0;
     margin-right: 0;
-    color: rgba(255, 255, 255, 0.82);
+    color: rgba(11, 157, 143, 0.8);
     padding: 10px 16px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(11, 157, 143, 0.06);
     font-weight: 600;
     white-space: nowrap;
   }
 
+  .site-header:has(.back-arrow) .nav a {
+    color: rgba(255, 255, 255, 0.82);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
   .nav a:hover {
+    color: #fff;
+    background: rgba(11, 157, 143, 0.2);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  .site-header:has(.back-arrow) .nav a:hover {
     color: #fff;
     background: rgba(255, 255, 255, 0.18);
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
