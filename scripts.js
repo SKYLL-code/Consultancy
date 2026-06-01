@@ -149,7 +149,7 @@
     const checkoutOptions = {
       public_key: 'pub-test-epj50KELdZlBOxRSOYJ0xi2qRSepDSzR',
       tx_ref: txRef,
-      amount: 1,
+      amount: 100,
       currency: 'MWK',
       country: 'MW',
       payment_options: 'mobilemoney,card',
