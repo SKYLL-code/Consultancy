@@ -1,47 +1,3 @@
-// Basic JS: set year and handle contact form by launching mailto (simple fallback)
-document.getElementById('year').textContent = new Date().getFullYear();
-
-// Save scroll position before navigating to a service page
-document.querySelectorAll('a.service-link').forEach(link => {
-  link.addEventListener('click', () => {
-    sessionStorage.setItem('scrollPosition', window.scrollY);
-  });
-});
-
-// Handle back arrow - save scroll position and return to home
-document.querySelectorAll('a.back-arrow').forEach(link => {
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
-    sessionStorage.setItem('scrollPosition', '0');
-    window.location.href = '../index.html';
-  });
-});
-
-// Restore scroll position when returning to the home page
-window.addEventListener('load', () => {
-  const scrollPosition = sessionStorage.getItem('scrollPosition');
-  if (scrollPosition !== null) {
-    setTimeout(() => {
-      window.scrollTo(0, parseInt(scrollPosition));
-      sessionStorage.removeItem('scrollPosition');
-    }, 100);
-  }
-});
-
-const form = document.getElementById('contactForm');
-if(form){
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('name').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const message = document.getElementById('message').value.trim();
-    const subject = encodeURIComponent('Website contact from ' + name);
-    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`);
-    // opens user's mail client; keep WhatsApp/Facebook links for direct contact
-    window.location.href = `mailto:skylltechconsult@gmail.com?subject=${subject}&body=${body}`;
-  });
-}
-
 // Premium GEE Panel Functionality
 (function() {
   const premiumFab = document.getElementById('premiumFab');
@@ -63,12 +19,14 @@ if(form){
     premiumOverlay.classList.add('open');
     premiumOverlay.setAttribute('aria-hidden', 'false');
     document.body.classList.add('drawer-open');
+    premiumFab.classList.add('hidden');
   }
 
   function closePremium() {
     premiumOverlay.classList.remove('open');
     premiumOverlay.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('drawer-open');
+    premiumFab.classList.remove('hidden');
   }
 
   function setActiveTab(targetId) {
@@ -111,17 +69,85 @@ if(form){
     }
   }
 
-  function unlockAllPremiumScripts() {
-    document.querySelectorAll('.code-card.premium').forEach(card => {
-      const scriptId = card.dataset.scriptId;
-      if (scriptId) unlockScript(scriptId);
-    });
+  const paychanguVerifyEndpoint = '/verify-paychangu';
+  const paychanguStatusEndpoint = '/payment-status';
+
+  async function verifyPaychanguTransaction(txRef, transaction) {
+    try {
+      const response = await fetch(paychanguVerifyEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tx_ref: txRef, transaction })
+      });
+      return await response.json();
+    } catch (error) {
+      console.error('Paychangu verification request failed:', error);
+      return { success: false, message: error.message };
+    }
+  }
+
+  async function getPaychanguStatus(txRef) {
+    if (!txRef) {
+      return { success: false, message: 'tx_ref is required.' };
+    }
+    try {
+      const response = await fetch(`${paychanguStatusEndpoint}?tx_ref=${encodeURIComponent(txRef)}`);
+      return await response.json();
+    } catch (error) {
+      console.error('Payment status request failed:', error);
+      return { success: false, message: error.message };
+    }
+  }
+
+  async function pollPaychanguStatus(txRef, scriptId, attempts = 0) {
+    const maxAttempts = 8;
+    const delayMs = 3000;
+
+    if (attempts >= maxAttempts) {
+      alert('Payment verification is still pending. Please wait a few moments and refresh this page.');
+      return;
+    }
+
+    const statusResult = await getPaychanguStatus(txRef);
+    if (statusResult.success && statusResult.status === 'verified') {
+      unlockScript(scriptId);
+      clearPendingPaychanguTxRef();
+      alert('Payment confirmed by webhook! Premium code unlocked.');
+      return;
+    }
+
+    if (statusResult.status === 'failed') {
+      clearPendingPaychanguTxRef();
+      alert('Payment failed or was declined. Please try again.');
+      return;
+    }
+
+    setTimeout(() => pollPaychanguStatus(txRef, scriptId, attempts + 1), delayMs);
+  }
+
+  function savePendingPaychanguTxRef(txRef, scriptId) {
+    localStorage.setItem('pendingPaychanguTxRef', txRef);
+    localStorage.setItem('pendingPaychanguScriptId', scriptId);
+  }
+
+  function clearPendingPaychanguTxRef() {
+    localStorage.removeItem('pendingPaychanguTxRef');
+    localStorage.removeItem('pendingPaychanguScriptId');
+  }
+
+  async function resumePendingPaychanguStatus() {
+    const txRef = localStorage.getItem('pendingPaychanguTxRef');
+    const scriptId = localStorage.getItem('pendingPaychanguScriptId');
+    if (txRef && scriptId) {
+      await pollPaychanguStatus(txRef, scriptId);
+    }
   }
 
   function startPaychanguCheckout(scriptId) {
     const txRef = `skylltech_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
+    savePendingPaychanguTxRef(txRef, scriptId);
     const checkoutOptions = {
-      public_key: 'YOUR_PAYCHANGU_PUBLIC_KEY_HERE', // REPLACE WITH YOUR PAYCHANGU PUBLIC KEY
+      public_key: 'pub-test-epj50KELdZlBOxRSOYJ0xi2qRSepDSzR',
       tx_ref: txRef,
       amount: 1,
       currency: 'MWK',
@@ -137,11 +163,20 @@ if(form){
         description: 'Pay to unlock premium Earth Engine scripts',
         logo: 'https://skyll-code.github.io/Consultancy/assets/LOGO2.png'
       },
-      callback: function(response) {
+      callback: async function(response) {
         if (response && response.status === 'success') {
-          unlockScript(scriptId);
-          alert('Payment verified! Premium code unlocked.');
+          const verifyResult = await verifyPaychanguTransaction(txRef, response);
+          if (verifyResult.success) {
+            unlockScript(scriptId);
+            clearPendingPaychanguTxRef();
+            alert('Payment verified! Premium code unlocked.');
+          } else {
+            console.warn('Paychangu verification response:', verifyResult);
+            alert('Payment received but verification is pending. Checking status via webhook...');
+            pollPaychanguStatus(txRef, scriptId);
+          }
         } else {
+          clearPendingPaychanguTxRef();
           alert('Payment not verified. Please try again.');
         }
       }
@@ -215,8 +250,4 @@ if(form){
       geminiPrompt.value = button.dataset.preset;
     });
   });
-
-  unlockedScripts.forEach(scriptId => unlockScript(scriptId));
-  // Demo unlock all premium snippets so the paid code is visible immediately.
-  unlockAllPremiumScripts();
 })();

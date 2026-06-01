@@ -141,14 +141,16 @@
   </footer>
 
   <!-- Premium GEE panel -->
-  <button id="premiumFab" class="premium-fab" aria-label="Access GEE Codes">Access GEE Codes</button>
+  <button id="premiumFab" type="button" class="premium-fab" aria-label="Access GEE Codes">Access GEE Codes</button>
 
   <div id="premiumOverlay" class="premium-overlay" aria-hidden="true">
     <div class="premium-panel" role="dialog" aria-modal="true" aria-labelledby="premiumPanelTitle">
       <button id="closePremiumPanel" class="premium-close" aria-label="Close Premium Panel">×</button>
       <div class="premium-header">
-        <h2 id="premiumPanelTitle">GEE Code Repository</h2>
-        <p>Free and premium Google Earth Engine snippets for ROI, classification, drought mapping, and AI-assisted editing.</p>
+        <div>
+          <h2 id="premiumPanelTitle">GEE Code Repository</h2>
+          <p>Free and premium Google Earth Engine snippets for ROI, classification, drought mapping, and AI-assisted editing. To get full and customised codes, unlock the codes below.</p>
+        </div>
       </div>
 
       <div class="premium-tabs" role="tablist">
@@ -221,7 +223,7 @@ Map.addLayer(malawiCountry.style(countryStyle), {}, "Malawi Country Boundary (Le
             <div class="lock-icon">🔒</div>
             <div>
               <h3>Premium ROI with Custom Buffer</h3>
-              <button class="unlock-button" data-script-id="codeA2">Unlock via Paychangu</button>
+              <button class="unlock-button" data-script-id="codeA2">Unlock codes</button>
             </div>
           </div>
           <div class="code-blur">
@@ -331,7 +333,7 @@ var input = scaledImage.select(bands);
             <div class="lock-icon">🔒</div>
             <div>
               <h3>Premium Supervised LULC with Validation</h3>
-              <button class="unlock-button" data-script-id="codeB2">Unlock via Paychangu</button>
+              <button class="unlock-button" data-script-id="codeB2">Unlock codes</button>
             </div>
           </div>
           <div class="code-blur">
@@ -517,7 +519,7 @@ Export.image.toDrive({
             <div class="lock-icon">🔒</div>
             <div>
               <h3>Premium Unsupervised with NDVI/SAVI</h3>
-              <button class="unlock-button" data-script-id="codeC2">Unlock via Paychangu</button>
+              <button class="unlock-button" data-script-id="codeC2">Unlock codes</button>
             </div>
           </div>
           <div class="code-blur">
@@ -650,6 +652,8 @@ Map.addLayer(classified.randomVisualizer(), {}, 'Advanced Unsupervised');
     </div>
   </div>
 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://in.paychangu.com/js/popup.js"></script>
   <script src="scripts.js"></script>
 </body>
 </html>
