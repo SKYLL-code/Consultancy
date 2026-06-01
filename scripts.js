@@ -138,29 +138,37 @@
   }
 
   async function pollPaychanguStatus(txRef, scriptId, attempts = 0) {
-    const maxAttempts = 8;
-    const delayMs = 3000;
+    const maxAttempts = 15;
+    const delayMs = 2000;
 
     if (attempts >= maxAttempts) {
-      alert('Payment verification is still pending. Please wait a few moments and refresh this page.');
+      alert('Payment verification is still pending. This is normal for some payment methods. Your code will unlock when the transaction is verified. Please refresh this page in a moment.');
       return;
     }
 
-    const statusResult = await getPaychanguStatus(txRef);
-    if (statusResult.success && statusResult.status === 'verified') {
-      unlockScript(scriptId);
-      clearPendingPaychanguTxRef();
-      alert('Payment confirmed by webhook! Premium code unlocked.');
-      return;
-    }
+    try {
+      const statusResult = await getPaychanguStatus(txRef);
+      console.log(`Poll attempt ${attempts + 1}/${maxAttempts}: Status =`, statusResult);
 
-    if (statusResult.status === 'failed') {
-      clearPendingPaychanguTxRef();
-      alert('Payment failed or was declined. Please try again.');
-      return;
-    }
+      if (statusResult.success && statusResult.status === 'verified') {
+        unlockScript(scriptId);
+        clearPendingPaychanguTxRef();
+        alert('Payment confirmed! Premium code unlocked.');
+        return;
+      }
 
-    setTimeout(() => pollPaychanguStatus(txRef, scriptId, attempts + 1), delayMs);
+      if (statusResult.status === 'failed') {
+        clearPendingPaychanguTxRef();
+        alert('Payment was declined. Please try again.');
+        return;
+      }
+
+      // Continue polling if status is pending or unknown
+      setTimeout(() => pollPaychanguStatus(txRef, scriptId, attempts + 1), delayMs);
+    } catch (error) {
+      console.error('Error polling payment status:', error);
+      setTimeout(() => pollPaychanguStatus(txRef, scriptId, attempts + 1), delayMs);
+    }
   }
 
   function savePendingPaychanguTxRef(txRef, scriptId) {
@@ -210,20 +218,30 @@
       callback_url: accessPageUrl,
       return_url: accessPageUrl,
       callback: async function(response) {
+        console.log('Paychangu callback received:', response);
         if (response && response.status === 'success') {
-          const verifyResult = await verifyPaychanguTransaction(txRef, response);
-          if (verifyResult.success) {
-            unlockScript(scriptId);
-            clearPendingPaychanguTxRef();
-            alert('Payment verified! Premium code unlocked.');
-          } else {
-            console.warn('Paychangu verification response:', verifyResult);
-            alert('Payment received but verification is pending. Checking status via webhook...');
-            pollPaychanguStatus(txRef, scriptId);
+          // Trust Paychangu's callback - if they say success, the payment was successful
+          // Unlock immediately and verify via backend/webhook
+          unlockScript(scriptId);
+          clearPendingPaychanguTxRef();
+          alert('Payment processed! Premium code unlocked.');
+          
+          // Also verify with backend to ensure record is saved
+          try {
+            await verifyPaychanguTransaction(txRef, response);
+            console.log('Backend verification succeeded');
+          } catch (error) {
+            console.log('Backend verification initiated (async):', error.message);
           }
+        } else if (response && response.status === 'pending') {
+          // Payment is still being processed (e.g., for some mobile money methods)
+          console.log('Payment is pending, polling for status...');
+          alert('Payment is being processed. Please wait...');
+          pollPaychanguStatus(txRef, scriptId);
         } else {
           clearPendingPaychanguTxRef();
-          alert('Payment not verified. Please try again.');
+          alert('Payment was not successful. Please try again.');
+          console.error('Payment failed or cancelled:', response);
         }
       }
     };

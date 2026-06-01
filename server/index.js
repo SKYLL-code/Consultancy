@@ -48,8 +48,12 @@ app.post('/verify-paychangu', async (req, res) => {
     return res.status(400).json({ success: false, message: 'tx_ref is required.' });
   }
 
+  console.log(`Verifying transaction: tx_ref=${tx_ref}`);
+
   if (!PAYCHANGU_SECRET_KEY) {
-    return res.status(500).json({ success: false, message: 'Paychangu secret key not configured.' });
+    // If secret key is not set, record as pending and await webhook
+    savePaymentStatus(tx_ref, 'pending', { note: 'No secret key for immediate verification, awaiting webhook' });
+    return res.json({ success: false, status: 'pending', message: 'Backend verification unavailable, awaiting webhook.' });
   }
 
   try {
@@ -60,19 +64,26 @@ app.post('/verify-paychangu', async (req, res) => {
       amount: transaction?.amount || null
     };
 
+    console.log(`Making verification request to Paychangu:`, payload);
+
     const response = await fetch(verifyUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${PAYCHANGU_SECRET_KEY}`
       },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
+      timeout: 10000
     });
 
     const data = await response.json();
+    console.log(`Paychangu API response:`, data);
 
     if (!response.ok) {
-      return res.status(502).json({ success: false, message: 'Paychangu verification failed.', details: data });
+      console.warn(`Paychangu verification failed (HTTP ${response.status}):`, data);
+      // Save as pending to wait for webhook
+      savePaymentStatus(tx_ref, 'pending', data);
+      return res.json({ success: false, status: 'pending', message: 'Verification pending via webhook.', details: data });
     }
 
     const isVerified = data?.status === 'success' || data?.data?.status === 'success';
@@ -81,11 +92,14 @@ app.post('/verify-paychangu', async (req, res) => {
       : (data?.status === 'failed' || data?.data?.status === 'failed')
         ? 'failed'
         : 'pending';
+    
     savePaymentStatus(tx_ref, status, data);
     return res.json({ success: isVerified, status, data });
   } catch (error) {
     console.error('Paychangu verification error:', error);
-    return res.status(500).json({ success: false, message: 'Verification request failed.', error: error.message });
+    // On error, assume webhook will handle it
+    savePaymentStatus(tx_ref, 'pending', { error: error.message });
+    return res.json({ success: false, status: 'pending', message: 'Verification error, awaiting webhook.', error: error.message });
   }
 });
 
