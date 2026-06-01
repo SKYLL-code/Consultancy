@@ -26,21 +26,21 @@
           <li>
             <strong>Study Area Codes</strong>
             <div class="snippet-actions">
-              <button class="btn small copy-btn" data-snippet="// Study Area sample code\nprint('study area')">Copy</button>
+              <button class="btn small copy-btn" data-snippet="// Free Study Area sample\n// Load country boundaries and center the map\nvar country = ee.FeatureCollection('FAO/GAUL/2015/level0').filter(ee.Filter.eq('ADM0_NAME','Malawi'));\nMap.clear();\nMap.centerObject(country,7);\nMap.addLayer(country, {color: 'red'}, 'Country Boundary');">Copy</button>
               <button class="btn small expand-btn">Expand</button>
             </div>
           </li>
           <li>
             <strong>Watershed Codes</strong>
             <div class="snippet-actions">
-              <button class="btn small copy-btn" data-snippet="// Watershed sample code\nprint('watershed')">Copy</button>
+              <button class="btn small copy-btn" data-snippet="// Free Watershed sample\n// Create a watershed AOI from DEM thresholding (simplified)\nvar srtm = ee.Image('USGS/SRTMGL1_003');\nvar elev = srtm.select('elevation');\nvar watershed = elev.gt(500).selfMask();\nMap.addLayer(watershed, {palette: ['0000FF']}, 'Watershed AOI');">Copy</button>
               <button class="btn small expand-btn">Expand</button>
             </div>
           </li>
           <li>
             <strong>River Codes</strong>
             <div class="snippet-actions">
-              <button class="btn small copy-btn" data-snippet="// River sample code\nprint('river')">Copy</button>
+              <button class="btn small copy-btn" data-snippet="// Free River sample\n// Extract high-flow channels using JRC water occurrence (example)\nvar jrc = ee.Image('JRC/GSW1_3/GlobalSurfaceWater');\nvar occurrence = jrc.select('occurrence');\nvar major = occurrence.gt(50);\nMap.addLayer(major.updateMask(major), {palette:['00FFFF']}, 'Major Rivers');">Copy</button>
               <button class="btn small expand-btn">Expand</button>
             </div>
           </li>

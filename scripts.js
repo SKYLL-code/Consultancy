@@ -269,13 +269,19 @@
 
   // Mapping of premium script placeholders (editable)
   const PREMIUM_SNIPPETS = {
-    lulc: '// LULC (Supervised Classification) - placeholder code\nprint("LULC script")',
-    hydro: '// Hydrological Modelling - placeholder code\nprint("Hydro script")',
-    drought: '// Drought Mapping - placeholder code\nprint("Drought script")',
-    flood: '// Flood Risk Mapping - placeholder code\nprint("Flood script")',
-    landslide: '// Landslide Analysis - placeholder code\nprint("Landslide script")',
-    msi: '// Multi-Spectral Indices - placeholder code\nprint("NDVI, NDWI")',
-    rusle: '// RUSLE Soil Erosion Estimation - placeholder code\nprint("RUSLE script")'
+    lulc: `// LULC (Supervised Classification) - example placeholder\n// 1. Load image and training data\nvar img = ee.ImageCollection('LANDSAT/LC09/C02/T1_L2').filterDate('2024-01-01','2024-12-31').median();\nvar training = /* Your training FC of points with 'class' property */ null;\n// 2. Sample and train\n// var samples = img.sampleRegions({collection: training, properties:['class'], scale:30});\n// var classifier = ee.Classifier.smileRandomForest(100).train(samples, 'class');\n// var classified = img.classify(classifier);\n// Map.addLayer(classified, {min:0, max:3, palette:['blue','green','brown','red']}, 'LULC');`,
+
+    hydro: `// Hydrological modelling (simplified)\nvar dem = ee.Image('USGS/SRTMGL1_003');\nvar filled = dem.focal_mean(3);\nvar slope = ee.Terrain.slope(filled);\n// Flow direction/accumulation requires more complex algorithms not shown here\nMap.addLayer(slope, {min:0, max:60}, 'Slope');`,
+
+    drought: `// Drought mapping (NDVI anomaly example)\nvar s2 = ee.ImageCollection('COPERNICUS/S2_SR').filterDate('2024-01-01','2024-12-31').median();\nvar ndvi = s2.normalizedDifference(['B8','B4']).rename('NDVI');\nvar ndvi_mean = ndvi.reduceRegion({reducer: ee.Reducer.mean(), geometry: ndvi.geometry(), scale: 1000});\n// Compute anomaly and visualize (placeholder)\nMap.addLayer(ndvi, {min:-0.5, max:1}, 'NDVI');`,
+
+    flood: `// Flood risk mapping (water detection example)\nvar s1 = ee.ImageCollection('COPERNICUS/S1_GRD').filterDate('2024-01-01','2024-12-31').median();\nvar vv = s1.select('VV');\nvar water = vv.lt(-15);\nMap.addLayer(water.updateMask(water), {palette:['0000FF']}, 'Suspected Water');`,
+
+    landslide: `// Landslide susceptibility (slope + rainfall placeholder)\nvar dem = ee.Image('USGS/SRTMGL1_003');\nvar slope = ee.Terrain.slope(dem);\nvar susceptible = slope.gt(30);\nMap.addLayer(susceptible.updateMask(susceptible), {palette:['FF6600']}, 'Susceptible Areas');`,
+
+    msi: `// Multi-spectral indices: NDVI, NDWI\nvar s2 = ee.ImageCollection('COPERNICUS/S2_SR').filterDate('2024-06-01','2024-08-31').median();\nvar ndvi = s2.normalizedDifference(['B8','B4']).rename('NDVI');\nvar ndwi = s2.normalizedDifference(['B3','B8']).rename('NDWI');\nMap.addLayer(ndvi, {min:-0.5, max:1}, 'NDVI');\nMap.addLayer(ndwi, {min:-1, max:1}, 'NDWI');`,
+
+    rusle: `// RUSLE components (simplified placeholders)\n// R = rainfall erosivity (external dataset)\n// K = soil erodibility (soil dataset)\n// LS = slope-length factor computed from DEM\n// C = cover-management factor (landcover)\n// P = support practice factor\n// Erosion = R.multiply(K).multiply(LS).multiply(C).multiply(P);\n// Map.addLayer(Erosion, {min:0, max:100}, 'Estimated Soil Loss');`
   };
 
   // Expose checkout and helper globally for features page
