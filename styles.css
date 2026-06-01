@@ -777,8 +777,7 @@ body.access-page .premium-close {
   position: fixed;
   right: 16px;
   bottom: 24px;
-  width: 140px;
-  height: 80px;
+  padding: 14px 18px;
   background: linear-gradient(135deg, #FF4444, #CC0000);
   color: #fff;
   border-radius: 20px;
@@ -792,17 +791,14 @@ body.access-page .premium-close {
 }
 .fab:hover { transform: translateY(-6px) scale(1.08); }
 .fab:active { transform: translateY(-2px) scale(0.98); }
-.fab-icon { font-size: 12px; font-weight: 800; text-align: center; line-height: 1.2; }
+.fab-icon { font-size: 12px; font-weight: 800; text-align: center; line-height: 1.2; white-space: nowrap; }
 
 /* Beaming pulse effect */
 .fab::after {
   content: '';
   position: absolute;
-  width: 140px;
-  height: 80px;
+  inset: 0;
   border-radius: 20px;
-  left: 0;
-  top: 0;
   box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.5);
   animation: fab-pulse 1.8s infinite ease-out;
   z-index: -1;
@@ -815,15 +811,10 @@ body.access-page .premium-close {
 
 @media (min-width: 900px) {
   .fab {
-    width: 160px;
-    height: 95px;
+    padding: 16px 22px;
     right: 28px;
     bottom: 32px;
     box-shadow: 0 10px 36px rgba(204, 0, 0, 0.45), 0 0 0 0 rgba(255, 68, 68, 0.3);
-  }
-  .fab::after {
-    width: 160px;
-    height: 95px;
   }
   .fab-icon {
     font-size: 13px;
