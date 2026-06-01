@@ -93,10 +93,20 @@
     }
   }
 
-  const paychanguVerifyEndpoint = '/verify-paychangu';
-  const paychanguStatusEndpoint = '/payment-status';
+  const PAYCHANGU_BACKEND_BASE_URL = 'http://localhost:3000';
+  const PAYCHANGU_PUBLIC_KEY = 'PUB-N7RITDglPYPRjEZDW3H3uwKtvQNqgsjR';
+  const paychanguVerifyEndpoint = `${PAYCHANGU_BACKEND_BASE_URL}/verify-paychangu`;
+  const paychanguStatusEndpoint = `${PAYCHANGU_BACKEND_BASE_URL}/payment-status`;
+
+  function networkAvailable() {
+    return window.location.protocol === 'http:' || window.location.protocol === 'https:';
+  }
 
   async function verifyPaychanguTransaction(txRef, transaction) {
+    if (!networkAvailable()) {
+      console.warn('Network unavailable for Paychangu verification in file preview mode.');
+      return { success: false, message: 'network unavailable' };
+    }
     try {
       const response = await fetch(paychanguVerifyEndpoint, {
         method: 'POST',
@@ -111,6 +121,10 @@
   }
 
   async function getPaychanguStatus(txRef) {
+    if (!networkAvailable()) {
+      console.warn('Network unavailable for Paychangu status check in file preview mode.');
+      return { success: false, message: 'network unavailable' };
+    }
     if (!txRef) {
       return { success: false, message: 'tx_ref is required.' };
     }
@@ -160,6 +174,11 @@
   }
 
   async function resumePendingPaychanguStatus() {
+    if (!networkAvailable()) {
+      console.warn('Skipping Paychangu status resume in file preview mode.');
+      return;
+    }
+
     const txRef = localStorage.getItem('pendingPaychanguTxRef');
     const scriptId = localStorage.getItem('pendingPaychanguScriptId');
     if (txRef && scriptId) {
@@ -170,9 +189,9 @@
   function startPaychanguCheckout(scriptId) {
     const txRef = `skylltech_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
     savePendingPaychanguTxRef(txRef, scriptId);
-    const accessPageUrl = new URL('features.html', window.location.href).href;
+    const accessPageUrl = `${window.location.origin}/features.html`;
     const checkoutOptions = {
-      public_key: 'pub-test-epj50KELdZlBOxRSOYJ0xi2qRSepDSzR',
+      public_key: PAYCHANGU_PUBLIC_KEY,
       tx_ref: txRef,
       amount: 100,
       currency: 'MWK',
