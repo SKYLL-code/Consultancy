@@ -146,6 +146,7 @@
   function startPaychanguCheckout(scriptId) {
     const txRef = `skylltech_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
     savePendingPaychanguTxRef(txRef, scriptId);
+    const accessPageUrl = new URL('access-gee-codes.html', window.location.href).href;
     const checkoutOptions = {
       public_key: 'pub-test-epj50KELdZlBOxRSOYJ0xi2qRSepDSzR',
       tx_ref: txRef,
@@ -163,8 +164,8 @@
         description: 'Pay to unlock premium Earth Engine scripts',
         logo: 'https://skyll-code.github.io/Consultancy/assets/LOGO2.png'
       },
-      callback_url: `${window.location.origin}/access-gee-codes.html`,
-      return_url: `${window.location.origin}/access-gee-codes.html`,
+      callback_url: accessPageUrl,
+      return_url: accessPageUrl,
       callback: async function(response) {
         if (response && response.status === 'success') {
           const verifyResult = await verifyPaychanguTransaction(txRef, response);
