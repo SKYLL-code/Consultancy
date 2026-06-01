@@ -154,6 +154,34 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
   .service-page h3{text-align:left;margin-top:20px;font-size:1.4rem}
   .service-page p{text-align:justify;line-height:1.7;font-size:1.05rem}
   .service-image{max-width:100%;margin:24px auto}
+  
+  /* Features page mobile */
+  .features-header{padding:24px 0 18px}
+  .features-header h1{font-size:1.8rem;margin-bottom:8px}
+  .features-header p{font-size:0.95rem}
+  .feature-grid{grid-template-columns:1fr;gap:16px}
+  .feature-card{min-height:auto;padding:18px}
+  .feature-card h2{font-size:1.2rem;margin-bottom:12px}
+  .snippet-list li,.premium-list li{padding:10px 0;flex-direction:column;align-items:flex-start;gap:8px}
+  .snippet-actions{gap:6px;width:100%}
+  .btn.small{padding:6px 10px;font-size:0.8rem;width:auto}
+  .btn.unlock-btn{width:100%;justify-content:space-between;padding:10px 12px;font-size:0.95rem}
+  .badge{margin-left:4px;padding:3px 6px;font-size:0.7rem}
+  
+  /* Modal mobile */
+  .modal-dialog{width:min(98%, 480px);padding:12px;border-radius:8px}
+  .modal-header{flex-direction:column;align-items:flex-start;gap:8px;margin-bottom:8px}
+  .modal-header h3{margin:0;font-size:1.1rem}
+  .modal-header button{align-self:flex-end;margin-top:-24px}
+  .modal-body{margin-top:4px}
+  .modal-body p{font-size:0.9rem}
+  .modal-footer{flex-wrap:wrap;gap:6px}
+  .modal-footer button{flex:1;min-width:calc(50% - 3px);padding:10px 12px;font-size:0.9rem}
+  
+  /* Expanded code area mobile */
+  .expanded-area{right:12px;bottom:60px;left:12px;max-height:45vh;padding:12px;border-radius:12px}
+  .code-block{padding:12px;font-size:0.85rem;line-height:1.4}
+  #closeExpanded{width:100%;padding:10px 12px;margin-top:8px}
 }
 
 /* Small mobile devices */
@@ -178,6 +206,34 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
   .hero{background:linear-gradient(135deg, rgba(11,157,143,0.12) 0%, rgba(78,205,196,0.12) 100%), url('assets/Background3.png');background-size:cover;background-attachment:scroll;background-position:center}
   body{background:linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)), url('assets/Background3.png');background-size:cover;background-position:center;background-attachment:scroll}
   
+  /* Features page small mobile */
+  .features-header{padding:16px 0 12px}
+  .features-header .container{gap:6px}
+  .features-header h1{font-size:1.4rem;margin-bottom:6px}
+  .features-header p{font-size:0.85rem}
+  .feature-grid{grid-template-columns:1fr;gap:12px}
+  .feature-card{min-height:auto;padding:14px}
+  .feature-card h2{font-size:1.05rem;margin-bottom:10px}
+  .snippet-list li,.premium-list li{padding:8px 0;font-size:0.95rem}
+  .snippet-actions{gap:4px}
+  .btn.small{padding:4px 8px;font-size:0.75rem}
+  .btn.unlock-btn{padding:8px 10px;font-size:0.9rem;min-height:44px;display:flex;align-items:center}
+  .badge{margin-left:2px;padding:2px 4px;font-size:0.65rem}
+  
+  /* Modal small mobile */
+  .modal-dialog{width:min(96%, 360px);padding:8px;border-radius:6px}
+  .modal-header{gap:6px}
+  .modal-header h3{font-size:0.95rem}
+  .modal-body{margin-top:2px}
+  .modal-body p{font-size:0.85rem;line-height:1.5}
+  .modal-footer{gap:4px}
+  .modal-footer button{font-size:0.85rem;padding:8px 10px;min-height:44px}
+  
+  /* Expanded code area small mobile */
+  .expanded-area{right:8px;bottom:50px;left:8px;max-height:40vh;padding:10px;border-radius:10px}
+  .code-block{padding:10px;font-size:0.8rem;line-height:1.3}
+  #closeExpanded{width:100%;padding:8px 10px;margin-top:6px;min-height:40px}
+}
   /* Content alignment */
   p, .about p, .contact p{text-align:justify;line-height:1.6;font-size:1rem}
   .service-page{text-align:justify}
