@@ -71,7 +71,18 @@
     const featureBtn = document.querySelector(`.unlock-btn[data-script-id="${scriptId}"]`);
     if (featureBtn) {
       featureBtn.classList.add('unlocked');
-      featureBtn.textContent = 'Unlocked — View';
+      // Update or add badge
+      let badge = featureBtn.querySelector('.badge');
+      if (badge) {
+        badge.classList.remove('locked');
+        badge.classList.add('unlocked');
+        badge.textContent = 'Unlocked';
+      } else {
+        badge = document.createElement('span');
+        badge.className = 'badge unlocked';
+        badge.textContent = 'Unlocked';
+        featureBtn.appendChild(badge);
+      }
       featureBtn.onclick = () => {
         const code = (typeof PREMIUM_SNIPPETS !== 'undefined' && PREMIUM_SNIPPETS[scriptId]) ? PREMIUM_SNIPPETS[scriptId] : '// Premium code unlocked.';
         const expanded = document.getElementById('expandedArea');
@@ -287,6 +298,42 @@
   // Expose checkout and helper globally for features page
   window.startPaychanguCheckout = startPaychanguCheckout;
   window.unlockScript = unlockScript;
+
+  // Open preview modal for premium items
+  function openPreviewModal({ scriptId, title, description }) {
+    const modal = document.getElementById('previewModal');
+    if (!modal) return;
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDesc = document.getElementById('modalDesc');
+    const modalCode = document.getElementById('modalCode');
+    const previewBtn = document.getElementById('modalPreviewBtn');
+    const unlockBtn = document.getElementById('modalUnlockBtn');
+    modalTitle.textContent = title || 'Preview';
+    modalDesc.textContent = description || '';
+    modalCode.textContent = (typeof PREMIUM_SNIPPETS !== 'undefined' && PREMIUM_SNIPPETS[scriptId]) ? PREMIUM_SNIPPETS[scriptId] : '// Premium code preview not available.';
+    modal.hidden = false;
+
+    // Preview in expanded area
+    previewBtn.onclick = () => {
+      const expanded = document.getElementById('expandedArea');
+      const pre = document.getElementById('expandedCode');
+      if (pre) pre.textContent = modalCode.textContent;
+      if (expanded) expanded.hidden = false;
+      modal.hidden = true;
+    };
+
+    // Unlock action triggers checkout
+    unlockBtn.onclick = () => {
+      modal.hidden = true;
+      if (typeof startPaychanguCheckout === 'function') startPaychanguCheckout(scriptId);
+      else alert('Payment flow not available in this environment.');
+    };
+
+    // Close handler
+    document.getElementById('closeModal').onclick = () => { modal.hidden = true; };
+  }
+
+  window.openPreviewModal = openPreviewModal;
 
   // Apply previously-unlocked scripts to the UI (features page)
   unlockedScripts.forEach(id => {

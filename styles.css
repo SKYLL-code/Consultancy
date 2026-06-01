@@ -647,3 +647,15 @@ body.access-page .premium-close {
 .expanded-area { position:fixed; right:24px; bottom:100px; left:24px; background:#04101a; border-radius:8px; padding:12px; box-shadow:0 10px 40px rgba(0,0,0,0.6); max-height:60vh; overflow:auto; }
 .code-block { background:#00131a; color:#dff; padding:12px; border-radius:6px; white-space:pre; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace; }
 
+/* Badges for premium items */
+.badge { display:inline-block; margin-left:10px; padding:4px 8px; border-radius:999px; font-size:0.75rem; vertical-align:middle; }
+.badge.locked { background: rgba(255,255,255,0.06); color: #fff; border:1px solid rgba(255,255,255,0.04); }
+.badge.unlocked { background: linear-gradient(90deg,#00f0d8,#0066ff); color:#002127; border:none; }
+
+/* Modal styles */
+.modal { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(4,8,12,0.6); z-index:10050; }
+.modal-dialog { width: min(980px, 94%); background: linear-gradient(180deg, #07111d, #031219); border-radius:10px; box-shadow:0 20px 60px rgba(0,0,0,0.7); padding:16px; }
+.modal-header { display:flex; justify-content:space-between; align-items:center; }
+.modal-body { margin-top:8px; }
+.modal-footer { display:flex; gap:8px; justify-content:flex-end; margin-top:12px; }
+

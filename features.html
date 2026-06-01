@@ -52,13 +52,27 @@
         <h2>Premium Plan</h2>
         <p class="muted">Advanced scripts — unlock via Paychangu.</p>
         <ul class="premium-list">
-          <li><button class="btn unlock-btn" data-script-id="lulc">LULC (Supervised Classification) Codes</button></li>
-          <li><button class="btn unlock-btn" data-script-id="hydro">Hydrological Modelling Codes</button></li>
-          <li><button class="btn unlock-btn" data-script-id="drought">Drought Mapping Codes</button></li>
-          <li><button class="btn unlock-btn" data-script-id="flood">Flood Risk Mapping Codes</button></li>
-          <li><button class="btn unlock-btn" data-script-id="landslide">Landslide Codes</button></li>
-          <li><button class="btn unlock-btn" data-script-id="msi">Multi-Spectral Indices Codes</button></li>
-          <li><button class="btn unlock-btn" data-script-id="rusle">Soil Erosion (RUSLE) Codes</button></li>
+          <li>
+            <button class="btn unlock-btn" data-script-id="lulc" data-desc="Supervised LULC classification with random forest; includes sampling and classification pipeline">LULC (Supervised Classification) Codes <span class="badge locked">Locked</span></button>
+          </li>
+          <li>
+            <button class="btn unlock-btn" data-script-id="hydro" data-desc="Hydrological modelling helpers: slope, flow proxies and prep routines">Hydrological Modelling Codes <span class="badge locked">Locked</span></button>
+          </li>
+          <li>
+            <button class="btn unlock-btn" data-script-id="drought" data-desc="NDVI-based drought anomaly detection and visualization utilities">Drought Mapping Codes <span class="badge locked">Locked</span></button>
+          </li>
+          <li>
+            <button class="btn unlock-btn" data-script-id="flood" data-desc="Flood detection using Sentinel-1 backscatter thresholds and time-series masks">Flood Risk Mapping Codes <span class="badge locked">Locked</span></button>
+          </li>
+          <li>
+            <button class="btn unlock-btn" data-script-id="landslide" data-desc="Landslide susceptibility helpers using slope and terrain derivatives">Landslide Codes <span class="badge locked">Locked</span></button>
+          </li>
+          <li>
+            <button class="btn unlock-btn" data-script-id="msi" data-desc="Multi-spectral index functions: NDVI, NDWI, SAVI and combined palettes">Multi-Spectral Indices Codes <span class="badge locked">Locked</span></button>
+          </li>
+          <li>
+            <button class="btn unlock-btn" data-script-id="rusle" data-desc="RUSLE component calculators (R, K, LS, C, P) and simplified estimation workflow">Soil Erosion (RUSLE) Codes <span class="badge locked">Locked</span></button>
+          </li>
         </ul>
       </article>
 
@@ -74,6 +88,24 @@
       <pre id="expandedCode" class="code-block"></pre>
       <button id="closeExpanded" class="btn">Close</button>
     </section>
+
+  <!-- Preview / Unlock Modal -->
+  <div id="previewModal" class="modal" hidden>
+    <div class="modal-dialog">
+      <header class="modal-header">
+        <h3 id="modalTitle">Preview</h3>
+        <button id="closeModal" class="btn">×</button>
+      </header>
+      <div class="modal-body">
+        <p id="modalDesc" class="muted"></p>
+        <pre id="modalCode" class="code-block">// Code preview will appear here</pre>
+      </div>
+      <footer class="modal-footer">
+        <button id="modalPreviewBtn" class="btn">Open Preview</button>
+        <button id="modalUnlockBtn" class="btn primary-button">Unlock (Pay)</button>
+      </footer>
+    </div>
+  </div>
   </main>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -105,15 +137,17 @@
     });
 
     // Premium unlock handlers: call existing startPaychanguCheckout if available
+    // Premium unlock handlers: open preview modal (defined in scripts.js)
     document.querySelectorAll('.unlock-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const id = btn.dataset.scriptId;
-        if (typeof startPaychanguCheckout === 'function') {
-          startPaychanguCheckout(id);
-        } else if (window.paychangu && typeof window.paychangu.open === 'function') {
-          window.paychangu.open({ tx_ref: 'demo_'+Date.now(), amount: 100 });
+        const title = btn.textContent.trim();
+        const desc = btn.dataset.desc || '';
+        if (typeof window.openPreviewModal === 'function') {
+          window.openPreviewModal({ scriptId: id, title, description: desc });
         } else {
-          alert('Payment unavailable in this environment — startPaychanguCheckout not found.');
+          // Fallback: directly attempt checkout
+          if (typeof startPaychanguCheckout === 'function') startPaychanguCheckout(id);
         }
       });
     });
