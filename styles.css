@@ -170,6 +170,7 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
   
   /* Modal mobile */
   .modal-dialog{width:min(98%, 480px);padding:12px;border-radius:8px}
+  .modal[hidden] .modal-dialog { display: none !important; }
   .modal-header{flex-direction:column;align-items:flex-start;gap:8px;margin-bottom:8px}
   .modal-header h3{margin:0;font-size:1.1rem}
   .modal-header button{align-self:flex-end;margin-top:-24px}
@@ -222,6 +223,7 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
   
   /* Modal small mobile */
   .modal-dialog{width:min(96%, 360px);padding:8px;border-radius:6px}
+  .modal[hidden] .modal-dialog { display: none !important; }
   .modal-header{gap:6px}
   .modal-header h3{font-size:0.95rem}
   .modal-body{margin-top:2px}
@@ -829,7 +831,7 @@ body.access-page .premium-close {
 
 /* Modal styles */
 .modal { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(4,8,12,0.6); z-index:10050; }
-.modal[hidden] { display: none; }
+.modal[hidden] { display: none !important; visibility: hidden !important; pointer-events: none !important; }
 .modal-dialog { width: min(980px, 94%); background: linear-gradient(180deg, #07111d, #031219); border-radius:10px; box-shadow:0 20px 60px rgba(0,0,0,0.7); padding:16px; }
 .modal-header { display:flex; justify-content:space-between; align-items:center; }
 .modal-body { margin-top:8px; }
