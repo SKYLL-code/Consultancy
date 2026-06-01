@@ -67,6 +67,19 @@
       opener.addEventListener('click', () => openGeminiEditor(scriptId));
       card.appendChild(opener);
     }
+    // Support features page unlock buttons: change text to View
+    const featureBtn = document.querySelector(`.unlock-btn[data-script-id="${scriptId}"]`);
+    if (featureBtn) {
+      featureBtn.classList.add('unlocked');
+      featureBtn.textContent = 'Unlocked — View';
+      featureBtn.onclick = () => {
+        const code = (typeof PREMIUM_SNIPPETS !== 'undefined' && PREMIUM_SNIPPETS[scriptId]) ? PREMIUM_SNIPPETS[scriptId] : '// Premium code unlocked.';
+        const expanded = document.getElementById('expandedArea');
+        const pre = document.getElementById('expandedCode');
+        if (pre) pre.textContent = code;
+        if (expanded) expanded.hidden = false;
+      };
+    }
   }
 
   const paychanguVerifyEndpoint = '/verify-paychangu';
@@ -146,7 +159,7 @@
   function startPaychanguCheckout(scriptId) {
     const txRef = `skylltech_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
     savePendingPaychanguTxRef(txRef, scriptId);
-    const accessPageUrl = new URL('access-gee-codes.html', window.location.href).href;
+    const accessPageUrl = new URL('features.html', window.location.href).href;
     const checkoutOptions = {
       public_key: 'pub-test-epj50KELdZlBOxRSOYJ0xi2qRSepDSzR',
       tx_ref: txRef,
@@ -253,4 +266,27 @@
       geminiPrompt.value = button.dataset.preset;
     });
   });
+
+  // Mapping of premium script placeholders (editable)
+  const PREMIUM_SNIPPETS = {
+    lulc: '// LULC (Supervised Classification) - placeholder code\nprint("LULC script")',
+    hydro: '// Hydrological Modelling - placeholder code\nprint("Hydro script")',
+    drought: '// Drought Mapping - placeholder code\nprint("Drought script")',
+    flood: '// Flood Risk Mapping - placeholder code\nprint("Flood script")',
+    landslide: '// Landslide Analysis - placeholder code\nprint("Landslide script")',
+    msi: '// Multi-Spectral Indices - placeholder code\nprint("NDVI, NDWI")',
+    rusle: '// RUSLE Soil Erosion Estimation - placeholder code\nprint("RUSLE script")'
+  };
+
+  // Expose checkout and helper globally for features page
+  window.startPaychanguCheckout = startPaychanguCheckout;
+  window.unlockScript = unlockScript;
+
+  // Apply previously-unlocked scripts to the UI (features page)
+  unlockedScripts.forEach(id => {
+    try { unlockScript(id); } catch (e) { /* ignore */ }
+  });
+
+  // Resume any pending Paychangu status checks (if user returns after payment)
+  resumePendingPaychanguStatus();
 })();
