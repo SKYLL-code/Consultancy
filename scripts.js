@@ -93,7 +93,9 @@
     }
   }
 
-  const PAYCHANGU_BACKEND_BASE_URL = 'http://localhost:3000';
+  const PAYCHANGU_BACKEND_BASE_URL = (window.location.protocol === 'http:' || window.location.protocol === 'https:')
+    ? `${window.location.protocol}//${window.location.host}`
+    : 'https://your-paychangu-backend.example.com';
   const PAYCHANGU_PUBLIC_KEY = 'PUB-N7RITDglPYPRjEZDW3H3uwKtvQNqgsjR';
   const paychanguVerifyEndpoint = `${PAYCHANGU_BACKEND_BASE_URL}/verify-paychangu`;
   const paychanguStatusEndpoint = `${PAYCHANGU_BACKEND_BASE_URL}/payment-status`;
@@ -349,25 +351,39 @@
     modalDesc.textContent = description || '';
     modalCode.textContent = (typeof PREMIUM_SNIPPETS !== 'undefined' && PREMIUM_SNIPPETS[scriptId]) ? PREMIUM_SNIPPETS[scriptId] : '// Premium code preview not available.';
     modal.hidden = false;
+    modal.setAttribute('aria-hidden', 'false');
+    modal.focus();
 
-    // Preview in expanded area
+    const closeModal = () => {
+      modal.hidden = true;
+      modal.setAttribute('aria-hidden', 'true');
+      document.removeEventListener('keydown', handleEsc);
+    };
+
+    const handleEsc = (event) => {
+      if (event.key === 'Escape') closeModal();
+    };
+
     previewBtn.onclick = () => {
       const expanded = document.getElementById('expandedArea');
       const pre = document.getElementById('expandedCode');
       if (pre) pre.textContent = modalCode.textContent;
-      if (expanded) expanded.hidden = false;
-      modal.hidden = true;
+      if (expanded) {
+        expanded.hidden = false;
+        expanded.setAttribute('aria-hidden', 'false');
+      }
+      closeModal();
     };
 
-    // Unlock action triggers checkout
     unlockBtn.onclick = () => {
-      modal.hidden = true;
+      closeModal();
       if (typeof startPaychanguCheckout === 'function') startPaychanguCheckout(scriptId);
       else alert('Payment flow not available in this environment.');
     };
 
-    // Close handler
-    document.getElementById('closeModal').onclick = () => { modal.hidden = true; };
+    const closeButton = document.getElementById('closeModal');
+    if (closeButton) closeButton.onclick = closeModal;
+    document.addEventListener('keydown', handleEsc);
   }
 
   window.openPreviewModal = openPreviewModal;

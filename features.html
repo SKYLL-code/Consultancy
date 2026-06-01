@@ -55,25 +55,25 @@
         <p class="muted">Advanced scripts — unlock via Paychangu.</p>
         <ul class="premium-list">
           <li>
-            <button class="btn unlock-btn" data-script-id="lulc" data-desc="Supervised LULC classification with random forest; includes sampling and classification pipeline">LULC (Supervised Classification) Codes <span class="badge locked">Locked</span></button>
+            <button class="btn unlock-btn" data-script-id="lulc" data-title="LULC (Supervised Classification) Codes" data-desc="Supervised LULC classification with random forest; includes sampling and classification pipeline">LULC (Supervised Classification) Codes <span class="badge locked">Locked</span></button>
           </li>
           <li>
-            <button class="btn unlock-btn" data-script-id="hydro" data-desc="Hydrological modelling helpers: slope, flow proxies and prep routines">Hydrological Modelling Codes <span class="badge locked">Locked</span></button>
+            <button class="btn unlock-btn" data-script-id="hydro" data-title="Hydrological Modelling Codes" data-desc="Hydrological modelling helpers: slope, flow proxies and prep routines">Hydrological Modelling Codes <span class="badge locked">Locked</span></button>
           </li>
           <li>
-            <button class="btn unlock-btn" data-script-id="drought" data-desc="NDVI-based drought anomaly detection and visualization utilities">Drought Mapping Codes <span class="badge locked">Locked</span></button>
+            <button class="btn unlock-btn" data-script-id="drought" data-title="Drought Mapping Codes" data-desc="NDVI-based drought anomaly detection and visualization utilities">Drought Mapping Codes <span class="badge locked">Locked</span></button>
           </li>
           <li>
-            <button class="btn unlock-btn" data-script-id="flood" data-desc="Flood detection using Sentinel-1 backscatter thresholds and time-series masks">Flood Risk Mapping Codes <span class="badge locked">Locked</span></button>
+            <button class="btn unlock-btn" data-script-id="flood" data-title="Flood Risk Mapping Codes" data-desc="Flood detection using Sentinel-1 backscatter thresholds and time-series masks">Flood Risk Mapping Codes <span class="badge locked">Locked</span></button>
           </li>
           <li>
-            <button class="btn unlock-btn" data-script-id="landslide" data-desc="Landslide susceptibility helpers using slope and terrain derivatives">Landslide Codes <span class="badge locked">Locked</span></button>
+            <button class="btn unlock-btn" data-script-id="landslide" data-title="Landslide Codes" data-desc="Landslide susceptibility helpers using slope and terrain derivatives">Landslide Codes <span class="badge locked">Locked</span></button>
           </li>
           <li>
-            <button class="btn unlock-btn" data-script-id="msi" data-desc="Multi-spectral index functions: NDVI, NDWI, SAVI and combined palettes">Multi-Spectral Indices Codes <span class="badge locked">Locked</span></button>
+            <button class="btn unlock-btn" data-script-id="msi" data-title="Multi-Spectral Indices Codes" data-desc="Multi-spectral index functions: NDVI, NDWI, SAVI and combined palettes">Multi-Spectral Indices Codes <span class="badge locked">Locked</span></button>
           </li>
           <li>
-            <button class="btn unlock-btn" data-script-id="rusle" data-desc="RUSLE component calculators (R, K, LS, C, P) and simplified estimation workflow">Soil Erosion (RUSLE) Codes <span class="badge locked">Locked</span></button>
+            <button class="btn unlock-btn" data-script-id="rusle" data-title="Soil Erosion (RUSLE) Codes" data-desc="RUSLE component calculators (R, K, LS, C, P) and simplified estimation workflow">Soil Erosion (RUSLE) Codes <span class="badge locked">Locked</span></button>
           </li>
         </ul>
       </article>
@@ -86,13 +86,13 @@
       </article>
     </section>
 
-    <section id="expandedArea" class="expanded-area" hidden>
+    <section id="expandedArea" class="expanded-area" role="region" aria-label="Expanded code preview" aria-live="polite" aria-hidden="true" hidden>
       <pre id="expandedCode" class="code-block"></pre>
       <button id="closeExpanded" class="btn">Close</button>
     </section>
 
   <!-- Preview / Unlock Modal -->
-  <div id="previewModal" class="modal" hidden>
+  <div id="previewModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc" aria-hidden="true" tabindex="-1" hidden>
     <div class="modal-dialog">
       <header class="modal-header">
         <h3 id="modalTitle">Preview</h3>
@@ -130,13 +130,21 @@
       btn.addEventListener('click', () => {
         const li = btn.closest('li');
         const snippet = li.querySelector('.copy-btn')?.dataset.snippet || '// No snippet';
+        const expanded = document.getElementById('expandedArea');
         document.getElementById('expandedCode').textContent = snippet;
-        document.getElementById('expandedArea').hidden = false;
+        if (expanded) {
+          expanded.hidden = false;
+          expanded.setAttribute('aria-hidden', 'false');
+        }
       });
     });
 
     document.getElementById('closeExpanded').addEventListener('click', () => {
-      document.getElementById('expandedArea').hidden = true;
+      const expanded = document.getElementById('expandedArea');
+      if (expanded) {
+        expanded.hidden = true;
+        expanded.setAttribute('aria-hidden', 'true');
+      }
     });
 
     // Premium unlock handlers: call existing startPaychanguCheckout if available
@@ -144,7 +152,7 @@
     document.querySelectorAll('.unlock-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const id = btn.dataset.scriptId;
-        const title = btn.textContent.trim();
+        const title = btn.dataset.title || btn.textContent.trim();
         const desc = btn.dataset.desc || '';
         if (typeof window.openPreviewModal === 'function') {
           window.openPreviewModal({ scriptId: id, title, description: desc });

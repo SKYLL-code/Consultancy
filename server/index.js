@@ -115,6 +115,16 @@ app.get('/payment-status', (req, res) => {
   return res.json({ success: true, ...record });
 });
 
+// Test endpoint to simulate successful payment (for development only)
+app.post('/test-payment-success', (req, res) => {
+  const { tx_ref } = req.body;
+  if (!tx_ref) {
+    return res.status(400).json({ success: false, message: 'tx_ref is required.' });
+  }
+  savePaymentStatus(tx_ref, 'verified', { test: true, message: 'Test payment verified' });
+  return res.json({ success: true, message: 'Test payment marked as verified.', tx_ref });
+});
+
 app.post('/paychangu-webhook', (req, res) => {
   const event = req.body || {};
   console.log('Paychangu webhook event received:', JSON.stringify(event, null, 2));
@@ -140,17 +150,33 @@ app.post('/paychangu-webhook', (req, res) => {
   const txRef = event?.data?.tx_ref
     || event?.data?.transaction?.tx_ref
     || event?.data?.transaction?.reference
-    || event?.data?.transaction?.id;
+    || event?.data?.transaction?.id
+    || event?.tx_ref
+    || event?.transaction_id;
 
-  const isSuccess = event?.data?.status === 'success' || event?.event === 'transaction.success';
-  const isFailure = event?.data?.status === 'failed' || event?.event === 'transaction.failed';
+  // Check for success/failure in multiple possible locations
+  const eventStatus = event?.data?.status || event?.status;
+  const transactionStatus = event?.data?.transaction?.status;
+  const isSuccess = eventStatus === 'success' 
+    || event?.event === 'transaction.success' 
+    || transactionStatus === 'success'
+    || event?.data?.transaction?.successful === true;
+  const isFailure = eventStatus === 'failed' 
+    || event?.event === 'transaction.failed' 
+    || transactionStatus === 'failed'
+    || event?.data?.transaction?.successful === false;
+
+  console.log(`Processing webhook for tx_ref=${txRef}, status=${eventStatus}, isSuccess=${isSuccess}, isFailure=${isFailure}`);
 
   if (txRef) {
     if (isSuccess) {
+      console.log(`Webhook confirmed payment success for ${txRef}`);
       savePaymentStatus(txRef, 'verified', event);
     } else if (isFailure) {
+      console.log(`Webhook confirmed payment failure for ${txRef}`);
       savePaymentStatus(txRef, 'failed', event);
     } else {
+      console.log(`Webhook received pending status for ${txRef}`);
       savePaymentStatus(txRef, 'pending', event);
     }
   } else {
