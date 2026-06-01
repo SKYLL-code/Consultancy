@@ -778,13 +778,13 @@ body.access-page .premium-close {
   right: 16px;
   bottom: 24px;
   padding: 14px 18px;
-  background: linear-gradient(135deg, #FF4444, #CC0000);
+  background: linear-gradient(135deg, #00D4FF, #0099CC);
   color: #fff;
   border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 28px rgba(204, 0, 0, 0.4), 0 0 0 0 rgba(255, 68, 68, 0.3);
+  box-shadow: 0 8px 28px rgba(0, 150, 200, 0.4), 0 0 0 0 rgba(100, 220, 255, 0.3);
   z-index: 10010;
   text-decoration: none;
   transition: transform .18s ease, box-shadow .18s ease;
@@ -793,20 +793,22 @@ body.access-page .premium-close {
 .fab:active { transform: translateY(-2px) scale(0.98); }
 .fab-icon { font-size: 12px; font-weight: 800; text-align: center; line-height: 1.2; white-space: nowrap; }
 
-/* Beaming pulse effect */
+/* Water splash beaming effect */
 .fab::after {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: 20px;
-  box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.5);
-  animation: fab-pulse 1.8s infinite ease-out;
+  box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.6);
+  animation: water-splash 2s infinite ease-out;
   z-index: -1;
 }
-@keyframes fab-pulse {
-  0% { box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.7); }
-  50% { box-shadow: 0 0 0 15px rgba(255, 68, 68, 0.1); }
-  100% { box-shadow: 0 0 0 32px rgba(255, 68, 68, 0); }
+@keyframes water-splash {
+  0% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.8), 0 0 0 0 rgba(100, 220, 255, 0.6); }
+  25% { box-shadow: 0 0 0 8px rgba(0, 212, 255, 0.6), 0 0 0 8px rgba(100, 220, 255, 0.4); }
+  50% { box-shadow: 0 0 0 18px rgba(0, 212, 255, 0.3), 0 0 0 18px rgba(100, 220, 255, 0.2); }
+  75% { box-shadow: 0 0 0 28px rgba(0, 212, 255, 0.1), 0 0 0 28px rgba(100, 220, 255, 0.05); }
+  100% { box-shadow: 0 0 0 40px rgba(0, 212, 255, 0), 0 0 0 40px rgba(100, 220, 255, 0); }
 }
 
 @media (min-width: 900px) {
@@ -814,7 +816,7 @@ body.access-page .premium-close {
     padding: 16px 22px;
     right: 28px;
     bottom: 32px;
-    box-shadow: 0 10px 36px rgba(204, 0, 0, 0.45), 0 0 0 0 rgba(255, 68, 68, 0.3);
+    box-shadow: 0 10px 36px rgba(0, 150, 200, 0.45), 0 0 0 0 rgba(100, 220, 255, 0.3);
   }
   .fab-icon {
     font-size: 13px;
