@@ -158,7 +158,7 @@
         phonenumber: '+265880000000',
         name: 'SKYLL TECH Customer'
       },
-      customizations: {
+      customization: {
         title: 'Unlock Premium GEE Code',
         description: 'Pay to unlock premium Earth Engine scripts',
         logo: 'https://skyll-code.github.io/Consultancy/assets/LOGO2.png'
@@ -183,7 +183,7 @@
     };
 
     if (window.PaychanguCheckout) {
-      window.PaychanguCheckout(checkoutOptions).open();
+      window.PaychanguCheckout(checkoutOptions);
     } else {
       alert('Paychangu is unavailable. Please refresh the page.');
     }
