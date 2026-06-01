@@ -89,10 +89,10 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
 .contact h3, .contact p { color: #1a1a1a;line-height:1.8 }
 .contact-links{display:flex;justify-content:center;gap:12px;margin:20px auto;flex-wrap:wrap}
 .contact-btn{padding:16px 28px;border-radius:12px;text-decoration:none;color:#fff;display:inline-flex;align-items:center;justify-content:center;text-align:center;font-size:1.1rem;font-weight:600;transition:var(--transition);margin:0 4px 8px;box-shadow:var(--shadow-lg);border:none;cursor:pointer;letter-spacing:0.5px;backdrop-filter:blur(8px)}
-.contact-btn.fb{background:linear-gradient(135deg, #1877F2 0%, #42A5F5 50%, #4A7FDC 100%)}
-.contact-btn.wa{background:linear-gradient(135deg, #25D366 0%, #4CAF50 50%, #1FA85A 100%)}
+.contact-btn.fb{background:transparent;color:#1877F2;border:1px solid rgba(24,119,242,0.12);box-shadow:none;border-radius:6px}
+.contact-btn.wa{background:transparent;color:#25D366;border:1px solid rgba(37,211,102,0.12);box-shadow:none;border-radius:6px}
 .contact-btn.em{background:linear-gradient(135deg, #EA4335 0%, #FF7043 50%, #D33B27 100%)}
-.contact-btn:hover{transform:translateY(-6px) scale(1.05);box-shadow:var(--shadow-xl);filter:brightness(1.1)}
+.contact-btn:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);filter:brightness(1.02)}
 .contact-form{display:grid;gap:12px;max-width:540px}
 .contact-form input,.contact-form textarea{padding:14px 16px;border-radius:10px;border:2px solid rgba(11,157,143,0.2);font-family:inherit;font-size:1rem;transition:var(--transition);background:rgba(255,255,255,0.8)}
 .contact-form input:focus,.contact-form textarea:focus{outline:none;border-color:var(--brand);background:rgba(255,255,255,1);box-shadow:0 0 0 3px rgba(11,157,143,0.1)}
