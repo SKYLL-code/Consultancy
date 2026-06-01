@@ -549,3 +549,43 @@ section:nth-child(4){animation-delay:0.7s}
   .gemini-pane textarea, .gemini-pane input { min-height: 120px; }
 }
 
+body.access-page {
+  background: #07111d;
+  color: #f1fbff;
+}
+
+body.access-page .access-topbar {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 10001;
+}
+
+body.access-page .access-topbar .btn {
+  border-radius: 999px;
+  background: rgba(0, 240, 216, 0.12);
+  color: #f8fcff;
+  padding: 12px 18px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+body.access-page .premium-overlay {
+  justify-content: center;
+  align-items: flex-start;
+  background: #07111d;
+  backdrop-filter: none;
+}
+
+body.access-page .premium-panel {
+  width: 100%;
+  max-width: 100%;
+  height: 100vh;
+  border-radius: 0;
+  box-shadow: none;
+  margin: 0;
+}
+
+body.access-page .premium-close {
+  background: rgba(255,255,255,0.08);
+}
+

@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SKYLL TECH Consultancy - Access GEE Codes</title>
+  <meta name="description" content="Access premium Google Earth Engine code on SKYLL TECH Consultancy." />
+  <meta name="robots" content="index, follow" />
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" href="assets/LOGO2.png" sizes="192x192">
+  <link rel="shortcut icon" href="assets/LOGO2.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/LOGO2.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="access-page">
+  <div class="access-topbar">
+    <a class="btn primary-button" href="index.html">← Back to home</a>
+  </div>
+
+  <div id="premiumOverlay" class="premium-overlay open" aria-hidden="false">
+    <div class="premium-panel" role="main" aria-labelledby="premiumPanelTitle">
+      <a id="closePremiumPanel" class="premium-close" href="index.html" aria-label="Close Access GEE Codes">×</a>
+      <div class="premium-header">
+        <div>
+          <h2 id="premiumPanelTitle">GEE Code Repository</h2>
+          <p>Free and premium Google Earth Engine snippets for ROI, classification, drought mapping, and AI-assisted editing. Unlock the premium examples below.</p>
+        </div>
+      </div>
+
+      <div class="premium-tabs" role="tablist">
+        <button class="tab-button active" data-target="tabA" role="tab" aria-selected="true">ROI Setup</button>
+        <button class="tab-button" data-target="tabB" role="tab" aria-selected="false">Supervised LULC</button>
+        <button class="tab-button" data-target="tabC" role="tab" aria-selected="false">Unsupervised LULC</button>
+        <a class="tab-button" href="mailto:skylltechconsult@gmail.com?subject=GEE%20Code%20Request&body=Hello%20SKYLL%20TECH%2C%0A%0AI%20would%20like%20to%20request%20custom%20Google%20Earth%20Engine%20code%20for%20my%20project.%0A%0APlease%20describe%20your%20analysis%20or%20data%20requirements%20here." role="tab" aria-selected="false">Request other GEE code</a>
+      </div>
+
+      <div class="tab-panel active" id="tabA" role="tabpanel">
+        <div class="code-card free">
+          <div class="code-card-header">
+            <h3>ROI / Study Area Setup</h3>
+            <button class="copy-button" data-copy-target="codeA1">Copy</button>
+          </div>
+          <pre><code id="codeA1">// Free ROI sample
+// =========================================================================
+// 1. LOAD ADMINISTRATIVE BOUNDARIES FOR MALAWI
+// =========================================================================
+
+var malawiCountry = ee.FeatureCollection("FAO/GAUL/2015/level0")
+  .filter(ee.Filter.eq('ADM0_NAME', 'Malawi'));
+
+var malawiDistricts = ee.FeatureCollection("FAO/GAUL/2015/level2")
+  .filter(ee.Filter.eq('ADM0_NAME', 'Malawi'));
+
+print("Malawi Districts Properties:", malawiDistricts.limit(5));
+
+Map.clear();
+Map.centerObject(malawiCountry, 7);
+Map.addLayer(malawiDistricts, {}, "Malawi Districts (Level 2)");
+Map.addLayer(malawiCountry, {}, "Malawi Country Boundary (Level 0)");
+          </code></pre>
+        </div>
+        <div class="code-card premium" data-script-id="codeA2">
+          <div class="premium-lock">
+            <span class="lock-icon"><i class="fas fa-lock"></i></span>
+            <div>
+              <h3>Premium ROI with Custom Buffer</h3>
+              <button class="unlock-button" data-script-id="codeA2">Unlock codes</button>
+            </div>
+          </div>
+          <div class="code-blur">
+            <pre><code id="codeA2">// ROI code for paid users
+// =========================================================================
+// Premium workflow with custom buffer and AOI filters
+// =========================================================================
+
+var malawiCountry = ee.FeatureCollection("FAO/GAUL/2015/level0")
+  .filter(ee.Filter.eq('ADM0_NAME', 'Malawi'));
+
+var bufferArea = malawiCountry.geometry().buffer(5000);
+Map.centerObject(bufferArea, 8);
+Map.addLayer(bufferArea, {color: 'FFAA00'}, 'Buffered ROI');
+          </code></pre>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tabB" role="tabpanel">
+        <div class="code-card free">
+          <div class="code-card-header">
+            <h3>Supervised Classification Starter</h3>
+            <button class="copy-button" data-copy-target="codeB1">Copy</button>
+          </div>
+          <pre><code id="codeB1">// Free supervised classification sample
+// =========================================================================
+var image = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR')
+  .filterDate('2024-01-01', '2024-12-31')
+  .median();
+
+Map.addLayer(image, {bands: ['B4','B3','B2'], min: 0, max: 3000}, 'Landsat RGB');
+          </code></pre>
+        </div>
+        <div class="code-card premium" data-script-id="codeB2">
+          <div class="premium-lock">
+            <span class="lock-icon"><i class="fas fa-lock"></i></span>
+            <div>
+              <h3>Premium Accuracy Optimiser</h3>
+              <button class="unlock-button" data-script-id="codeB2">Unlock codes</button>
+            </div>
+          </div>
+          <div class="code-blur">
+            <pre><code id="codeB2">// Premium supervised classification sample
+// =========================================================================
+var classifier = ee.Classifier.smileRandomForest(100)
+  .train({
+    features: trainingPoints,
+    classProperty: 'landcover',
+    inputProperties: image.bandNames()
+  });
+
+var classified = image.classify(classifier);
+Map.addLayer(classified, {}, 'Supervised Classification');
+          </code></pre>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tabC" role="tabpanel">
+        <div class="code-card free">
+          <div class="code-card-header">
+            <h3>Unsupervised Clustering Base</h3>
+            <button class="copy-button" data-copy-target="codeC1">Copy</button>
+          </div>
+          <pre><code id="codeC1">// Free unsupervised clustering starter
+// =========================================================================
+var image = ee.Image('COPERNICUS/S2_SR/20230705T084609_20230705T085230_T36NUR');
+var bands = ['B4', 'B3', 'B2', 'B8'];
+var clusterer = ee.Clusterer.wekaKMeans(5).train(image.select(bands));
+var clusters = image.select(bands).cluster(clusterer);
+Map.addLayer(clusters.randomVisualizer(), {}, 'Unsupervised Clusters');
+          </code></pre>
+        </div>
+        <div class="code-card premium" data-script-id="codeC2">
+          <div class="premium-lock">
+            <span class="lock-icon"><i class="fas fa-lock"></i></span>
+            <div>
+              <h3>Premium Drought & Change Detection</h3>
+              <button class="unlock-button" data-script-id="codeC2">Unlock codes</button>
+            </div>
+          </div>
+          <div class="code-blur">
+            <pre><code id="codeC2">// Premium drought detection sample
+// =========================================================================
+var ndvi = image.normalizedDifference(['B8', 'B4']).rename('NDVI');
+var change = ndvi.subtract(ndvi.rename('previous')).abs();
+Map.addLayer(change, {}, 'Drought / Change Detection');
+          </code></pre>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://in.paychangu.com/js/popup.js"></script>
+  <script src="scripts.js"></script>
+  <script>
+    document.getElementById('closePremiumPanel')?.addEventListener('click', function(event) {
+      event.preventDefault();
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>

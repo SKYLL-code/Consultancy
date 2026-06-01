@@ -163,6 +163,8 @@
         description: 'Pay to unlock premium Earth Engine scripts',
         logo: 'https://skyll-code.github.io/Consultancy/assets/LOGO2.png'
       },
+      callback_url: `${window.location.origin}/access-gee-codes.html`,
+      return_url: `${window.location.origin}/access-gee-codes.html`,
       callback: async function(response) {
         if (response && response.status === 'success') {
           const verifyResult = await verifyPaychanguTransaction(txRef, response);
