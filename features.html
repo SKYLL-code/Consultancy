@@ -20,23 +20,23 @@
 
   <main class="features-main container">
     <section class="feature-value-grid" aria-label="GEE capability highlights">
-      <article class="feature-value-panel">
-        <p class="panel-label">Precision mapping</p>
-        <h3>Automatic AOI & export-ready layers</h3>
+      <article class="feature-value-panel" data-target="#freePlanCard" role="button" tabindex="0" aria-label="Go to Free Plan">
+        <p class="panel-label">Free Plan</p>
+        <h3>Open-source snippets & starter scripts</h3>
       </article>
-      <article class="feature-value-panel">
-        <p class="panel-label">Workflow acceleration</p>
-        <h3>Fast Earth Engine prototypes with clean comments</h3>
+      <article class="feature-value-panel" data-target="#premiumPlanCard" role="button" tabindex="0" aria-label="Go to Premium Plan">
+        <p class="panel-label">Premium Plan</p>
+        <h3>Advanced Earth Engine scripts</h3>
       </article>
-      <article class="feature-value-panel">
-        <p class="panel-label">Project-ready</p>
-        <h3>Custom scripts built for reporting and delivery</h3>
+      <article class="feature-value-panel" data-target="#customPlanCard" role="button" tabindex="0" aria-label="Go to Custom Code & Ready Maps">
+        <p class="panel-label">Custom Code & Ready Maps</p>
+        <h3>Tailored scripts and delivery-ready maps</h3>
       </article>
     </section>
 
     <section class="feature-grid">
       <!-- Free Plan column (starter; will expand on confirmation) -->
-      <article class="feature-card">
+      <article id="freePlanCard" class="feature-card">
         <h2>Free Plan</h2>
         <p class="muted">Open-source script categories — copy or expand snippets.</p>
         <ul class="snippet-list">
@@ -67,7 +67,7 @@
       </article>
 
       <!-- Premium Plan column (placeholder for Paychangu hooks) -->
-      <article class="feature-card">
+      <article id="premiumPlanCard" class="feature-card">
         <h2>Premium Plan</h2>
         <p class="muted">Advanced Earth Engine scripts — unlock with Paychangu.</p>
         <ul class="premium-list">
@@ -97,7 +97,7 @@
       </article>
 
       <!-- Request custom codes -->
-      <article class="feature-card">
+      <article id="customPlanCard" class="feature-card">
         <h2>Custom Code & Ready Maps</h2>
         <p class="muted">Tell us your goals and we’ll deliver a tailored script or finished map package.</p>
         <ul class="snippet-list">
@@ -185,6 +185,19 @@
           // Fallback: directly attempt checkout
           if (typeof startPaychanguCheckout === 'function') startPaychanguCheckout(id);
         }
+      });
+
+      // Clickable highlight panels -> scroll to corresponding card
+      document.querySelectorAll('.feature-value-panel').forEach(panel => {
+        const target = panel.dataset.target;
+        panel.addEventListener('click', () => {
+          if (!target) return;
+          const el = document.querySelector(target);
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+        panel.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); panel.click(); }
+        });
       });
     });
   </script>
