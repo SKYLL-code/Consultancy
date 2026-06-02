@@ -411,59 +411,157 @@
 
   // Overwrite `lulc` snippet with the exact LULC code provided by the user.
   // This preserves the earlier placeholder while ensuring the preview and copy use the exact text.
-  PREMIUM_SNIPPETS.lulc = `Map.addLayer(LM1)
-Map.centerObject(LM1,10);
+  PREMIUM_SNIPPETS.lulc = `/**
+ * =========================================================================
+ * ADVANCED SIDE-BY-SIDE FLOOD DEPTH MAPPING FOR THE NILE RIVER
+ * Dataset: JRC Global River Flood Hazard Maps (GloFAS v2.1)
+ * Features: Interactive Split-Screen Slider Layout & Automated Drive Export
+ * =========================================================================
+ */
 
-var image = ee.ImageCollection("LANDSAT/LC09/C02/T1_L2")
-            .filterBounds(LM1)
-            .filterDate('2024-01-01','2024-12-31')
-            .filterMetadata('CLOUD_COVER','less_than',18)
-            .median()
-            .multiply(2.75e-05)
-            .add(-0.2)
-            .clip(LM1)
-            
-Map.addLayer(image,imageVisParam, 'image')
+// 1. DEFINE NILE RIVER STUDY AREA BOUNDS (Khartoum Convergence Region)
+var AOI = ee.Geometry.Polygon([[ 
+  [32.20, 15.20],
+  [33.10, 15.20],
+  [33.10, 16.00],
+  [32.20, 16.00]
+]]);
 
-var samples = water.merge(vegetation).merge(bareland).merge(builtup)
+// 2. LOAD THE UPDATED GLOFAS V2.1 IMAGE 
+// Version 2.1 contains all return periods as separate bands inside an ImageCollection
+var glofasCollection = ee.ImageCollection('JRC/CEMS_GLOFAS/FloodHazard/v2_1')
+  .filterBounds(AOI);
 
-print(samples)
+// Mosaic and clip the collection to the area of interest
+var glofasImage = glofasCollection.mosaic().clip(AOI);
 
-var bands = ['SR_B1','SR_B2','SR_B3','SR_B4','SR_B5','SR_B6','SR_B7']
+// Extract targeted flood hazard bands and mask out dry areas (less than 1 cm)
+var depth10  = glofasImage.select('RP10_depth').updateMask(glofasImage.select('RP10_depth').gt(0.01));
+var depth100 = glofasImage.select('RP100_depth').updateMask(glofasImage.select('RP100_depth').gt(0.01));
 
-var input = image.select(bands)
+// 3. COLOR PALETTES & VISUALIZATION PARAMETERS
+var depthPalette = ['#dbf3fa', '#abd9e9', '#74add1', '#4575b4', '#313695', '#081d58'];
+var visParams = {
+  min: 0.0,
+  max: 6.0, // Maximum visualization depth scaled to 6 meters
+  palette: depthPalette
+};
 
-var trainImage = input.sampleRegions({
-  collection: samples,
-  properties: ['class'],
-  scale: 30})
-  
-print(trainImage)
-  
+// 4. GENERATE THE SUPER USER INTERFACE (SPLIT-SCREEN SLIDER)
+// Create separate map windows
+var leftMap = ui.Map();
+var rightMap = ui.Map();
 
-var trainData = trainImage.randomColumn()
+// Sync the views so zooming or dragging on one updates the other automatically
+var linker = ui.Map.Linker([leftMap, rightMap]);
 
-var trainSet = trainData.filter(ee.Filter.lessThan('random',0.8))
-var testSet = trainData.filter(ee.Filter.greaterThanOrEquals('random',0.8))
+// Configure basemaps
+leftMap.setOptions('SATELLITE');
+rightMap.setOptions('SATELLITE');
 
-var classifier = ee.Classifier.smileCart().train({
-  features: trainSet,
-  classProperty: 'class',
-  inputProperties: bands
-})
+// Build the splitting UI component
+var splitPanel = ui.SplitPanel({
+  firstPanel: leftMap,
+  secondPanel: rightMap,
+  orientation: 'horizontal',
+  wipe: true,
+  style: {stretch: 'both'}
+});
 
-var classified = input.classify(classifier)
+// Clear the default main script map viewport and embed our custom split panel
+ui.root.clear();
+ui.root.add(splitPanel);
 
-Map.addLayer(classified, {min: 0, max: 3, palette: ['blue', 'green', 'red', 'yellow']}, 'Classified Land Cover')
+// Add data layers to respective map panels
+leftMap.addLayer(depth10, visParams, '10-Year Flood Depth');
+rightMap.addLayer(depth100, visParams, '100-Year Flood Depth');
 
-// --- EXPORT CLASSIFIED IMAGE TO GOOGLE DRIVE ---
+// Add study boundary outline to both viewports
+var outline = ee.Image().paint({featureCollection: ee.FeatureCollection([ee.Feature(AOI)]), color: 1, width: 2});
+leftMap.addLayer(outline, {palette: ['#ff4d4d']}, 'Study Area Border');
+rightMap.addLayer(outline, {palette: ['#ff4d4d']}, 'Study Area Border');
+
+// Center both panels on the Nile River study site
+leftMap.centerObject(AOI, 10);
+
+// 5. EMBED STYLED UI DESCRIPTIVE LABELS
+var leftLabel = ui.Label({
+  value: '⬅ Low-Interval/Frequent Flood Hazard (10-Year RP)',
+  style: {position: 'top-left', padding: '8px', fontWeight: 'bold', backgroundColor: 'rgba(255,255,255,0.8)'}
+});
+leftMap.add(leftLabel);
+
+var rightLabel = ui.Label({
+  value: 'High-Severity/Extreme Flood Hazard (100-Year RP) ➡',
+  style: {position: 'top-right', padding: '8px', fontWeight: 'bold', backgroundColor: 'rgba(255,255,255,0.8)'}
+});
+rightMap.add(rightLabel);
+
+// 6. BUILD COLOR BAR LEGEND CARD
+var legendPanel = ui.Panel({
+  style: {position: 'bottom-left', padding: '8px 15px', backgroundColor: 'white'}
+});
+var legendTitle = ui.Label({
+  value: 'Water Depth (m)',
+  style: {fontWeight: 'bold', fontSize: '14px', margin: '0 0 6px 0'}
+});
+legendPanel.add(legendTitle);
+
+// Create legend color scale strip
+var lon = ee.Image.pixelLonLat().select('longitude');
+var gradient = lon.multiply(0).add(1);
+var legendImage = gradient.visualize(visParams);
+
+var thumbnail = ui.Thumbnail({
+  image: legendImage,
+  params: {bbox: '0,0,10,100', dimensions: '160x15', format: 'png'},
+  style: {padding: '1px', margin: '0 0 4px 0'}
+});
+legendPanel.add(thumbnail);
+
+// Label layout for the text scale underneath the color bar strip
+var labelPanel = ui.Panel({
+  widgets: [
+    ui.Label('0m', {fontSize: '11px'}),
+    ui.Label('3m', {fontSize: '11px', textAlign: 'center', stretch: 'horizontal'}),
+    ui.Label('6m+', {fontSize: '11px'})
+  ],
+  layout: ui.Panel.Layout.Flow('horizontal')
+});
+legendPanel.add(labelPanel);
+leftMap.add(legendPanel);
+
+// 7. COMPUTE DATA HISTOGRAM
+var floodHistogram = ui.Chart.image.histogram({
+  image: depth100,
+  region: AOI,
+  scale: 90, // Scale optimized to the higher 90m native resolution of v2.1
+  maxBuckets: 25
+}).setOptions({
+  title: 'Nile Segment: 100-Year Flood Depth Profile Metric',
+  hAxis: {title: 'Inundation Scale (Meters)', titleTextStyle: {bold: true}},
+  vAxis: {title: 'Pixel Density'},
+  colors: ['#081d58']
+});
+print('Statistical Histogram Plot:', floodHistogram);
+
+// 8. DATA OUTPUT BUNDLES (AUTOMATED TASKS WINDOW TRIGGERS)
 Export.image.toDrive({
-  image: classified,
-  description: 'Classified_LULC_2025',
-  folder: 'GEE_Classification', // The folder name that will be created in your Google Drive
-  region: LM1,                 // Uses your LM1 geometry boundary
-  scale: 30,                   // Landsat resolution is 30 meters
-  maxPixels: 1e13              // Prevents the export from failing due to size limits
+  image: depth10,
+  description: 'Nile_River_Flood_Depth_10Year',
+  folder: 'Nile_Flood_Analysis',
+  region: AOI,
+  scale: 90,
+  crs: 'EPSG:4326'
+});
+
+Export.image.toDrive({
+  image: depth100,
+  description: 'Nile_River_Flood_Depth_100Year',
+  folder: 'Nile_Flood_Analysis',
+  region: AOI,
+  scale: 90,
+  crs: 'EPSG:4326'
 });`;
 
   // Make snippets available globally for inline page scripts (features.html)
