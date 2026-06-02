@@ -19,9 +19,21 @@
   </header>
 
   <main class="features-main container">
-    <div class="feature-actions">
-      <button id="geminiChatBtn" class="btn secondary-button" aria-label="Customize with AI">Customize with AI</button>
-    </div>
+    <section class="feature-value-grid" aria-label="GEE capability highlights">
+      <article class="feature-value-panel">
+        <p class="panel-label">Precision mapping</p>
+        <h3>Automatic AOI & export-ready layers</h3>
+      </article>
+      <article class="feature-value-panel">
+        <p class="panel-label">Workflow acceleration</p>
+        <h3>Fast Earth Engine prototypes with clean comments</h3>
+      </article>
+      <article class="feature-value-panel">
+        <p class="panel-label">Project-ready</p>
+        <h3>Custom scripts built for reporting and delivery</h3>
+      </article>
+    </section>
+
     <section class="feature-grid">
       <!-- Free Plan column (starter; will expand on confirmation) -->
       <article class="feature-card">
@@ -104,25 +116,6 @@
       <button id="closeExpanded" class="btn">Close</button>
     </section>
 
-    <div id="geminiModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="geminiModalTitle" aria-hidden="true" tabindex="-1" hidden>
-      <div class="modal-dialog chat-modal">
-        <header class="modal-header">
-          <h3 id="geminiModalTitle">Chat with AI</h3>
-          <button id="closeGeminiModal" class="btn" aria-label="Close AI chat">×</button>
-        </header>
-        <div class="modal-body">
-          <div id="geminiChatWindow" class="chat-window" aria-live="polite" aria-atomic="false">
-            <div class="chat-message ai">AI is ready. Describe the Earth Engine code you want customized.</div>
-          </div>
-          <p class="muted">Tip: include your study area, datasets, date range, and desired outputs. Ask for "only runnable GEE code" when you want code-only results.</p>
-          <div class="chat-input-row">
-            <input id="geminiUserInput" type="text" placeholder="Describe your region, datasets, date range, and ask for runnable GEE code..." aria-label="AI chat input" />
-            <button id="geminiSendBtn" class="btn">Send</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
   <!-- Preview / Unlock Modal -->
   <div id="previewModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc" aria-hidden="true" tabindex="-1" hidden>
     <div class="modal-dialog">
@@ -193,160 +186,6 @@
           if (typeof startPaychanguCheckout === 'function') startPaychanguCheckout(id);
         }
       });
-    });
-
-    const geminiChatBtn = document.getElementById('geminiChatBtn');
-    const geminiModal = document.getElementById('geminiModal');
-    const geminiClose = document.getElementById('closeGeminiModal');
-    const geminiSendBtn = document.getElementById('geminiSendBtn');
-    const geminiUserInput = document.getElementById('geminiUserInput');
-    const geminiChatWindow = document.getElementById('geminiChatWindow');
-
-    // Use the deployed Vercel backend for AI requests in all modes.
-    const VERCEL_BACKEND_URL = 'https://skylltech-gee-ai-backend.vercel.app';
-    const BACKEND_BASE_URL = VERCEL_BACKEND_URL;
-
-    const addGeminiMessage = (sender, text) => {
-      const message = document.createElement('div');
-      message.className = `chat-message ${sender}`;
-      if (sender === 'ai') {
-        message.style.whiteSpace = 'pre-wrap';
-      }
-      geminiChatWindow.appendChild(message);
-      geminiChatWindow.scrollTop = geminiChatWindow.scrollHeight;
-      return message;
-    };
-
-    const parseAIResponse = (text) => {
-      const codeBlockRegex = /```(?:javascript|js)?\n?([\s\S]*?)```/g;
-      const codeBlocks = [];
-      let lastIndex = 0;
-      let match;
-      const parts = [];
-
-      while ((match = codeBlockRegex.exec(text)) !== null) {
-        if (match.index > lastIndex) {
-          const textPart = text.substring(lastIndex, match.index).trim();
-          if (textPart) parts.push({ type: 'text', content: textPart });
-        }
-        parts.push({ type: 'code', content: match[1].trim() });
-        codeBlocks.push(match[1].trim());
-        lastIndex = match.index + match[0].length;
-      }
-
-      if (lastIndex < text.length) {
-        const textPart = text.substring(lastIndex).trim();
-        if (textPart) parts.push({ type: 'text', content: textPart });
-      }
-
-      if (parts.length === 0) {
-        parts.push({ type: 'text', content: text });
-      }
-
-      return parts;
-    };
-
-    const displayAIResponse = (text) => {
-      const parts = parseAIResponse(text);
-      const message = addGeminiMessage('ai', '');
-
-      for (const part of parts) {
-        if (part.type === 'text') {
-          const textDiv = document.createElement('div');
-          textDiv.className = 'chat-text';
-          textDiv.textContent = part.content;
-          message.appendChild(textDiv);
-        } else if (part.type === 'code') {
-          const codeContainer = document.createElement('div');
-          codeContainer.className = 'gee-code-box';
-          codeContainer.style.cssText = 'background:rgba(12,23,44,0.95);border:1px solid rgba(0,221,255,0.3);border-radius:8px;padding:12px;margin:8px 0;font-family:monospace;font-size:0.85rem;position:relative;';
-
-          const codeElement = document.createElement('pre');
-          codeElement.textContent = part.content;
-          codeElement.style.cssText = 'margin:0;overflow-x:auto;color:#e4fbff;line-height:1.4;';
-
-          const copyBtn = document.createElement('button');
-          copyBtn.textContent = '📋 Copy';
-          copyBtn.style.cssText = 'position:absolute;top:8px;right:8px;background:rgba(0,189,255,0.2);border:1px solid rgba(0,189,255,0.3);color:#00d9ff;padding:4px 8px;border-radius:4px;font-size:0.7rem;cursor:pointer;transition:all 0.2s;';
-          copyBtn.onmouseover = () => copyBtn.style.background = 'rgba(0,189,255,0.4)';
-          copyBtn.onmouseout = () => copyBtn.style.background = 'rgba(0,189,255,0.2)';
-          copyBtn.onclick = () => {
-            navigator.clipboard.writeText(part.content).then(() => {
-              const original = copyBtn.textContent;
-              copyBtn.textContent = '✓ Copied!';
-              setTimeout(() => { copyBtn.textContent = original; }, 2000);
-            });
-          };
-
-          codeContainer.appendChild(codeElement);
-          codeContainer.appendChild(copyBtn);
-          message.appendChild(codeContainer);
-        }
-      }
-    };
-
-    const closeGeminiModal = () => {
-      geminiModal.hidden = true;
-      geminiModal.setAttribute('aria-hidden', 'true');
-    };
-
-    const openGeminiModal = () => {
-      geminiModal.hidden = false;
-      geminiModal.setAttribute('aria-hidden', 'false');
-      geminiUserInput.focus();
-    };
-
-    const sendGeminiMessage = async () => {
-      const value = geminiUserInput.value.trim();
-      if (!value) return;
-      addGeminiMessage('user', value);
-      geminiUserInput.value = '';
-      let loadingMessage = addGeminiMessage('ai', '');
-      loadingMessage.classList.add('loading-dots');
-
-      geminiSendBtn.disabled = true;
-      try {
-        const response = await fetch(`${BACKEND_BASE_URL}/ai-chat`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ prompt: value })
-        });
-
-        const result = await response.json();
-        if (loadingMessage && loadingMessage.parentElement) {
-          loadingMessage.remove();
-        }
-        if (!response.ok || !result.success) {
-          const errorText = (result.message || result.error || '').toString().toLowerCase();
-          if (errorText.includes('runtime') || errorText.includes('ai runtime') || errorText.includes('runtime error')) {
-            addGeminiMessage('ai', 'Runtime limit reached!');
-          } else {
-            addGeminiMessage('ai', result.message || result.error || 'The AI service returned an error.');
-          }
-        } else {
-          displayAIResponse(result.reply || 'The AI returned no response.');
-        }
-      } catch (error) {
-        console.error('AI request failed:', error);
-        if (loadingMessage && loadingMessage.parentElement) {
-          loadingMessage.remove();
-        }
-        addGeminiMessage('ai', 'Unable to reach the AI backend. Please ensure the backend is running.');
-      } finally {
-        geminiSendBtn.disabled = false;
-      }
-    };
-
-    geminiChatBtn.addEventListener('click', openGeminiModal);
-    geminiClose.addEventListener('click', closeGeminiModal);
-    geminiModal.addEventListener('click', event => {
-      if (event.target === geminiModal) closeGeminiModal();
-    });
-    geminiSendBtn.addEventListener('click', sendGeminiMessage);
-    geminiUserInput.addEventListener('keydown', event => {
-      if (event.key === 'Enter') sendGeminiMessage();
     });
   </script>
 </body>
