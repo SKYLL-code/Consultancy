@@ -1178,13 +1178,42 @@ body.access-page .premium-close {
 @media (max-width: 960px) {
   .feature-hero { grid-template-columns: 1fr; padding: 28px; }
   .feature-value-grid { grid-template-columns: 1fr; }
+  .feature-value-panel { padding: 24px 20px; }
+  .feature-grid { gap: 24px; }
+  .feature-card { padding: 28px; }
+  .snippet-list li,
+  .premium-list li {
+    grid-template-columns: 1fr;
+    align-items: flex-start;
+  }
+  .snippet-actions {
+    justify-content: flex-start;
+    width: 100%;
+  }
+  .premium-list li button,
+  .btn.unlock-btn,
+  .btn.small {
+    width: 100%;
+  }
   .hero-code-meta { flex-direction: column; align-items: flex-start; gap: 10px; }
 }
 @media (max-width: 660px) {
+  .features-header { padding: 30px 22px 24px; }
   .feature-hero { padding: 22px; }
   .feature-hero-code { min-height: 180px; padding: 18px; }
   .feature-hero-stats { justify-content: flex-start; }
   .hero-code-meta { font-size: 0.86rem; }
+  .feature-value-panel { padding: 20px; }
+  .feature-card { padding: 24px; }
+  .snippet-list li,
+  .premium-list li {
+    gap: 14px;
+  }
+  .snippet-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .btn.small { padding: 10px 14px; }
 }
 
 .features-header .container {
