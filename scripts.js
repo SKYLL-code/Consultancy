@@ -466,6 +466,9 @@ Export.image.toDrive({
   maxPixels: 1e13              // Prevents the export from failing due to size limits
 });`;
 
+  // Make snippets available globally for inline page scripts (features.html)
+  window.PREMIUM_SNIPPETS = PREMIUM_SNIPPETS;
+
   // Expose checkout and helper globally for features page
   window.startPaychanguCheckout = startPaychanguCheckout;
   window.unlockScript = unlockScript;
