@@ -1531,8 +1531,7 @@ body.access-page .premium-close {
     flex-direction: column;
   }
 
-  .feature-card:not(#customPlanCard) .snippet-list,
-  .feature-card:not(#customPlanCard) .premium-list {
+  .feature-card#premiumPlanCard .premium-list {
     max-height: 340px;
     overflow: auto;
     padding-right: 8px;
