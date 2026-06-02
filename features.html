@@ -50,14 +50,14 @@
           <li>
             <strong>Watershed Codes</strong>
             <div class="snippet-actions">
-              <button class="btn small copy-btn" data-snippet="// Free Watershed sample\n// Create a watershed AOI from DEM thresholding (simplified)\nvar srtm = ee.Image('USGS/SRTMGL1_003');\nvar elev = srtm.select('elevation');\nvar watershed = elev.gt(500).selfMask();\nMap.addLayer(watershed, {palette: ['0000FF']}, 'Watershed AOI');">Copy</button>
+              <button class="btn small copy-btn" data-snippet-key="watershed">Copy</button>
               <button class="btn small expand-btn">Expand</button>
             </div>
           </li>
           <li>
             <strong>River Codes</strong>
             <div class="snippet-actions">
-              <button class="btn small copy-btn" data-snippet="// Free River sample\n// Extract high-flow channels using JRC water occurrence (example)\nvar jrc = ee.Image('JRC/GSW1_3/GlobalSurfaceWater');\nvar occurrence = jrc.select('occurrence');\nvar major = occurrence.gt(50);\nMap.addLayer(major.updateMask(major), {palette:['00FFFF']}, 'Major Rivers');">Copy</button>
+              <button class="btn small copy-btn" data-snippet-key="river">Copy</button>
               <button class="btn small expand-btn">Expand</button>
             </div>
           </li>
@@ -216,13 +216,13 @@ Export.table.toDrive({
 // Print sample properties to the console for quick validation
 print('Level 1 Structure (Will export to SHP):', export_adm1.limit(3));
 print('Level 2 Structure (Will export to SHP):', export_adm2.limit(5));`,
-      watershed: `// Free Watershed sample
+      watershed: dedent`// Free Watershed sample
 // Create a watershed AOI from DEM thresholding (simplified)
 var srtm = ee.Image('USGS/SRTMGL1_003');
 var elev = srtm.select('elevation');
 var watershed = elev.gt(500).selfMask();
 Map.addLayer(watershed, {palette: ['0000FF']}, 'Watershed AOI');`,
-      river: `// Free River sample
+      river: dedent`// Free River sample
 // Extract high-flow channels using JRC water occurrence (example)
 var jrc = ee.Image('JRC/GSW1_3/GlobalSurfaceWater');
 var occurrence = jrc.select('occurrence');
