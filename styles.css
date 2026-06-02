@@ -1525,16 +1525,14 @@ body.access-page .premium-close {
 
   /* Desktop uniform card sizing */
   .feature-card {
-    min-height: 420px;
-    max-height: 520px;
-    overflow: hidden;
+    min-height: 460px;
     display: flex;
     flex-direction: column;
   }
 
-  .feature-card .snippet-list,
-  .feature-card .premium-list {
-    max-height: 220px;
+  .feature-card:not(#customPlanCard) .snippet-list,
+  .feature-card:not(#customPlanCard) .premium-list {
+    max-height: 280px;
     overflow: auto;
     padding-right: 8px;
   }
