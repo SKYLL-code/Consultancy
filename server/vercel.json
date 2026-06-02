@@ -1,13 +1,5 @@
 {
   "version": 2,
-  "name": "skylltech-gee-ai-backend",
-  "env": {
-    "GEMINI_API_KEY_1": "@gemini-api-key-1",
-    "GEMINI_API_KEY_2": "@gemini-api-key-2",
-    "GEMINI_API_TYPE": "free",
-    "GEMINI_MODEL": "gemini-2.5-flash",
-    "AI_PROVIDER": "gemini"
-  },
   "builds": [
     {
       "src": "api/**/*.js",
