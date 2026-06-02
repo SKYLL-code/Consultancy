@@ -409,6 +409,63 @@
     rusle: `// RUSLE components (simplified placeholders)\n// R = rainfall erosivity (external dataset)\n// K = soil erodibility (soil dataset)\n// LS = slope-length factor computed from DEM\n// C = cover-management factor (landcover)\n// P = support practice factor\n// Erosion = R.multiply(K).multiply(LS).multiply(C).multiply(P);\n// Map.addLayer(Erosion, {min:0, max:100}, 'Estimated Soil Loss');`
   };
 
+  // Overwrite `lulc` snippet with the exact LULC code provided by the user.
+  // This preserves the earlier placeholder while ensuring the preview and copy use the exact text.
+  PREMIUM_SNIPPETS.lulc = `Map.addLayer(LM1)
+Map.centerObject(LM1,10);
+
+var image = ee.ImageCollection("LANDSAT/LC09/C02/T1_L2")
+            .filterBounds(LM1)
+            .filterDate('2024-01-01','2024-12-31')
+            .filterMetadata('CLOUD_COVER','less_than',18)
+            .median()
+            .multiply(2.75e-05)
+            .add(-0.2)
+            .clip(LM1)
+            
+Map.addLayer(image,imageVisParam, 'image')
+
+var samples = water.merge(vegetation).merge(bareland).merge(builtup)
+
+print(samples)
+
+var bands = ['SR_B1','SR_B2','SR_B3','SR_B4','SR_B5','SR_B6','SR_B7']
+
+var input = image.select(bands)
+
+var trainImage = input.sampleRegions({
+  collection: samples,
+  properties: ['class'],
+  scale: 30})
+  
+print(trainImage)
+  
+
+var trainData = trainImage.randomColumn()
+
+var trainSet = trainData.filter(ee.Filter.lessThan('random',0.8))
+var testSet = trainData.filter(ee.Filter.greaterThanOrEquals('random',0.8))
+
+var classifier = ee.Classifier.smileCart().train({
+  features: trainSet,
+  classProperty: 'class',
+  inputProperties: bands
+})
+
+var classified = input.classify(classifier)
+
+Map.addLayer(classified, {min: 0, max: 3, palette: ['blue', 'green', 'red', 'yellow']}, 'Classified Land Cover')
+
+// --- EXPORT CLASSIFIED IMAGE TO GOOGLE DRIVE ---
+Export.image.toDrive({
+  image: classified,
+  description: 'Classified_LULC_2025',
+  folder: 'GEE_Classification', // The folder name that will be created in your Google Drive
+  region: LM1,                 // Uses your LM1 geometry boundary
+  scale: 30,                   // Landsat resolution is 30 meters
+  maxPixels: 1e13              // Prevents the export from failing due to size limits
+});`;
+
   // Expose checkout and helper globally for features page
   window.startPaychanguCheckout = startPaychanguCheckout;
   window.unlockScript = unlockScript;
