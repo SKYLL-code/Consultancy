@@ -216,12 +216,95 @@ Export.table.toDrive({
 // Print sample properties to the console for quick validation
 print('Level 1 Structure (Will export to SHP):', export_adm1.limit(3));
 print('Level 2 Structure (Will export to SHP):', export_adm2.limit(5));`,
-      watershed: dedent`// Free Watershed sample
-// Create a watershed AOI from DEM thresholding (simplified)
-var srtm = ee.Image('USGS/SRTMGL1_003');
-var elev = srtm.select('elevation');
-var watershed = elev.gt(500).selfMask();
-Map.addLayer(watershed, {palette: ['0000FF']}, 'Watershed AOI');`,
+      watershed: dedent`// =========================================================================
+// 1. BOUNDING GEOMETRY & TOTAL HYDROSHEDS INGESTION (LEVELS 1 - 12)
+// =========================================================================
+
+// Load Malawi baseline geometry to clip the global layers
+var malawi_aoi = ee.FeatureCollection("FAO/GAUL/2015/level0")
+  .filter(ee.Filter.eq('ADM0_NAME', 'Malawi'));
+
+// Import all 12 structural scales filtered exactly to the Malawi footprint
+var hybas_l1  = ee.FeatureCollection("WWF/HydroSHEDS/v1/Basins/hybas_1").filterBounds(malawi_aoi);
+var hybas_l2  = ee.FeatureCollection("WWF/HydroSHEDS/v1/Basins/hybas_2").filterBounds(malawi_aoi);
+var hybas_l3  = ee.FeatureCollection("WWF/HydroSHEDS/v1/Basins/hybas_3").filterBounds(malawi_aoi);
+var hybas_l4  = ee.FeatureCollection("WWF/HydroSHEDS/v1/Basins/hybas_4").filterBounds(malawi_aoi);
+var hybas_l5  = ee.FeatureCollection("WWF/HydroSHEDS/v1/Basins/hybas_5").filterBounds(malawi_aoi);
+var hybas_l6  = ee.FeatureCollection("WWF/HydroSHEDS/v1/Basins/hybas_6").filterBounds(malawi_aoi);
+var hybas_l7  = ee.FeatureCollection("WWF/HydroSHEDS/v1/Basins/hybas_7").filterBounds(malawi_aoi);
+var hybas_l8  = ee.FeatureCollection("WWF/HydroSHEDS/v1/Basins/hybas_8").filterBounds(malawi_aoi);
+var hybas_l9  = ee.FeatureCollection("WWF/HydroSHEDS/v1/Basins/hybas_9").filterBounds(malawi_aoi);
+var hybas_l10 = ee.FeatureCollection("WWF/HydroSHEDS/v1/Basins/hybas_10").filterBounds(malawi_aoi);
+var hybas_l11 = ee.FeatureCollection("WWF/HydroSHEDS/v1/Basins/hybas_11").filterBounds(malawi_aoi);
+var hybas_l12 = ee.FeatureCollection("WWF/HydroSHEDS/v1/Basins/hybas_12").filterBounds(malawi_aoi);
+
+
+// =========================================================================
+// 2. LAYER VISUALIZATION (Strict Outlines, Distinct Color Schema)
+// =========================================================================
+Map.setOptions('TERRAIN');
+Map.centerObject(malawi_aoi, 7);
+
+var canvas = ee.Image().byte();
+
+// --- Macro Continental Scales ---
+Map.addLayer(canvas.paint({featureCollection: hybas_l1, color: 1, width: 5}), {palette: '000000'}, 'L1: Continent (Black)');
+Map.addLayer(canvas.paint({featureCollection: hybas_l2, color: 1, width: 4.5}), {palette: '7F7F7F'}, 'L2: Macro Region (Grey)');
+Map.addLayer(canvas.paint({featureCollection: hybas_l3, color: 1, width: 4}), {palette: '00FFFF'}, 'L3: Major Basins (Cyan)');
+
+// --- Regional Basin Scales ---
+Map.addLayer(canvas.paint({featureCollection: hybas_l4, color: 1, width: 3.5}), {palette: '0000FF'}, 'L4: Sub-Continental (Blue)');
+Map.addLayer(canvas.paint({featureCollection: hybas_l5, color: 1, width: 3}), {palette: '800080'}, 'L5: Regional Units (Purple)');
+Map.addLayer(canvas.paint({featureCollection: hybas_l6, color: 1, width: 2.5}), {palette: 'FFA500'}, 'L6: Medium Catchments (Orange)');
+
+// --- Watershed & Sub-Basin Scales ---
+Map.addLayer(canvas.paint({featureCollection: hybas_l7, color: 1, width: 2}), {palette: 'FFC0CB'}, 'L7: Local Watersheds (Pink)');
+Map.addLayer(canvas.paint({featureCollection: hybas_l8, color: 1, width: 1.5}), {palette: '00FF00'}, 'L8: Fine Sub-Basins (Green)');
+Map.addLayer(canvas.paint({featureCollection: hybas_l9, color: 1, width: 1.2}), {palette: 'FFFF00'}, 'L9: Micro Catchments (Yellow)');
+
+// --- Ultra-High Resolution Local Runoff Scales ---
+Map.addLayer(canvas.paint({featureCollection: hybas_l10, color: 1, width: 1}), {palette: 'FF00FF'}, 'L10: Streamshed Level A (Magenta)');
+Map.addLayer(canvas.paint({featureCollection: hybas_l11, color: 1, width: 0.8}), {palette: 'A52A2A'}, 'L11: Streamshed Level B (Brown)');
+Map.addLayer(canvas.paint({featureCollection: hybas_l12, color: 1, width: 0.5}), {palette: 'FF2400'}, 'L12: Hyper-Local Sinks (Scarlet)');
+
+
+// =========================================================================
+// 3. CLEAN METADATA SELECTION & BULK SHAPEFILE EXPORTS
+// =========================================================================
+
+// Attribute filters optimized for ESRI Shapefile component constraints
+var shp_selectors = ['HYBAS_ID', 'NEXT_DOWN', 'MAIN_BAS', 'SUB_AREA', 'PFAF_ID'];
+
+var out_l1  = hybas_l1.select(shp_selectors);
+var out_l2  = hybas_l2.select(shp_selectors);
+var out_l3  = hybas_l3.select(shp_selectors);
+var out_l4  = hybas_l4.select(shp_selectors);
+var out_l5  = hybas_l5.select(shp_selectors);
+var out_l6  = hybas_l6.select(shp_selectors);
+var out_l7  = hybas_l7.select(shp_selectors);
+var out_l8  = hybas_l8.select(shp_selectors);
+var out_l9  = hybas_l9.select(shp_selectors);
+var out_l10 = hybas_l10.select(shp_selectors);
+var out_l11 = hybas_l11.select(shp_selectors);
+var out_l12 = hybas_l12.select(shp_selectors);
+
+// Queue the 12 Task Profiles for Shapefile Engine extraction
+Export.table.toDrive({collection: out_l1,  description: 'MW_HydroSHEDS_L01_SHP', fileFormat: 'SHP', selectors: shp_selectors});
+Export.table.toDrive({collection: out_l2,  description: 'MW_HydroSHEDS_L02_SHP', fileFormat: 'SHP', selectors: shp_selectors});
+Export.table.toDrive({collection: out_l3,  description: 'MW_HydroSHEDS_L03_SHP', fileFormat: 'SHP', selectors: shp_selectors});
+Export.table.toDrive({collection: out_l4,  description: 'MW_HydroSHEDS_L04_SHP', fileFormat: 'SHP', selectors: shp_selectors});
+Export.table.toDrive({collection: out_l5,  description: 'MW_HydroSHEDS_L05_SHP', fileFormat: 'SHP', selectors: shp_selectors});
+Export.table.toDrive({collection: out_l6,  description: 'MW_HydroSHEDS_L06_SHP', fileFormat: 'SHP', selectors: shp_selectors});
+Export.table.toDrive({collection: out_l7,  description: 'MW_HydroSHEDS_L07_SHP', fileFormat: 'SHP', selectors: shp_selectors});
+Export.table.toDrive({collection: out_l8,  description: 'MW_HydroSHEDS_L08_SHP', fileFormat: 'SHP', selectors: shp_selectors});
+Export.table.toDrive({collection: out_l9,  description: 'MW_HydroSHEDS_L09_SHP', fileFormat: 'SHP', selectors: shp_selectors});
+Export.table.toDrive({collection: out_l10, description: 'MW_HydroSHEDS_L10_SHP', fileFormat: 'SHP', selectors: shp_selectors});
+Export.table.toDrive({collection: out_l11, description: 'MW_HydroSHEDS_L11_SHP', fileFormat: 'SHP', selectors: shp_selectors});
+Export.table.toDrive({collection: out_l12, description: 'MW_HydroSHEDS_L12_SHP', fileFormat: 'SHP', selectors: shp_selectors});
+
+// Print Validation Check logs
+print("Macro-Scale L1 Columns Sample:", out_l1.limit(1));
+print("Micro-Scale L12 Columns Sample:", out_l12.limit(1));`,
       river: dedent`// Free River sample
 // Extract high-flow channels using JRC water occurrence (example)
 var jrc = ee.Image('JRC/GSW1_3/GlobalSurfaceWater');
