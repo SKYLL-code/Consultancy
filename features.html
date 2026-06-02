@@ -201,12 +201,9 @@
     const geminiUserInput = document.getElementById('geminiUserInput');
     const geminiChatWindow = document.getElementById('geminiChatWindow');
 
-    // Use local backend when opening the file directly.
-    // For GitHub Pages or hosted sites, use the Vercel backend URL.
+    // Use the deployed Vercel backend for AI requests in all modes.
     const VERCEL_BACKEND_URL = 'https://skylltech-gee-ai-backend.vercel.app';
-    const BACKEND_BASE_URL = window.location.protocol === 'file:'
-      ? 'http://127.0.0.1:3000'
-      : (window.location.hostname === 'localhost' ? window.location.origin : VERCEL_BACKEND_URL);
+    const BACKEND_BASE_URL = VERCEL_BACKEND_URL;
 
     const addGeminiMessage = (sender, text) => {
       const message = document.createElement('div');
