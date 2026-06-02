@@ -274,7 +274,9 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
 .btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
 .btn:focus{outline:none;box-shadow:0 0 0 3px rgba(11,157,143,0.3)}
 
-.feature-actions{display:flex;justify-content:flex-end;gap:12px;margin:12px 0 20px}
+.feature-actions{display:flex;justify-content:center;gap:12px;margin:12px 0 20px}
+#geminiChatBtn{background:linear-gradient(135deg, rgba(0,191,255,0.3), rgba(0,150,255,0.4)) !important;color:#00d9ff !important;border:1px solid rgba(0,191,255,0.5) !important;box-shadow:0 0 20px rgba(0,191,255,0.2) !important}
+#geminiChatBtn:hover{box-shadow:0 0 30px rgba(0,191,255,0.4) !important;background:linear-gradient(135deg, rgba(0,191,255,0.4), rgba(0,150,255,0.5)) !important}
 .btn.secondary-button{background:linear-gradient(135deg, rgba(59,183,255,0.18), rgba(7,71,112,0.35));color:#e7faff;border:1px solid rgba(98,202,255,0.22)}
 .btn.secondary-button:hover{box-shadow:0 18px 40px rgba(9,173,255,0.25)}
 .chat-modal .modal-dialog{max-width:640px}
@@ -282,6 +284,8 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
 .chat-message{max-width:100%;padding:14px 18px;border-radius:18px;line-height:1.65;box-shadow:0 10px 24px rgba(0,0,0,0.18)}
 .chat-message.user{align-self:flex-end;background:rgba(0,189,255,0.16);color:#d9f7ff;border:1px solid rgba(0,189,255,0.22)}
 .chat-message.ai{align-self:flex-start;background:rgba(12,23,44,0.98);color:#e4fbff;border:1px solid rgba(49,214,255,0.14)}
+.loading-dots{font-weight:900;letter-spacing:0.3em;animation:dot-flash 1s infinite steps(4,end);}
+@keyframes dot-flash{0%,20%{color:rgba(255,255,255,0);}25%,45%{color:rgba(255,255,255,1);}50%,70%{color:rgba(255,255,255,0);}75%,100%{color:rgba(255,255,255,1);}}
 .chat-input-row{display:flex;gap:10px;margin-top:16px;align-items:center}
 .chat-input-row input{flex:1 1 0%;border-radius:999px;border:1px solid rgba(255,255,255,0.12);padding:14px 18px;background:rgba(255,255,255,0.05);color:#f3fcff;min-width:0}
 .chat-input-row button{flex:0 0 auto;min-width:100px}
@@ -1278,6 +1282,12 @@ body.access-page .premium-close {
   gap: 10px;
   align-items: center;
   flex-wrap: wrap;
+  justify-content: center;
+}
+@media(min-width:769px){
+  .snippet-actions {
+    justify-content: flex-end;
+  }
 }
 .btn.small {
   padding: 8px 12px;
@@ -1332,6 +1342,8 @@ body.access-page .premium-close {
 .badge { display:inline-block; margin-left:10px; padding:4px 8px; border-radius:999px; font-size:0.75rem; vertical-align:middle; }
 .badge.locked { background: rgba(255,255,255,0.06); color: #fff; border:1px solid rgba(255,255,255,0.04); }
 .badge.unlocked { background: linear-gradient(90deg,#00f0d8,#0066ff); color:#002127; border:none; }
+.badge.pending { background: linear-gradient(90deg,#ff9500,#ffb819); color:#002127; border:none; animation:pulse 1.5s infinite; }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.7; } }
 
 /* Modal styles */
 .modal { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(4,8,12,0.6); z-index:10050; }

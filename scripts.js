@@ -144,7 +144,18 @@
     const delayMs = 2000;
 
     if (attempts >= maxAttempts) {
-      alert('Payment verification is still pending. This is normal for some payment methods. Your code will unlock when the transaction is verified. Please refresh this page in a moment.');
+      const btn = document.querySelector(`.unlock-btn[data-script-id="${scriptId}"]`);
+      if (btn) {
+        let badge = btn.querySelector('.badge');
+        if (!badge) {
+          badge = document.createElement('span');
+          badge.className = 'badge pending';
+          btn.appendChild(badge);
+        }
+        badge.classList.add('pending');
+        badge.textContent = '⏳ Verifying...';
+      }
+      console.log('Payment verification still pending after maximum polling attempts. Waiting silently until verification completes.');
       return;
     }
 
@@ -155,13 +166,42 @@
       if (statusResult.success && statusResult.status === 'verified') {
         unlockScript(scriptId);
         clearPendingPaychanguTxRef();
-        alert('Payment confirmed! Premium code unlocked.');
+        const btn = document.querySelector(`.unlock-btn[data-script-id="${scriptId}"]`);
+        if (btn) {
+          let badge = btn.querySelector('.badge');
+          if (!badge) {
+            badge = document.createElement('span');
+            badge.className = 'badge unlocked';
+            btn.appendChild(badge);
+          }
+          badge.classList.remove('pending', 'locked');
+          badge.classList.add('unlocked');
+          badge.textContent = '✓ Unlocked';
+          setTimeout(() => {
+            badge.textContent = '🔓';
+          }, 2000);
+        }
         return;
       }
 
       if (statusResult.status === 'failed') {
         clearPendingPaychanguTxRef();
-        alert('Payment was declined. Please try again.');
+        const btn = document.querySelector(`.unlock-btn[data-script-id="${scriptId}"]`);
+        if (btn) {
+          let badge = btn.querySelector('.badge');
+          if (!badge) {
+            badge = document.createElement('span');
+            badge.className = 'badge';
+            btn.appendChild(badge);
+          }
+          badge.classList.remove('pending', 'unlocked');
+          badge.classList.add('locked');
+          badge.textContent = '❌ Failed';
+          setTimeout(() => {
+            badge.textContent = '🔒';
+            badge.classList.add('locked');
+          }, 2000);
+        }
         return;
       }
 

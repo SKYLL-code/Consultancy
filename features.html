@@ -208,12 +208,80 @@
     const addGeminiMessage = (sender, text) => {
       const message = document.createElement('div');
       message.className = `chat-message ${sender}`;
-      message.textContent = text;
       if (sender === 'ai') {
         message.style.whiteSpace = 'pre-wrap';
       }
       geminiChatWindow.appendChild(message);
       geminiChatWindow.scrollTop = geminiChatWindow.scrollHeight;
+      return message;
+    };
+
+    const parseAIResponse = (text) => {
+      const codeBlockRegex = /```(?:javascript|js)?\n?([\s\S]*?)```/g;
+      const codeBlocks = [];
+      let lastIndex = 0;
+      let match;
+      const parts = [];
+
+      while ((match = codeBlockRegex.exec(text)) !== null) {
+        if (match.index > lastIndex) {
+          const textPart = text.substring(lastIndex, match.index).trim();
+          if (textPart) parts.push({ type: 'text', content: textPart });
+        }
+        parts.push({ type: 'code', content: match[1].trim() });
+        codeBlocks.push(match[1].trim());
+        lastIndex = match.index + match[0].length;
+      }
+
+      if (lastIndex < text.length) {
+        const textPart = text.substring(lastIndex).trim();
+        if (textPart) parts.push({ type: 'text', content: textPart });
+      }
+
+      if (parts.length === 0) {
+        parts.push({ type: 'text', content: text });
+      }
+
+      return parts;
+    };
+
+    const displayAIResponse = (text) => {
+      const parts = parseAIResponse(text);
+      const message = addGeminiMessage('ai', '');
+
+      for (const part of parts) {
+        if (part.type === 'text') {
+          const textDiv = document.createElement('div');
+          textDiv.className = 'chat-text';
+          textDiv.textContent = part.content;
+          message.appendChild(textDiv);
+        } else if (part.type === 'code') {
+          const codeContainer = document.createElement('div');
+          codeContainer.className = 'gee-code-box';
+          codeContainer.style.cssText = 'background:rgba(12,23,44,0.95);border:1px solid rgba(0,221,255,0.3);border-radius:8px;padding:12px;margin:8px 0;font-family:monospace;font-size:0.85rem;position:relative;';
+
+          const codeElement = document.createElement('pre');
+          codeElement.textContent = part.content;
+          codeElement.style.cssText = 'margin:0;overflow-x:auto;color:#e4fbff;line-height:1.4;';
+
+          const copyBtn = document.createElement('button');
+          copyBtn.textContent = '📋 Copy';
+          copyBtn.style.cssText = 'position:absolute;top:8px;right:8px;background:rgba(0,189,255,0.2);border:1px solid rgba(0,189,255,0.3);color:#00d9ff;padding:4px 8px;border-radius:4px;font-size:0.7rem;cursor:pointer;transition:all 0.2s;';
+          copyBtn.onmouseover = () => copyBtn.style.background = 'rgba(0,189,255,0.4)';
+          copyBtn.onmouseout = () => copyBtn.style.background = 'rgba(0,189,255,0.2)';
+          copyBtn.onclick = () => {
+            navigator.clipboard.writeText(part.content).then(() => {
+              const original = copyBtn.textContent;
+              copyBtn.textContent = '✓ Copied!';
+              setTimeout(() => { copyBtn.textContent = original; }, 2000);
+            });
+          };
+
+          codeContainer.appendChild(codeElement);
+          codeContainer.appendChild(copyBtn);
+          message.appendChild(codeContainer);
+        }
+      }
     };
 
     const closeGeminiModal = () => {
@@ -232,9 +300,8 @@
       if (!value) return;
       addGeminiMessage('user', value);
       geminiUserInput.value = '';
-      setTimeout(() => {
-        addGeminiMessage('ai', 'Looking up a code suggestion from Gemini...');
-      }, 100);
+      let loadingMessage = addGeminiMessage('ai', '....');
+      loadingMessage.classList.add('loading-dots');
 
       geminiSendBtn.disabled = true;
       try {
@@ -247,13 +314,24 @@
         });
 
         const result = await response.json();
+        if (loadingMessage && loadingMessage.parentElement) {
+          loadingMessage.remove();
+        }
         if (!response.ok || !result.success) {
-          addGeminiMessage('ai', result.message || result.error || 'The AI service returned an error.');
+          const errorText = (result.message || result.error || '').toString().toLowerCase();
+          if (errorText.includes('runtime') || errorText.includes('ai runtime') || errorText.includes('runtime error')) {
+            addGeminiMessage('ai', 'Runtime limit reached!');
+          } else {
+            addGeminiMessage('ai', result.message || result.error || 'The AI service returned an error.');
+          }
         } else {
-          addGeminiMessage('ai', result.reply || 'The AI returned no response.');
+          displayAIResponse(result.reply || 'The AI returned no response.');
         }
       } catch (error) {
         console.error('AI request failed:', error);
+        if (loadingMessage && loadingMessage.parentElement) {
+          loadingMessage.remove();
+        }
         addGeminiMessage('ai', 'Unable to reach the AI backend. Please ensure the backend is running.');
       } finally {
         geminiSendBtn.disabled = false;
