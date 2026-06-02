@@ -236,13 +236,12 @@
 
       geminiSendBtn.disabled = true;
       try {
-        const wrappedPrompt = `Answer only with pure Google Earth Engine JavaScript code. Use the Earth Engine public data catalog and dataset IDs when relevant. Return a complete runnable script, including any export statements, with no extra explanation. User request:\n${value}`;
-      const response = await fetch(`${BACKEND_BASE_URL}/ai-chat`, {
+        const response = await fetch(`${BACKEND_BASE_URL}/ai-chat`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ prompt: wrappedPrompt })
+          body: JSON.stringify({ prompt: value })
         });
 
         const result = await response.json();

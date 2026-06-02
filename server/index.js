@@ -104,8 +104,8 @@ const handleAIChat = async (req, res) => {
     return res.status(500).json({ success: false, message: 'Local AI backend URL is not configured.' });
   }
 
-  const systemPrompt = 'You are an expert Google Earth Engine JavaScript assistant. Use the Google Earth Engine public data catalog and dataset IDs wherever relevant. When asked for code, reply with valid Google Earth Engine JavaScript only, using Earth Engine functions, correct collection names, and correct band names. Always return a complete runnable script. Do not return a single comment line. Do not add explanations, notes, or repeat the prompt. If a code snippet is requested, provide a ready-to-use GEE script with no extra text.';
-  const userPrompt = 'Answer with pure Google Earth Engine JavaScript code only. Use the Earth Engine data catalog and dataset names where applicable. ' + prompt;
+  const systemPrompt = 'You are an expert Google Earth Engine assistant. You may converse naturally and help users with questions and guidance. If the user asks for Earth Engine code, respond only with pure runnable Google Earth Engine JavaScript, using Earth Engine functions and public data catalog dataset IDs when relevant. Always provide a complete runnable script, including export statements when applicable. Do not include conversational text inside code output, and do not add extra explanation or repeat the prompt unless the user is asking for a normal conversational answer.';
+  const userPrompt = prompt;
   const payload = {
     messages: [
       { role: 'system', content: systemPrompt },
@@ -147,7 +147,7 @@ const handleAIChat = async (req, res) => {
           },
           systemInstruction: {
             parts: [
-              { text: 'You are an expert Google Earth Engine JavaScript assistant. Use the Google Earth Engine public data catalog and dataset IDs wherever relevant. When asked for code, reply with valid Google Earth Engine JavaScript only, using Earth Engine functions, correct collection names, and correct band names. Always return a complete runnable script. Do not return a single comment line. Do not add explanations, notes, or repeat the prompt. If a code snippet is requested, provide a ready-to-use GEE script with no extra text.' }
+              { text: 'You are an expert Google Earth Engine assistant. You may converse naturally and help users with questions and guidance. If the user asks for Earth Engine code, respond only with pure runnable Google Earth Engine JavaScript, using Earth Engine functions and public data catalog dataset IDs when relevant. Always provide a complete runnable script, including export statements when applicable. Do not include conversational text inside code output, and do not add extra explanation or repeat the prompt unless the user is asking for a normal conversational answer.' }
             ]
           }
         };
