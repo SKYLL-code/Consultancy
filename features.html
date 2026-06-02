@@ -301,7 +301,7 @@
       if (!value) return;
       addGeminiMessage('user', value);
       geminiUserInput.value = '';
-      let loadingMessage = addGeminiMessage('ai', '....');
+      let loadingMessage = addGeminiMessage('ai', '');
       loadingMessage.classList.add('loading-dots');
 
       geminiSendBtn.disabled = true;

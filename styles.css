@@ -341,10 +341,12 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
 .chat-modal .modal-dialog{max-width:640px}
 .chat-window{max-height:50vh;overflow-y:auto;border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:18px;background:rgba(1,6,18,0.9);display:flex;flex-direction:column;gap:12px}
 .chat-message{max-width:100%;padding:14px 18px;border-radius:18px;line-height:1.65;box-shadow:0 10px 24px rgba(0,0,0,0.18)}
-.chat-message.user{align-self:flex-end;background:rgba(0,189,255,0.16);color:#d9f7ff;border:1px solid rgba(0,189,255,0.22)}
+.chat-message.user{align-self:flex-end;background:rgba(0,152,255,0.18);color:#d9f7ff;border:1px solid rgba(0,152,255,0.32)}
+.chat-message.user .chat-text{color:#eaf8ff}
 .chat-message.ai{align-self:flex-start;background:rgba(12,23,44,0.98);color:#e4fbff;border:1px solid rgba(49,214,255,0.14)}
-.loading-dots{font-weight:900;letter-spacing:0.3em;animation:dot-flash 1s infinite steps(4,end);}
-@keyframes dot-flash{0%,20%{color:rgba(255,255,255,0);}25%,45%{color:rgba(255,255,255,1);}50%,70%{color:rgba(255,255,255,0);}75%,100%{color:rgba(255,255,255,1);}}
+.loading-dots{font-weight:900;letter-spacing:0.25em;display:inline-block;position:relative;}
+.loading-dots::after{content:'...';opacity:0;animation:loading-dots 1s infinite ease-in-out;}
+@keyframes loading-dots{0%{opacity:0;}25%{opacity:0.3;}50%{opacity:0.6;}75%{opacity:0.9;}100%{opacity:0;}}
 .chat-input-row{display:flex;gap:10px;margin-top:16px;align-items:center}
 .chat-input-row input{flex:1 1 0%;border-radius:999px;border:1px solid rgba(255,255,255,0.12);padding:14px 18px;background:rgba(255,255,255,0.05);color:#f3fcff;min-width:0}
 .chat-input-row button{flex:0 0 auto;min-width:100px}
