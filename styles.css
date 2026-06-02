@@ -1179,6 +1179,8 @@ body.access-page .premium-close {
   .feature-hero { grid-template-columns: 1fr; padding: 28px; }
   .feature-value-grid { grid-template-columns: 1fr; }
   .feature-value-panel { padding: 24px 20px; }
+  .feature-value-panel h3 { font-size: 1.1rem; }
+  .feature-value-panel .panel-label { font-size: 0.78rem; }
   .feature-grid { gap: 24px; }
   .feature-card { padding: 28px; }
   .snippet-list li,
@@ -1196,24 +1198,31 @@ body.access-page .premium-close {
     width: 100%;
   }
   .hero-code-meta { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .features-header .container { grid-template-columns: 1fr; }
 }
 @media (max-width: 660px) {
-  .features-header { padding: 30px 22px 24px; }
+  .features-header { padding: 30px 18px 22px; }
+  .features-header h1 { font-size: 1.6rem; line-height: 1.1; }
+  .features-header p { font-size: 0.9rem; }
   .feature-hero { padding: 22px; }
   .feature-hero-code { min-height: 180px; padding: 18px; }
   .feature-hero-stats { justify-content: flex-start; }
   .hero-code-meta { font-size: 0.86rem; }
-  .feature-value-panel { padding: 20px; }
-  .feature-card { padding: 24px; }
+  .feature-value-panel { padding: 18px; }
+  .feature-value-panel h3 { font-size: 1rem; }
+  .feature-value-panel .panel-label { font-size: 0.75rem; }
+  .feature-card { padding: 20px; }
   .snippet-list li,
   .premium-list li {
-    gap: 14px;
+    gap: 12px;
   }
   .snippet-actions {
     flex-direction: column;
     align-items: stretch;
   }
   .btn.small { padding: 10px 14px; }
+  .btn.unlock-btn { padding: 10px 14px; }
+  .feature-value-grid { gap: 16px; }
 }
 
 .features-header .container {
