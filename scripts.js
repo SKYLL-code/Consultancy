@@ -15,6 +15,37 @@
   const presetButtons = Array.from(document.querySelectorAll('.prompt-button'));
   const unlockedScripts = JSON.parse(localStorage.getItem('premiumGEEUnlocked') || '[]');
 
+  // Temporary developer helper: force-unlock all premium scripts.
+  // Set `window.FORCE_UNLOCK_PREMIUM = false` to disable later and re-lock manually.
+  if (window.FORCE_UNLOCK_PREMIUM === undefined) window.FORCE_UNLOCK_PREMIUM = true;
+  if (window.FORCE_UNLOCK_PREMIUM) {
+    document.querySelectorAll('.premium-actions').forEach(span => {
+      const id = span.dataset.scriptId;
+      if (!id) return;
+      // reveal the actions UI
+      span.hidden = false;
+      // mark in localStorage list
+      if (!unlockedScripts.includes(id)) unlockedScripts.push(id);
+      // update corresponding feature unlock button badge if present
+      const featureBtn = document.querySelector(`.unlock-btn[data-script-id="${id}"]`);
+      if (featureBtn) {
+        featureBtn.classList.add('unlocked');
+        let badge = featureBtn.querySelector('.badge');
+        if (badge) {
+          badge.classList.remove('locked');
+          badge.classList.add('unlocked');
+          badge.textContent = 'Unlocked';
+        } else {
+          badge = document.createElement('span');
+          badge.className = 'badge unlocked';
+          badge.textContent = 'Unlocked';
+          featureBtn.appendChild(badge);
+        }
+      }
+    });
+    localStorage.setItem('premiumGEEUnlocked', JSON.stringify(unlockedScripts));
+  }
+
   function openPremiumPanel() {
     premiumOverlay.classList.add('open');
     premiumOverlay.setAttribute('aria-hidden', 'false');
