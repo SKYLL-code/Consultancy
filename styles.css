@@ -1523,9 +1523,23 @@ body.access-page .premium-close {
     margin-bottom: 16px;
   }
 
+  /* Desktop uniform card sizing */
   .feature-card {
     min-height: 420px;
+    max-height: 520px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
+
+  .feature-card .snippet-list,
+  .feature-card .premium-list {
+    max-height: 220px;
+    overflow: auto;
+    padding-right: 8px;
+  }
+
+  .feature-card .muted { margin-bottom: 12px; }
 
   .feature-value-grid {
     grid-template-columns: repeat(3, 300px);
