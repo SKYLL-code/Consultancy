@@ -72,24 +72,52 @@
         <ul class="premium-list">
           <li>
             <button class="btn unlock-btn" data-script-id="lulc" data-title="LULC (Supervised Classification)" data-desc="Supervised LULC classification using random forest">LULC (Supervised Classification) <span class="badge locked">🔒</span></button>
+            <span class="premium-actions" data-script-id="lulc" hidden>
+              <button class="btn small premium-copy-btn" data-script-id="lulc">Copy Code</button>
+              <button class="btn small premium-expand-btn" data-script-id="lulc">Expand</button>
+            </span>
           </li>
           <li>
             <button class="btn unlock-btn" data-script-id="hydro" data-title="Hydrological Modelling" data-desc="Slope, flow proxy and watershed prep">Hydrological Modelling <span class="badge locked">🔒</span></button>
+            <span class="premium-actions" data-script-id="hydro" hidden>
+              <button class="btn small premium-copy-btn" data-script-id="hydro">Copy Code</button>
+              <button class="btn small premium-expand-btn" data-script-id="hydro">Expand</button>
+            </span>
           </li>
           <li>
             <button class="btn unlock-btn" data-script-id="drought" data-title="Drought Mapping" data-desc="NDVI anomaly detection utilities">Drought Mapping <span class="badge locked">🔒</span></button>
+            <span class="premium-actions" data-script-id="drought" hidden>
+              <button class="btn small premium-copy-btn" data-script-id="drought">Copy Code</button>
+              <button class="btn small premium-expand-btn" data-script-id="drought">Expand</button>
+            </span>
           </li>
           <li>
             <button class="btn unlock-btn" data-script-id="flood" data-title="Flood Risk Mapping" data-desc="Sentinel-1 flood and risk mapping">Flood Risk Mapping <span class="badge locked">🔒</span></button>
+            <span class="premium-actions" data-script-id="flood" hidden>
+              <button class="btn small premium-copy-btn" data-script-id="flood">Copy Code</button>
+              <button class="btn small premium-expand-btn" data-script-id="flood">Expand</button>
+            </span>
           </li>
           <li>
             <button class="btn unlock-btn" data-script-id="landslide" data-title="Landslide Susceptibility" data-desc="Terrain and slope-driven risk helpers">Landslide Susceptibility <span class="badge locked">🔒</span></button>
+            <span class="premium-actions" data-script-id="landslide" hidden>
+              <button class="btn small premium-copy-btn" data-script-id="landslide">Copy Code</button>
+              <button class="btn small premium-expand-btn" data-script-id="landslide">Expand</button>
+            </span>
           </li>
           <li>
             <button class="btn unlock-btn" data-script-id="msi" data-title="Multi-Spectral Indices" data-desc="NDVI, NDWI, SAVI and combined palettes">Multi-Spectral Indices <span class="badge locked">🔒</span></button>
+            <span class="premium-actions" data-script-id="msi" hidden>
+              <button class="btn small premium-copy-btn" data-script-id="msi">Copy Code</button>
+              <button class="btn small premium-expand-btn" data-script-id="msi">Expand</button>
+            </span>
           </li>
           <li>
             <button class="btn unlock-btn" data-script-id="rusle" data-title="Soil Erosion (RUSLE)" data-desc="Simplified RUSLE erosion estimation">Soil Erosion (RUSLE) <span class="badge locked">🔒</span></button>
+            <span class="premium-actions" data-script-id="rusle" hidden>
+              <button class="btn small premium-copy-btn" data-script-id="rusle">Copy Code</button>
+              <button class="btn small premium-expand-btn" data-script-id="rusle">Expand</button>
+            </span>
           </li>
         </ul>
         <p class="muted">Premium scripts are built for repeatable mapping, export-ready layers, and fast deployment.</p>
@@ -127,6 +155,7 @@
       </div>
       <footer class="modal-footer">
         <button id="modalPreviewBtn" class="btn">Open Preview</button>
+        <button id="modalCopyBtn" class="btn">Copy Code</button>
         <button id="modalUnlockBtn" class="btn primary-button">Unlock (Pay)</button>
       </footer>
     </div>
@@ -305,13 +334,84 @@ Export.table.toDrive({collection: out_l12, description: 'MW_HydroSHEDS_L12_SHP',
 // Print Validation Check logs
 print("Macro-Scale L1 Columns Sample:", out_l1.limit(1));
 print("Micro-Scale L12 Columns Sample:", out_l12.limit(1));`,
-      river: dedent`// Free River sample
-// Extract high-flow channels using JRC water occurrence (example)
-var jrc = ee.Image('JRC/GSW1_3/GlobalSurfaceWater');
-var occurrence = jrc.select('occurrence');
-var major = occurrence.gt(50);
-Map.addLayer(major.updateMask(major), {palette:['00FFFF']}, 'Major Rivers');`
-    };
+      river: dedent`// =========================================================================
+// 1. BOUNDING GEOMETRY & RIVER GEOMETRY INGESTION
+// =========================================================================
+
+// Load Malawi baseline boundaries to isolate the local river network
+var malawi_aoi = ee.FeatureCollection("FAO/GAUL/2015/level0")
+  .filter(ee.Filter.eq('ADM0_NAME', 'Malawi'));
+
+// Load the global WWF HydroSHEDS Free Flowing Rivers collection
+var global_rivers = ee.FeatureCollection("WWF/HydroSHEDS/v1/FreeFlowingRivers");
+
+// Filter the dataset to isolate reaches falling within or intersecting Malawi
+var malawi_rivers = global_rivers.filterBounds(malawi_aoi);
+
+// =========================================================================
+// 2. MAP VISUALIZATION BY RIVER ORDER (Distinct Levels & Line Weights)
+// =========================================================================
+Map.setOptions('SATELLITE');
+Map.centerObject(malawi_aoi, 7);
+
+// Initialize a blank image canvas for crisp vector line styling
+var canvas = ee.Image().byte();
+
+// Isolate and paint each river order level present in the region
+// Level 4: Major Rivers / Primary Discharges (e.g., Lower Shire Main Stem)
+var r_order4 = malawi_rivers.filter(ee.Filter.eq('RIV_ORD', 4));
+Map.addLayer(canvas.paint({featureCollection: r_order4, color: 1, width: 4.5}), {palette: '0000FF'}, 'Level 4: Major Channels (Blue)');
+
+// Level 5: Large Tributaries / Regional Core Drainage
+var r_order5 = malawi_rivers.filter(ee.Filter.eq('RIV_ORD', 5));
+Map.addLayer(canvas.paint({featureCollection: r_order5, color: 1, width: 3.5}), {palette: '00FFFF'}, 'Level 5: Large Tributaries (Cyan)');
+
+// Level 6: Medium Regional Rivers
+var r_order6 = malawi_rivers.filter(ee.Filter.eq('RIV_ORD', 6));
+Map.addLayer(canvas.paint({featureCollection: r_order6, color: 1, width: 2.5}), {palette: '00FF00'}, 'Level 6: Medium Streams (Green)');
+
+// Level 7: Minor Tributaries / Standard Creeks
+var r_order7 = malawi_rivers.filter(ee.Filter.eq('RIV_ORD', 7));
+Map.addLayer(canvas.paint({featureCollection: r_order7, color: 1, width: 1.8}), {palette: 'FFFF00'}, 'Level 7: Minor Creeks (Yellow)');
+
+// Level 8: Local Headwaters / Small Valley Brooks
+var r_order8 = malawi_rivers.filter(ee.Filter.eq('RIV_ORD', 8));
+Map.addLayer(canvas.paint({featureCollection: r_order8, color: 1, width: 1.2}), {palette: 'FFA500'}, 'Level 8: Small Brooks (Orange)');
+
+// Level 9: Micro-Drainage Channels
+var r_order9 = malawi_rivers.filter(ee.Filter.eq('RIV_ORD', 9));
+Map.addLayer(canvas.paint({featureCollection: r_order9, color: 1, width: 0.8}), {palette: 'FF00FF'}, 'Level 9: Micro Channels (Magenta)');
+
+// Level 10: Hyper-Local Sinks / Headwater Seeps
+var r_order10 = malawi_rivers.filter(ee.Filter.eq('RIV_ORD', 10));
+Map.addLayer(canvas.paint({featureCollection: r_order10, color: 1, width: 0.5}), {palette: 'FF0000'}, 'Level 10: Seeps & Runoff (Red)');
+
+
+// =========================================================================
+// 3. PROPERTY SELECTION & TASK SHAPEFILE EXPORT
+// =========================================================================
+
+// Select key HydroSHEDS tracking codes for export:
+// 'RIV_ORD'   = Flow volume code classification level
+// 'RIV_ID'    = Absolute unique feature identifier for the reach segment
+// 'DIS_AV_CMS'= Long-term average discharge rate in cubic meters per second
+// 'UPLND_SKM' = Total cumulative drainage area upstream in square kilometers
+// 'HYBAS_L12' = Co-registered code pointing directly to the Level 12 HydroBASIN polygon
+var river_selectors = ['RIV_ORD', 'RIV_ID', 'DIS_AV_CMS', 'UPLND_SKM', 'HYBAS_L12'];
+
+var export_collection = malawi_rivers.select(river_selectors);
+
+// Export the complete, structured multi-level network as a Shapefile bundle
+Export.table.toDrive({
+  collection: export_collection,
+  description: 'Malawi_HydroSHEDS_Rivers_All_Levels',
+  fileFormat: 'SHP',
+  selectors: river_selectors
+});
+
+// View a metadata preview inside the console panel
+print("Sample River Segment Attributes (SHP Schema):", export_collection.limit(5));`
+    }; 
 
     function dedent(strings, ...values) {
       let raw = strings.raw.reduce((acc, str, i) => acc + str + (values[i] || ''), '');
@@ -369,18 +469,44 @@ Map.addLayer(major.updateMask(major), {palette:['00FFFF']}, 'Major Rivers');`
           if (typeof startPaychanguCheckout === 'function') startPaychanguCheckout(id);
         }
       });
+    });
 
-      // Clickable highlight panels -> scroll to corresponding card
-      document.querySelectorAll('.feature-value-panel').forEach(panel => {
-        const target = panel.dataset.target;
-        panel.addEventListener('click', () => {
-          if (!target) return;
-          const el = document.querySelector(target);
-          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    document.querySelectorAll('.premium-copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const scriptId = btn.dataset.scriptId;
+        const code = (typeof PREMIUM_SNIPPETS !== 'undefined' && PREMIUM_SNIPPETS[scriptId]) ? PREMIUM_SNIPPETS[scriptId] : '';
+        navigator.clipboard.writeText(code).then(() => {
+          const original = btn.textContent;
+          btn.textContent = 'Copied!';
+          setTimeout(() => { btn.textContent = original; }, 1200);
         });
-        panel.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); panel.click(); }
-        });
+      });
+    });
+
+    document.querySelectorAll('.premium-expand-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const scriptId = btn.dataset.scriptId;
+        const code = (typeof PREMIUM_SNIPPETS !== 'undefined' && PREMIUM_SNIPPETS[scriptId]) ? PREMIUM_SNIPPETS[scriptId] : '';
+        const expanded = document.getElementById('expandedArea');
+        const pre = document.getElementById('expandedCode');
+        if (pre) pre.textContent = code;
+        if (expanded) {
+          expanded.hidden = false;
+          expanded.setAttribute('aria-hidden', 'false');
+        }
+      });
+    });
+
+    // Clickable highlight panels -> scroll to corresponding card
+    document.querySelectorAll('.feature-value-panel').forEach(panel => {
+      const target = panel.dataset.target;
+      panel.addEventListener('click', () => {
+        if (!target) return;
+        const el = document.querySelector(target);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+      panel.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); panel.click(); }
       });
     });
   </script>

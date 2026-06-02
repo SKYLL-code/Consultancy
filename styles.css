@@ -820,6 +820,15 @@ section:nth-child(4){animation-delay:0.7s}
 .code-card.premium.unlocked .code-blur::before {
   display: none;
 }
+.premium-actions {
+  display: inline-flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+}
+.premium-actions[hidden] {
+  display: none !important;
+}
 
 .gemini-editor {
   display: none;

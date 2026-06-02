@@ -83,6 +83,10 @@
         badge.textContent = 'Unlocked';
         featureBtn.appendChild(badge);
       }
+      const actions = document.querySelector(`.premium-actions[data-script-id="${scriptId}"]`);
+      if (actions) {
+        actions.hidden = false;
+      }
       featureBtn.onclick = () => {
         const code = (typeof PREMIUM_SNIPPETS !== 'undefined' && PREMIUM_SNIPPETS[scriptId]) ? PREMIUM_SNIPPETS[scriptId] : '// Premium code unlocked.';
         const expanded = document.getElementById('expandedArea');
@@ -386,6 +390,7 @@
     const modalDesc = document.getElementById('modalDesc');
     const modalCode = document.getElementById('modalCode');
     const previewBtn = document.getElementById('modalPreviewBtn');
+    const copyBtn = document.getElementById('modalCopyBtn');
     const unlockBtn = document.getElementById('modalUnlockBtn');
     modalTitle.textContent = title || 'Preview';
     modalDesc.textContent = description || '';
@@ -414,6 +419,16 @@
       }
       closeModal();
     };
+
+    if (copyBtn) {
+      copyBtn.onclick = () => {
+        navigator.clipboard.writeText(modalCode.textContent).then(() => {
+          const original = copyBtn.textContent;
+          copyBtn.textContent = 'Copied!';
+          setTimeout(() => { copyBtn.textContent = original; }, 1200);
+        });
+      };
+    }
 
     unlockBtn.onclick = () => {
       closeModal();
