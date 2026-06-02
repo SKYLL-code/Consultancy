@@ -1177,7 +1177,7 @@ body.access-page .premium-close {
 }
 @media (max-width: 960px) {
   .feature-hero { grid-template-columns: 1fr; padding: 28px; }
-  .feature-value-grid { grid-template-columns: 1fr; display: none; }
+  .feature-value-grid { grid-template-columns: 1fr; display: none !important; }
   .feature-value-panel { padding: 24px 20px; }
   .feature-value-panel h3 { font-size: 1.1rem; }
   .feature-value-panel .panel-label { font-size: 0.78rem; }
@@ -1223,7 +1223,7 @@ body.access-page .premium-close {
   .btn.small { padding: 10px 14px; }
   .btn.unlock-btn { padding: 10px 14px; }
   .feature-value-grid { gap: 16px; }
-  .feature-value-grid { display: none; }
+  .feature-value-grid { display: none !important; }
 }
 
 .features-header .container {
