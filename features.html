@@ -12,13 +12,16 @@
   
   <header class="features-header">
     <div class="container">
-      <a class="btn" href="index.html">← Back</a>
       <h1>SKYLL TECH — Features</h1>
       <p class="muted">Explore free scripts, premium unlocks, and request custom GEE code.</p>
+      <a class="btn" href="index.html" aria-label="Back to home">←</a>
     </div>
   </header>
 
   <main class="features-main container">
+    <div class="feature-actions">
+      <button id="geminiChatBtn" class="btn secondary-button" aria-label="Customize with AI">Customize with AI</button>
+    </div>
     <section class="feature-grid">
       <!-- Free Plan column (starter; will expand on confirmation) -->
       <article class="feature-card">
@@ -47,41 +50,51 @@
             </div>
           </li>
         </ul>
+        <p class="muted">Every snippet is ready to drop into your Earth Engine Console, with clean comments, fast setup, and clear output layers.</p>
+        <p class="muted">Use this section to prototype mapping, analysis, and spatial workflows with minimal setup and maximum clarity.</p>
       </article>
 
       <!-- Premium Plan column (placeholder for Paychangu hooks) -->
       <article class="feature-card">
         <h2>Premium Plan</h2>
-        <p class="muted">Advanced scripts — unlock via Paychangu.</p>
+        <p class="muted">Advanced Earth Engine scripts — unlock with Paychangu.</p>
         <ul class="premium-list">
           <li>
-            <button class="btn unlock-btn" data-script-id="lulc" data-title="LULC (Supervised Classification) Codes" data-desc="Supervised LULC classification with random forest; includes sampling and classification pipeline">LULC (Supervised Classification) Codes <span class="badge locked">Locked</span></button>
+            <button class="btn unlock-btn" data-script-id="lulc" data-title="LULC (Supervised Classification)" data-desc="Supervised LULC classification using random forest">LULC (Supervised Classification) <span class="badge locked">🔒</span></button>
           </li>
           <li>
-            <button class="btn unlock-btn" data-script-id="hydro" data-title="Hydrological Modelling Codes" data-desc="Hydrological modelling helpers: slope, flow proxies and prep routines">Hydrological Modelling Codes <span class="badge locked">Locked</span></button>
+            <button class="btn unlock-btn" data-script-id="hydro" data-title="Hydrological Modelling" data-desc="Slope, flow proxy and watershed prep">Hydrological Modelling <span class="badge locked">🔒</span></button>
           </li>
           <li>
-            <button class="btn unlock-btn" data-script-id="drought" data-title="Drought Mapping Codes" data-desc="NDVI-based drought anomaly detection and visualization utilities">Drought Mapping Codes <span class="badge locked">Locked</span></button>
+            <button class="btn unlock-btn" data-script-id="drought" data-title="Drought Mapping" data-desc="NDVI anomaly detection utilities">Drought Mapping <span class="badge locked">🔒</span></button>
           </li>
           <li>
-            <button class="btn unlock-btn" data-script-id="flood" data-title="Flood Risk Mapping Codes" data-desc="Flood detection using Sentinel-1 backscatter thresholds and time-series masks">Flood Risk Mapping Codes <span class="badge locked">Locked</span></button>
+            <button class="btn unlock-btn" data-script-id="flood" data-title="Flood Risk Mapping" data-desc="Sentinel-1 flood and risk mapping">Flood Risk Mapping <span class="badge locked">🔒</span></button>
           </li>
           <li>
-            <button class="btn unlock-btn" data-script-id="landslide" data-title="Landslide Codes" data-desc="Landslide susceptibility helpers using slope and terrain derivatives">Landslide Codes <span class="badge locked">Locked</span></button>
+            <button class="btn unlock-btn" data-script-id="landslide" data-title="Landslide Susceptibility" data-desc="Terrain and slope-driven risk helpers">Landslide Susceptibility <span class="badge locked">🔒</span></button>
           </li>
           <li>
-            <button class="btn unlock-btn" data-script-id="msi" data-title="Multi-Spectral Indices Codes" data-desc="Multi-spectral index functions: NDVI, NDWI, SAVI and combined palettes">Multi-Spectral Indices Codes <span class="badge locked">Locked</span></button>
+            <button class="btn unlock-btn" data-script-id="msi" data-title="Multi-Spectral Indices" data-desc="NDVI, NDWI, SAVI and combined palettes">Multi-Spectral Indices <span class="badge locked">🔒</span></button>
           </li>
           <li>
-            <button class="btn unlock-btn" data-script-id="rusle" data-title="Soil Erosion (RUSLE) Codes" data-desc="RUSLE component calculators (R, K, LS, C, P) and simplified estimation workflow">Soil Erosion (RUSLE) Codes <span class="badge locked">Locked</span></button>
+            <button class="btn unlock-btn" data-script-id="rusle" data-title="Soil Erosion (RUSLE)" data-desc="Simplified RUSLE erosion estimation">Soil Erosion (RUSLE) <span class="badge locked">🔒</span></button>
           </li>
         </ul>
+        <p class="muted">Premium scripts are built for repeatable mapping, export-ready layers, and fast deployment.</p>
       </article>
 
       <!-- Request custom codes -->
       <article class="feature-card">
-        <h2>Request Custom Codes</h2>
-        <p class="muted">Need a tailored script? Email us with details.</p>
+        <h2>Custom Code & Ready Maps</h2>
+        <p class="muted">Tell us your goals and we’ll deliver a tailored script or finished map package.</p>
+        <ul class="snippet-list">
+          <li>Custom workflows for land use, hydrology, crop monitoring, and environmental impact studies.</li>
+          <li>Ready-made map templates for rapid project delivery and reporting.</li>
+          <li>Operational GEE solutions with clean layer styling and export-ready outputs.</li>
+          <li>Expert support for dataset selection, mapping, and script optimization.</li>
+        </ul>
+        <p class="muted">Choose custom code for exact analysis, or get pre-built maps for fast results and easy sharing.</p>
         <a class="btn primary-button" href="mailto:skylltechconsult@gmail.com?subject=Request%20for%20Custom%20GEE%20Script%20-%20SKYLL-TECH&body=Hello%20SKYLL-TECH%20Team,%0A%0AI%20am%20reaching%20out%20to%20request%20a%20customized%20Google%20Earth%20Engine%20script.%20My%20specific%20project%20requirements%20are:%0A%0A[Please%20describe%20your%20study%20area,%20datasets,%20and%20objectives%20here]%0A%0AThank%20you.">Request Custom Code</a>
       </article>
     </section>
@@ -90,6 +103,24 @@
       <pre id="expandedCode" class="code-block"></pre>
       <button id="closeExpanded" class="btn">Close</button>
     </section>
+
+    <div id="geminiModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="geminiModalTitle" aria-hidden="true" tabindex="-1" hidden>
+      <div class="modal-dialog chat-modal">
+        <header class="modal-header">
+          <h3 id="geminiModalTitle">Chat with AI</h3>
+          <button id="closeGeminiModal" class="btn" aria-label="Close AI chat">×</button>
+        </header>
+        <div class="modal-body">
+          <div id="geminiChatWindow" class="chat-window" aria-live="polite" aria-atomic="false">
+            <div class="chat-message ai">AI is ready. Describe the Earth Engine code you want customized.</div>
+          </div>
+          <div class="chat-input-row">
+            <input id="geminiUserInput" type="text" placeholder="Tell the AI what code customization you need..." aria-label="AI chat input" />
+            <button id="geminiSendBtn" class="btn">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
   <!-- Preview / Unlock Modal -->
   <div id="previewModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc" aria-hidden="true" tabindex="-1" hidden>
@@ -161,6 +192,81 @@
           if (typeof startPaychanguCheckout === 'function') startPaychanguCheckout(id);
         }
       });
+    });
+
+    const geminiChatBtn = document.getElementById('geminiChatBtn');
+    const geminiModal = document.getElementById('geminiModal');
+    const geminiClose = document.getElementById('closeGeminiModal');
+    const geminiSendBtn = document.getElementById('geminiSendBtn');
+    const geminiUserInput = document.getElementById('geminiUserInput');
+    const geminiChatWindow = document.getElementById('geminiChatWindow');
+
+    const BACKEND_BASE_URL = window.location.protocol === 'file:' ? 'http://127.0.0.1:3000' : '';
+
+    const addGeminiMessage = (sender, text) => {
+      const message = document.createElement('div');
+      message.className = `chat-message ${sender}`;
+      message.textContent = text;
+      if (sender === 'ai') {
+        message.style.whiteSpace = 'pre-wrap';
+      }
+      geminiChatWindow.appendChild(message);
+      geminiChatWindow.scrollTop = geminiChatWindow.scrollHeight;
+    };
+
+    const closeGeminiModal = () => {
+      geminiModal.hidden = true;
+      geminiModal.setAttribute('aria-hidden', 'true');
+    };
+
+    const openGeminiModal = () => {
+      geminiModal.hidden = false;
+      geminiModal.setAttribute('aria-hidden', 'false');
+      geminiUserInput.focus();
+    };
+
+    const sendGeminiMessage = async () => {
+      const value = geminiUserInput.value.trim();
+      if (!value) return;
+      addGeminiMessage('user', value);
+      geminiUserInput.value = '';
+      setTimeout(() => {
+        addGeminiMessage('ai', 'Looking up a code suggestion from Gemini...');
+      }, 100);
+
+      geminiSendBtn.disabled = true;
+      try {
+        const wrappedPrompt = `Answer only with pure Google Earth Engine JavaScript code. Use the Earth Engine public data catalog and dataset IDs when relevant. Return a complete runnable script, including any export statements, with no extra explanation. User request:\n${value}`;
+      const response = await fetch(`${BACKEND_BASE_URL}/ai-chat`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ prompt: wrappedPrompt })
+        });
+
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+          addGeminiMessage('ai', result.message || result.error || 'The AI service returned an error.');
+        } else {
+          addGeminiMessage('ai', result.reply || 'The AI returned no response.');
+        }
+      } catch (error) {
+        console.error('AI request failed:', error);
+        addGeminiMessage('ai', 'Unable to reach the AI backend. Please ensure the backend is running.');
+      } finally {
+        geminiSendBtn.disabled = false;
+      }
+    };
+
+    geminiChatBtn.addEventListener('click', openGeminiModal);
+    geminiClose.addEventListener('click', closeGeminiModal);
+    geminiModal.addEventListener('click', event => {
+      if (event.target === geminiModal) closeGeminiModal();
+    });
+    geminiSendBtn.addEventListener('click', sendGeminiMessage);
+    geminiUserInput.addEventListener('keydown', event => {
+      if (event.key === 'Enter') sendGeminiMessage();
     });
   </script>
 </body>
