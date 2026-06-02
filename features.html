@@ -201,7 +201,13 @@
     const geminiUserInput = document.getElementById('geminiUserInput');
     const geminiChatWindow = document.getElementById('geminiChatWindow');
 
-    const BACKEND_BASE_URL = window.location.protocol === 'file:' ? 'http://127.0.0.1:3000' : '';
+    // Use local backend when opening the file directly.
+    // For GitHub Pages or hosted sites, set this to your Vercel backend URL.
+    // Example: https://your-vercel-project.vercel.app
+    const VERCEL_BACKEND_URL = 'https://your-vercel-project.vercel.app'; // TODO: Replace with your actual Vercel URL
+    const BACKEND_BASE_URL = window.location.protocol === 'file:'
+      ? 'http://127.0.0.1:3000'
+      : (window.location.hostname === 'localhost' ? window.location.origin : VERCEL_BACKEND_URL);
 
     const addGeminiMessage = (sender, text) => {
       const message = document.createElement('div');
