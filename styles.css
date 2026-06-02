@@ -1501,13 +1501,14 @@ body.access-page .premium-close {
   .feature-grid {
     grid-template-columns: repeat(3, minmax(300px, 1fr));
     gap: 30px;
-    align-items: start;
+    align-items: stretch;
     justify-items: stretch;
   }
 
   .feature-card {
     padding: 34px;
     min-height: 0;
+    height: 100%;
     background: rgba(9, 18, 34, 0.96);
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 26px 86px rgba(0, 0, 0, 0.35);
