@@ -1533,7 +1533,7 @@ body.access-page .premium-close {
 
   .feature-card:not(#customPlanCard) .snippet-list,
   .feature-card:not(#customPlanCard) .premium-list {
-    max-height: 280px;
+    max-height: 340px;
     overflow: auto;
     padding-right: 8px;
   }
