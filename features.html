@@ -43,7 +43,7 @@
           <li>
             <strong>Study Area Codes</strong>
             <div class="snippet-actions">
-              <button class="btn small copy-btn" data-snippet="// Free Study Area sample\n// Load country boundaries and center the map\nvar country = ee.FeatureCollection('FAO/GAUL/2015/level0').filter(ee.Filter.eq('ADM0_NAME','Malawi'));\nMap.clear();\nMap.centerObject(country,7);\nMap.addLayer(country, {color: 'red'}, 'Country Boundary');">Copy</button>
+              <button class="btn small copy-btn" data-snippet-key="studyArea">Copy</button>
               <button class="btn small expand-btn">Expand</button>
             </div>
           </li>
@@ -137,10 +137,111 @@
   <script src="https://in.paychangu.com/js/popup.js"></script>
   <script src="scripts.js"></script>
   <script>
+    const codeSnippets = {
+      studyArea: dedent`// =========================================================================
+// 1. LOAD AND FILTER ADMINISTRATIVE BOUNDARIES FOR MALAWI (LEVELS 0, 1, 2)
+// =========================================================================
+
+// Level 0: National Boundary (Red)
+var malawi_adm0 = ee.FeatureCollection("FAO/GAUL/2015/level0")
+  .filter(ee.Filter.eq('ADM0_NAME', 'Malawi'));
+
+// Level 1: Regions (Northern, Central, Southern) (Blue)
+var malawi_adm1 = ee.FeatureCollection("FAO/GAUL/2015/level1")
+  .filter(ee.Filter.eq('ADM0_NAME', 'Malawi'));
+
+// Level 2: Districts (Purple)
+var malawi_adm2 = ee.FeatureCollection("FAO/GAUL/2015/level2")
+  .filter(ee.Filter.eq('ADM0_NAME', 'Malawi'));
+
+
+// =========================================================================
+// 2. VISUALIZE ON MAP (Strictly Boundary Lines, No Fill)
+// =========================================================================
+Map.setOptions('SATELLITE');
+Map.centerObject(malawi_adm2, 7);
+
+// Create an empty image to paint the vector boundaries onto
+var empty = ee.Image().byte();
+
+// Paint Level 2 (Districts) -> Purple outline, width 2
+var adm2Outline = empty.paint({
+  featureCollection: malawi_adm2,
+  color: 1,
+  width: 2
+});
+Map.addLayer(adm2Outline, {palette: '800080'}, 'Level 2: Districts (Purple Outline)');
+
+// Paint Level 1 (Regions) -> Blue outline, width 3
+var adm1Outline = empty.paint({
+  featureCollection: malawi_adm1,
+  color: 1,
+  width: 3
+});
+Map.addLayer(adm1Outline, {palette: '0000FF'}, 'Level 1: Regions (Blue Outline)');
+
+// Paint Level 0 (Country) -> Red outline, width 4
+var adm0Outline = empty.paint({
+  featureCollection: malawi_adm0,
+  color: 1,
+  width: 4
+});
+Map.addLayer(adm0Outline, {palette: 'FF0000'}, 'Level 0: Country Boundary (Red Outline)');
+
+
+// =========================================================================
+// 3. EXPORT SETUPS (Configured for Shapefile Format)
+// =========================================================================
+
+// Filter to keep only relevant export codes/attributes
+var export_adm1 = malawi_adm1.select(['ADM0_NAME', 'ADM0_CODE', 'ADM1_NAME', 'ADM1_CODE']);
+var export_adm2 = malawi_adm2.select(['ADM0_NAME', 'ADM1_NAME', 'ADM2_NAME', 'ADM2_CODE']);
+
+// Task Export for Level 1 to Google Drive (Shapefile format)
+Export.table.toDrive({
+  collection: export_adm1,
+  description: 'Malawi_Admin_Level1_SHP',
+  fileFormat: 'SHP',
+  selectors: ['ADM0_NAME', 'ADM0_CODE', 'ADM1_NAME', 'ADM1_CODE']
+});
+
+// Task Export for Level 2 to Google Drive (Shapefile format)
+Export.table.toDrive({
+  collection: export_adm2,
+  description: 'Malawi_Admin_Level2_SHP',
+  fileFormat: 'SHP',
+  selectors: ['ADM0_NAME', 'ADM1_NAME', 'ADM2_NAME', 'ADM2_CODE']
+});
+
+// Print sample properties to the console for quick validation
+print('Level 1 Structure (Will export to SHP):', export_adm1.limit(3));
+print('Level 2 Structure (Will export to SHP):', export_adm2.limit(5));`,
+      watershed: `// Free Watershed sample
+// Create a watershed AOI from DEM thresholding (simplified)
+var srtm = ee.Image('USGS/SRTMGL1_003');
+var elev = srtm.select('elevation');
+var watershed = elev.gt(500).selfMask();
+Map.addLayer(watershed, {palette: ['0000FF']}, 'Watershed AOI');`,
+      river: `// Free River sample
+// Extract high-flow channels using JRC water occurrence (example)
+var jrc = ee.Image('JRC/GSW1_3/GlobalSurfaceWater');
+var occurrence = jrc.select('occurrence');
+var major = occurrence.gt(50);
+Map.addLayer(major.updateMask(major), {palette:['00FFFF']}, 'Major Rivers');`
+    };
+
+    function dedent(strings, ...values) {
+      let raw = strings.raw.reduce((acc, str, i) => acc + str + (values[i] || ''), '');
+      let match = raw.match(/[ \t]*(?=\S)/gm);
+      let indent = match ? Math.min(...match.map(el => el.length)) : 0;
+      return raw.replace(new RegExp('^[ \t]{' + indent + '}', 'gm'), '').trim();
+    }
+
     // Copy buttons
     document.querySelectorAll('.copy-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        const txt = btn.dataset.snippet || '';
+        const key = btn.dataset.snippetKey;
+        const txt = (key && codeSnippets[key]) ? codeSnippets[key] : (btn.dataset.snippet || '');
         navigator.clipboard.writeText(txt).then(() => {
           btn.textContent = 'Copied';
           setTimeout(() => btn.textContent = 'Copy', 1200);
@@ -152,7 +253,8 @@
     document.querySelectorAll('.expand-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const li = btn.closest('li');
-        const snippet = li.querySelector('.copy-btn')?.dataset.snippet || '// No snippet';
+        const key = li.querySelector('.copy-btn')?.dataset.snippetKey;
+        const snippet = (key && codeSnippets[key]) ? codeSnippets[key] : (li.querySelector('.copy-btn')?.dataset.snippet || '// No snippet');
         const expanded = document.getElementById('expandedArea');
         document.getElementById('expandedCode').textContent = snippet;
         if (expanded) {
