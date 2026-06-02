@@ -1525,7 +1525,7 @@ body.access-page .premium-close {
 
   /* Desktop uniform card sizing */
   .feature-card {
-    min-height: 460px;
+    min-height: 520px;
     display: flex;
     flex-direction: column;
   }
