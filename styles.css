@@ -1223,6 +1223,7 @@ body.access-page .premium-close {
   .btn.small { padding: 10px 14px; }
   .btn.unlock-btn { padding: 10px 14px; }
   .feature-value-grid { gap: 16px; }
+  .feature-value-grid { display: none; }
 }
 
 .features-header .container {
