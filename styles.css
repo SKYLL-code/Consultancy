@@ -280,8 +280,8 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
 
 .feature-actions{
   position:relative;
-  width:100vw;
-  margin-left:calc(-50vw + 50%);
+  width:100%;
+  margin-left:0;
   padding:60px 20px;
   display:flex;
   justify-content:center;
@@ -343,7 +343,7 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
 .btn.secondary-button:hover{box-shadow:0 18px 40px rgba(9,173,255,0.25)}
 #geminiChatBtn.secondary-button{background:linear-gradient(135deg, rgba(0,191,255,0.3), rgba(0,150,255,0.4)) !important;color:#00d9ff !important;border:1px solid rgba(0,191,255,0.5) !important;}
 .chat-modal .modal-dialog{max-width:640px}
-.chat-window{max-height:50vh;overflow-y:auto;border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:18px;background:rgba(1,6,18,0.9);display:flex;flex-direction:column;gap:12px}
+.chat-window{max-height:50vh;overflow-y:auto;touch-action:pan-y;border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:18px;background:rgba(1,6,18,0.9);display:flex;flex-direction:column;gap:12px}
 .chat-message{max-width:100%;padding:14px 18px;border-radius:18px;line-height:1.65;box-shadow:0 10px 24px rgba(0,0,0,0.18)}
 .chat-message.user{align-self:flex-end;background:rgba(0,152,255,0.18);color:#d9f7ff;border:1px solid rgba(0,152,255,0.32)}
 .chat-message.user .chat-text{color:#eaf8ff}
@@ -646,7 +646,7 @@ section:nth-child(4){animation-delay:0.7s}
 }
 .premium-overlay.open {
   opacity: 1;
-  pointer-events: auto;
+  pointer-events: none;
 }
 
 .premium-panel {
@@ -662,6 +662,7 @@ section:nth-child(4){animation-delay:0.7s}
   border-radius: 0 0 0 24px;
   overflow-y: auto;
   overflow-x: hidden;
+  touch-action: pan-y;
   padding: 24px;
   box-shadow: -20px 0 60px rgba(0,0,0,0.35);
 }
@@ -987,7 +988,6 @@ body.access-page .premium-close {
 .features-page {
   min-height: 100vh;
   position: relative;
-  overflow: hidden;
   background:
     radial-gradient(circle at top left, rgba(18, 86, 154, 0.24), transparent 16%),
     radial-gradient(circle at bottom right, rgba(0, 215, 180, 0.10), transparent 20%),
@@ -1615,6 +1615,7 @@ body.access-page .premium-close {
   box-shadow: 0 22px 62px rgba(0, 0, 0, 0.56);
   max-height: 55vh;
   overflow: auto;
+  touch-action: pan-y;
   border: 1px solid rgba(81, 205, 255, 0.16);
 }
 .code-block {
