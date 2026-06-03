@@ -90,7 +90,7 @@
         <p>We create digital solutions and help students and organisations with data analysis, GIS projects, research design and project evaluations.</p>
         <div class="ctas">
           <a class="btn" href="#contact">Get in touch</a>
-          <button id="showTextToAudioBtn" class="btn secondary-button" type="button" aria-expanded="false" onclick="(function(btn){try{if(window.toggleTextToAudioPanel){toggleTextToAudioPanel(true);btn.setAttribute('aria-expanded','true');btn.hidden=true;}else{var p=document.getElementById('text-to-audio');if(p){p.classList.remove('audio-ai-hidden');p.classList.add('audio-ai-visible');p.setAttribute('aria-hidden','false');btn.hidden=true;}}}catch(e){console.error(e);}})(this); return false;">
+          <button id="showTextToAudioBtn" class="btn secondary-button" type="button" aria-expanded="false">
             <i class="fas fa-volume-high" aria-hidden="true"></i>
             Text to audio Converter AI
           </button>
@@ -98,10 +98,12 @@
       </div>
     </section>
 
-    <section id="text-to-audio" class="container audio-ai audio-ai-hidden" aria-hidden="true">
-      <div class="audio-card">
-        <button id="ttsCloseBtn" class="audio-close" aria-label="Close">×</button>
-        <h3>Text to Audio Converter AI</h3>
+    <section id="text-to-audio" class="audio-overlay audio-overlay-hidden" aria-hidden="true" role="dialog" aria-modal="true">
+      <div id="ttsBackdrop" class="audio-backdrop" aria-hidden="true"></div>
+      <div class="audio-ai">
+        <div class="audio-card">
+          <button id="ttsCloseBtn" class="audio-close" aria-label="Close">×</button>
+          <h3>Text to Audio Converter AI</h3>
         <p>Type or paste any text below, choose a gender, voice style, and speed, then click Read or Download to create audio instantly.</p>
         <textarea id="ttsText" placeholder="Type or paste your text here..."></textarea>
         <div class="audio-controls">
@@ -142,6 +144,7 @@
         </div>
         <div class="audio-status" id="ttsStatus">Free, browser-based text-to-speech converter.</div>
       </div>
+    </div>
     </section>
 
   <!-- Floating Action Bubble: opens features page -->

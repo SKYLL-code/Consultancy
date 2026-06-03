@@ -1353,38 +1353,39 @@ Export.image.toDrive({
   }
 
   function toggleTextToAudioPanel(open) {
-    const panel = document.getElementById('text-to-audio');
+    const overlay = document.getElementById('text-to-audio');
     const showBtn = document.getElementById('showTextToAudioBtn');
     let backdrop = document.getElementById('ttsBackdrop');
     if (!backdrop) {
       backdrop = document.createElement('div');
       backdrop.id = 'ttsBackdrop';
-      document.body.appendChild(backdrop);
-      backdrop.addEventListener('click', () => toggleTextToAudioPanel(false));
+      backdrop.className = 'audio-backdrop';
+      overlay?.appendChild(backdrop);
     }
-    if (!panel) return;
+    if (backdrop && !backdrop.dataset.bound) {
+      backdrop.addEventListener('click', () => toggleTextToAudioPanel(false));
+      backdrop.dataset.bound = 'true';
+    }
+    if (!overlay) return;
     if (open) {
-      panel.classList.remove('audio-ai-hidden');
-      panel.classList.add('audio-ai-visible');
-      panel.setAttribute('aria-hidden', 'false');
+      overlay.classList.remove('audio-overlay-hidden');
+      overlay.classList.add('audio-overlay-visible');
+      overlay.setAttribute('aria-hidden', 'false');
       if (showBtn) showBtn.hidden = true;
-      backdrop.classList.add('backdrop-visible');
       document.body.classList.add('modal-open');
       _addScrollRouting();
-      // focus first interactive element for accessibility
-      const first = panel.querySelector('textarea, button, select, input');
+      const first = overlay.querySelector('textarea, button, select, input');
       if (first) first.focus();
-      window.setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
     } else {
-      panel.classList.remove('audio-ai-visible');
-      panel.classList.add('audio-ai-hidden');
-      panel.setAttribute('aria-hidden', 'true');
+      overlay.classList.remove('audio-overlay-visible');
+      overlay.classList.add('audio-overlay-hidden');
+      overlay.setAttribute('aria-hidden', 'true');
       if (showBtn) showBtn.hidden = false;
-      backdrop.classList.remove('backdrop-visible');
       document.body.classList.remove('modal-open');
       _removeScrollRouting();
     }
   }
+  window.toggleTextToAudioPanel = toggleTextToAudioPanel;
 
   // --- Route background wheel/touch to modal when open and prevent body scroll ---
   let _touchStartY = null;
