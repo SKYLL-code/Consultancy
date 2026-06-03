@@ -7,22 +7,23 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" href="assets/LOGO2.png">
   <style>
+    /* Register banner — now a static header banner instead of floating */
     .gee-register-bar {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 999;
-      display: inline-flex;
+      position: static;
+      display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 12px;
+      width: 100%;
       padding: 12px 18px;
-      border-radius: 999px;
-      background: rgba(14, 76, 145, 0.95);
+      border-radius: 12px;
+      background: linear-gradient(90deg, rgba(14,76,145,0.95), rgba(6,150,200,0.95));
       color: #fff;
-      box-shadow: 0 16px 35px rgba(0, 0, 0, 0.2);
-      font-size: 0.95rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14);
+      font-size: 0.98rem;
       line-height: 1.3;
       cursor: pointer;
+      margin-top: 12px;
     }
     .gee-register-bar span {
       font-weight: 700;
@@ -114,7 +115,7 @@
     }
   </style>
 </head>
-<body class="features-page">
+  <body class="features-page">
   <div id="wrapper"></div>
   
   <header class="features-header">
@@ -122,6 +123,12 @@
       <h1>SKYLL TECH — Features</h1>
       <p class="muted">Explore free scripts, premium unlocks, and request custom GEE code.</p>
       <a class="btn" href="index.html" aria-label="Back to home">←</a>
+
+      <!-- Moved register banner into the header as a static, non-floating banner -->
+      <div class="gee-register-bar" id="geeRegisterBar" role="region" aria-label="GEE SATURDY'S E-LEARNING banner">
+        <span>GEE SATURDY'S E-LEARNING</span>
+        <button type="button" id="openRegisterSlide">Register</button>
+      </div>
     </div>
   </header>
 
@@ -277,15 +284,10 @@
   </div>
   </main>
 
-  <div class="gee-register-bar" id="geeRegisterBar" role="button" aria-label="Register for Google Earth Engine E-Learning">
-    <span>REGISTER FOR GOOGLE EARTH ENGINE E-LEARNING</span>
-    <button type="button" id="openRegisterSlide">Register</button>
-  </div>
-
   <div class="gee-register-slide" id="geeRegisterSlide" aria-hidden="true">
     <div class="gee-register-panel" role="dialog" aria-modal="true" aria-labelledby="registerTitle">
       <button class="close-slide" id="closeRegisterSlide" aria-label="Close registration slide">×</button>
-      <h2 id="registerTitle">Register for Google Earth Engine E-Learning</h2>
+      <h2 id="registerTitle">Register for GEE SATURDY'S E-LEARNING</h2>
       <p>Sign up with your email and a password of at least 5 characters to begin.</p>
       <form id="geeRegisterForm">
         <label for="registerEmail">Email address
