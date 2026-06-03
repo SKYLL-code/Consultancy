@@ -281,21 +281,28 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
 .audio-overlay{
   position:fixed;
   inset:0;
-  display:flex;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
   align-items:center;
   justify-content:center;
   padding:24px;
-  z-index:1400;
+  z-index:9999;
   overflow:auto;
   pointer-events:none;
   opacity:0;
   transition:opacity 0.28s ease;
 }
 .audio-overlay-hidden{
+  display:none;
+  visibility:hidden;
   opacity:0;
   pointer-events:none;
 }
 .audio-overlay-visible{
+  display:flex;
+  visibility:visible;
   opacity:1;
   pointer-events:auto;
 }

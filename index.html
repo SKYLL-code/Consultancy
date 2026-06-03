@@ -98,55 +98,6 @@
       </div>
     </section>
 
-    <section id="text-to-audio" class="audio-overlay audio-overlay-hidden" aria-hidden="true" role="dialog" aria-modal="true">
-      <div id="ttsBackdrop" class="audio-backdrop" aria-hidden="true"></div>
-      <div class="audio-ai">
-        <div class="audio-card">
-          <button id="ttsCloseBtn" class="audio-close" aria-label="Close">×</button>
-          <h3>Text to Audio Converter AI</h3>
-        <p>Type or paste any text below, choose a gender, voice style, and speed, then click Read or Download to create audio instantly.</p>
-        <textarea id="ttsText" placeholder="Type or paste your text here..."></textarea>
-        <div class="audio-controls">
-          <div class="control-group">
-            <label for="voiceGender">Voice</label>
-            <select id="voiceGender" aria-label="Select voice gender">
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
-          </div>
-          <div class="control-group">
-            <label for="voiceStyle">Voice type</label>
-            <select id="voiceStyle" aria-label="Select voice type">
-              <option value="neutral">Neutral voice</option>
-              <option value="deep">Deep voice</option>
-              <option value="soft">Soft voice</option>
-              <option value="warm">Warm voice</option>
-              <option value="bright">Bright voice</option>
-              <option value="calm">Calm voice</option>
-              <option value="energetic">Energetic voice</option>
-              <option value="smooth">Smooth voice</option>
-              <option value="dramatic">Dramatic voice</option>
-              <option value="classic">Classic voice</option>
-            </select>
-          </div>
-          <div class="control-group">
-            <label for="ttsSpeed">Speed</label>
-            <div class="speed-row">
-              <input id="ttsSpeed" type="range" min="0.6" max="2" step="0.1" value="1.0" aria-label="Set speech speed">
-              <span id="ttsSpeedValue">1.0x</span>
-            </div>
-          </div>
-        </div>
-        <div class="audio-actions">
-          <button id="ttsBackBtn" class="btn secondary-button" type="button"><i class="fas fa-arrow-left" aria-hidden="true"></i> Back</button>
-          <button id="ttsReadBtn" class="btn" type="button">Read</button>
-          <button id="ttsDownloadBtn" class="btn secondary-button" type="button">Download</button>
-        </div>
-        <div class="audio-status" id="ttsStatus">Free, browser-based text-to-speech converter.</div>
-      </div>
-    </div>
-    </section>
-
   <!-- Floating Action Bubble: opens features page -->
   <a id="fab-features" class="fab" href="features.html" target="_blank" aria-label="GEE Codes Access" title="Access GEE Codes">
     <span class="fab-icon">GEE<br>Codes<br>Access</span>
@@ -202,6 +153,54 @@
       <small>Â© <span id="year"></span> SKYLL TECH â€” Consultancy for GIS & Statistical Analysis</small>
     </div>
   </footer>
+
+  <section id="text-to-audio" class="audio-overlay audio-overlay-hidden" aria-hidden="true" role="dialog" aria-modal="true">
+    <div id="ttsBackdrop" class="audio-backdrop" aria-hidden="true"></div>
+    <div class="audio-ai">
+      <div class="audio-card">
+        <button id="ttsCloseBtn" class="audio-close" aria-label="Close">×</button>
+        <h3>Text to Audio Converter AI</h3>
+      <p>Type or paste any text below, choose a gender, voice style, and speed, then click Read or Download to create audio instantly.</p>
+      <textarea id="ttsText" placeholder="Type or paste your text here..."></textarea>
+      <div class="audio-controls">
+        <div class="control-group">
+          <label for="voiceGender">Voice</label>
+          <select id="voiceGender" aria-label="Select voice gender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label for="voiceStyle">Voice type</label>
+          <select id="voiceStyle" aria-label="Select voice type">
+            <option value="neutral">Neutral voice</option>
+            <option value="deep">Deep voice</option>
+            <option value="soft">Soft voice</option>
+            <option value="warm">Warm voice</option>
+            <option value="bright">Bright voice</option>
+            <option value="calm">Calm voice</option>
+            <option value="energetic">Energetic voice</option>
+            <option value="smooth">Smooth voice</option>
+            <option value="dramatic">Dramatic voice</option>
+            <option value="classic">Classic voice</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label for="ttsSpeed">Speed</label>
+          <div class="speed-row">
+            <input id="ttsSpeed" type="range" min="0.6" max="2" step="0.1" value="1.0" aria-label="Set speech speed">
+            <span id="ttsSpeedValue">1.0x</span>
+          </div>
+        </div>
+      </div>
+      <div class="audio-actions">
+        <button id="ttsBackBtn" class="btn secondary-button" type="button"><i class="fas fa-arrow-left" aria-hidden="true"></i> Back</button>
+        <button id="ttsReadBtn" class="btn" type="button">Read</button>
+        <button id="ttsDownloadBtn" class="btn secondary-button" type="button">Download</button>
+      </div>
+      <div class="audio-status" id="ttsStatus">Free, browser-based text-to-speech converter.</div>
+    </div>
+  </section>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mespeak/1.0.4/mespeak.min.js"></script>
   <script>
