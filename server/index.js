@@ -412,6 +412,21 @@ app.post('/paychangu-webhook', (req, res) => {
   return res.json({ success: true, message: 'Webhook received.' });
 });
 
+// Fallback route: serve the frontend page for any unknown GET requests.
+// This helps when Paychangu or other third-party redirects return the user
+// to a path that doesn't map to a static file (avoids 404 on Back navigation).
+app.get('*', (req, res) => {
+  if (req.method !== 'GET') return res.status(405).end();
+  const reqPath = req.path || '';
+
+  // Do not override API routes or webhook endpoints
+  if (reqPath.startsWith('/verify-paychangu') || reqPath.startsWith('/payment-status') || reqPath.startsWith('/paychangu-webhook') || reqPath.startsWith('/api') || reqPath.startsWith('/test-payment-success')) {
+    return res.status(404).json({ success: false, message: 'Not found' });
+  }
+
+  return res.sendFile(path.join(__dirname, '..', 'features.html'));
+});
+
 app.listen(PORT, () => {
   console.log(`Paychangu verification backend listening on http://localhost:${PORT}`);
 });
