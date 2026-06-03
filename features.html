@@ -191,10 +191,6 @@
   <main class="features-main container">
     <section id="accountSection" class="account-section" aria-label="Account and upcoming topic">
       <div class="account-card">
-        <div>
-          <h2 id="accountHeading">Welcome to GEE SATURDY'S E-LEARNING</h2>
-          <p id="accountMessage">Please register or sign in to view the next Saturday topic and pay with Paychangu.</p>
-        </div>
         <div id="topicSection" class="topic-section visually-hidden" aria-label="Next Saturday topic">
           <h3>Next Saturday Topic</h3>
           <p id="nextTopicText">No topic has been set yet. Check back after the admin sets the next subject.</p>
@@ -206,6 +202,9 @@
           <textarea id="adminTopicInput" placeholder="Type the next Saturday topic here"></textarea>
           <button id="saveTopicBtn" class="btn">Save Topic</button>
           <div id="adminStatus" class="muted"></div>
+          <div class="admin-actions">
+            <button id="resetAccountsBtn" class="btn warning">Reset all registrations</button>
+          </div>
         </div>
       </div>
     </section>
@@ -370,11 +369,17 @@
         <label for="registerEmail">Email address
           <input type="email" id="registerEmail" name="registerEmail" required placeholder="you@example.com">
         </label>
-        <label for="registerPassword">Password
-          <input type="password" id="registerPassword" name="registerPassword" required placeholder="At least 5 characters" minlength="5">
+        <label for="registerPassword" class="password-row">Password
+          <div class="password-input-wrap">
+            <input type="password" id="registerPassword" name="registerPassword" required placeholder="At least 5 characters" minlength="5">
+            <button type="button" id="toggleShowPassword" class="icon-btn" aria-label="Show password">👁️</button>
+          </div>
         </label>
         <p class="form-note">Password must be at least 5 letters or numbers.</p>
-        <button type="submit" class="btn primary-button">Register</button>
+        <div class="form-actions-row">
+          <button type="submit" class="btn primary-button">Register</button>
+          <button type="button" id="forgotPasswordLink" class="btn link">Forgot password?</button>
+        </div>
         <div class="register-status" id="registerStatus" aria-live="polite"></div>
       </form>
     </div>
@@ -739,8 +744,6 @@ print("Sample River Segment Attributes (SHP Schema):", export_collection.limit(5
     const registerStatus = document.getElementById('registerStatus');
     const registerTitle = document.getElementById('registerTitle');
     const accountBannerInfo = document.getElementById('accountBannerInfo');
-    const accountHeading = document.getElementById('accountHeading');
-    const accountMessage = document.getElementById('accountMessage');
     const topicSection = document.getElementById('topicSection');
     const adminSection = document.getElementById('adminSection');
     const nextTopicText = document.getElementById('nextTopicText');
@@ -807,15 +810,10 @@ print("Sample River Segment Attributes (SHP Schema):", export_collection.limit(5
       const session = getCurrentSession();
       const topicData = getTopicData();
       if (!session) {
-        accountHeading.textContent = 'Welcome to GEE SATURDY\'S E-LEARNING';
-        accountMessage.textContent = 'Please register or sign in to view the next Saturday topic and pay with Paychangu.';
         topicSection.classList.add('visual-hidden');
         adminSection.classList.add('visual-hidden');
         return;
       }
-
-      accountHeading.textContent = `Hello, ${session.email}`;
-      accountMessage.textContent = 'Below is the topic we will cover next Saturday. Click pay to confirm attendance.';
       topicSection.classList.remove('visual-hidden');
       topicStatus.textContent = '';
 
@@ -841,6 +839,74 @@ print("Sample River Segment Attributes (SHP Schema):", export_collection.limit(5
         adminSection.classList.add('visual-hidden');
       }
     }
+
+    // UI helpers: show-password toggle, forgot-password flow, and admin reset
+    const toggleShowPassword = document.getElementById('toggleShowPassword');
+    const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+    const resetAccountsBtn = document.getElementById('resetAccountsBtn');
+
+    toggleShowPassword?.addEventListener('click', () => {
+      const p = document.getElementById('registerPassword');
+      if (!p) return;
+      if (p.type === 'password') {
+        p.type = 'text';
+        toggleShowPassword.textContent = '🙈';
+      } else {
+        p.type = 'password';
+        toggleShowPassword.textContent = '👁️';
+      }
+      p.focus();
+    });
+
+    forgotPasswordLink?.addEventListener('click', () => {
+      const email = prompt('Enter your registered email for password reset:');
+      if (!email) return;
+      const saved = getSavedRegistration();
+      if (!saved || saved.email.toLowerCase() !== email.toLowerCase()) {
+        alert('No account found for that email.');
+        return;
+      }
+      const code = Math.floor(100000 + Math.random() * 900000).toString();
+      localStorage.setItem(`geeElearnReset_${email.toLowerCase()}`, code);
+      const mailto = `mailto:${encodeURIComponent(email)}?subject=GEE%20E-Learning%20Password%20Reset%20Code&body=Your%20password%20reset%20code%20is%3A%20${code}`;
+      // Open the user's mail client so they can receive the code in their inbox
+      window.location.href = mailto;
+      const entered = prompt('Enter the verification code sent to your email:');
+      if (!entered) return;
+      const stored = localStorage.getItem(`geeElearnReset_${email.toLowerCase()}`);
+      if (entered !== stored) {
+        alert('Verification code does not match.');
+        return;
+      }
+      const newPass = prompt('Enter your new password (at least 5 characters):');
+      if (!newPass || newPass.length < 5) {
+        alert('Password must be at least 5 characters.');
+        return;
+      }
+      saved.password = newPass;
+      localStorage.setItem('geeElearnRegistration', JSON.stringify(saved));
+      localStorage.removeItem(`geeElearnReset_${email.toLowerCase()}`);
+      alert('Password updated. You can now sign in.');
+      refreshAccountBanner();
+    });
+
+    resetAccountsBtn?.addEventListener('click', () => {
+      if (!confirm('This will remove all saved registrations and session info from this browser. Continue?')) return;
+      localStorage.removeItem('geeElearnRegistration');
+      localStorage.removeItem('geeElearnSession');
+      // remove any topic-paid flags and reset topic data
+      for (let i = localStorage.length - 1; i >= 0; i--) {
+        const k = localStorage.key(i);
+        if (!k) continue;
+        if (k.startsWith('geeElearnTopicPaid_') || k.startsWith('geeElearnReset_')) {
+          localStorage.removeItem(k);
+        }
+      }
+      localStorage.removeItem('geeElearnNextTopic');
+      adminStatus.textContent = 'All registrations and session info cleared.';
+      refreshAccountBanner();
+      refreshTopicArea();
+    });
 
     function openRegisterPanel() {
       const mode = getAuthMode();
