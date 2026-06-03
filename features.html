@@ -6,6 +6,113 @@
   <title>SKYLL TECH - Features</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" href="assets/LOGO2.png">
+  <style>
+    .gee-register-bar {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 999;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: rgba(14, 76, 145, 0.95);
+      color: #fff;
+      box-shadow: 0 16px 35px rgba(0, 0, 0, 0.2);
+      font-size: 0.95rem;
+      line-height: 1.3;
+      cursor: pointer;
+    }
+    .gee-register-bar span {
+      font-weight: 700;
+    }
+    .gee-register-bar button {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-weight: 700;
+      background: #fff;
+      color: #0e4c91;
+      cursor: pointer;
+    }
+    .gee-register-slide {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: flex-end;
+      justify-content: flex-end;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 1000;
+      transition: opacity 0.25s ease;
+    }
+    .gee-register-slide.open {
+      display: flex;
+    }
+    .gee-register-panel {
+      position: relative;
+      width: min(420px, 100%);
+      max-height: 100%;
+      padding: 28px 24px 30px;
+      background: #fff;
+      box-shadow: -8px 0 36px rgba(0, 0, 0, 0.18);
+      overflow-y: auto;
+    }
+    .gee-register-panel h2 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 1.5rem;
+    }
+    .gee-register-panel p {
+      margin: 0 0 18px;
+      color: #444;
+      line-height: 1.5;
+    }
+    .gee-register-panel form {
+      display: grid;
+      gap: 16px;
+    }
+    .gee-register-panel label {
+      display: grid;
+      gap: 8px;
+      font-weight: 600;
+      color: #222;
+      font-size: 0.95rem;
+    }
+    .gee-register-panel input {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 12px;
+      border: 1px solid #cbd5dd;
+      border-radius: 12px;
+      font-size: 1rem;
+      color: #111;
+    }
+    .gee-register-panel .form-note {
+      font-size: 0.9rem;
+      color: #666;
+    }
+    .gee-register-panel .close-slide {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      border: none;
+      background: transparent;
+      font-size: 1.6rem;
+      color: #333;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .register-status {
+      min-height: 1.4rem;
+      font-size: 0.95rem;
+      color: #0d6b29;
+      font-weight: 600;
+    }
+    .register-error {
+      color: #b02a37;
+    }
+  </style>
 </head>
 <body class="features-page">
   <div id="wrapper"></div>
@@ -69,6 +176,13 @@
       <article id="premiumPlanCard" class="feature-card">
         <h2>Premium Plan</h2>
         <p class="muted">Advanced Earth Engine scripts — unlock with Paychangu.</p>
+        <div class="premium-note muted">
+          <p><em>Premium rules:</em></p>
+          <ul>
+            <li><strong>Unlocks are device-specific.</strong> If you use a different device, unlocked scripts will relock until you return to the original device.</li>
+            <li><strong>Custom study-area updates are free.</strong> After unlocking, you may request free custom code changes for your own area.</li>
+          </ul>
+        </div>
         <ul class="premium-list">
           <li>
             <button class="btn unlock-btn" data-script-id="lulc" data-title="LULC (Supervised Classification)" data-desc="Supervised LULC classification using random forest">LULC (Supervised Classification) <span class="badge locked">🔒</span></button>
@@ -128,6 +242,7 @@
         <h2>Custom Code & Ready Maps</h2>
         <p class="muted">Tell us your goals and we’ll deliver a tailored script or finished map package.</p>
         <ul class="snippet-list">
+
           <li>Custom workflows for land use, hydrology, crop monitoring, and environmental impact studies.</li>
           <li>Ready-made map templates for rapid project delivery and reporting.</li>
           <li>Operational GEE solutions with clean layer styling and export-ready outputs.</li>
@@ -161,6 +276,30 @@
     </div>
   </div>
   </main>
+
+  <div class="gee-register-bar" id="geeRegisterBar" role="button" aria-label="Register for Google Earth Engine E-Learning">
+    <span>REGISTER FOR GOOGLE EARTH ENGINE E-LEARNING</span>
+    <button type="button" id="openRegisterSlide">Register</button>
+  </div>
+
+  <div class="gee-register-slide" id="geeRegisterSlide" aria-hidden="true">
+    <div class="gee-register-panel" role="dialog" aria-modal="true" aria-labelledby="registerTitle">
+      <button class="close-slide" id="closeRegisterSlide" aria-label="Close registration slide">×</button>
+      <h2 id="registerTitle">Register for Google Earth Engine E-Learning</h2>
+      <p>Sign up with your email and a password of at least 5 characters to begin.</p>
+      <form id="geeRegisterForm">
+        <label for="registerEmail">Email address
+          <input type="email" id="registerEmail" name="registerEmail" required placeholder="you@example.com">
+        </label>
+        <label for="registerPassword">Password
+          <input type="password" id="registerPassword" name="registerPassword" required placeholder="At least 5 characters" minlength="5">
+        </label>
+        <p class="form-note">Password must be at least 5 letters or numbers.</p>
+        <button type="submit" class="btn primary-button">Register</button>
+        <div class="register-status" id="registerStatus" aria-live="polite"></div>
+      </form>
+    </div>
+  </div>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://in.paychangu.com/js/popup.js"></script>
@@ -455,18 +594,17 @@ print("Sample River Segment Attributes (SHP Schema):", export_collection.limit(5
       }
     });
 
-    // Premium unlock handlers: call existing startPaychanguCheckout if available
-    // Premium unlock handlers: open preview modal (defined in scripts.js)
+    // Premium unlock handlers: start Paychangu checkout directly for the unlock button
     document.querySelectorAll('.unlock-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const id = btn.dataset.scriptId;
-        const title = btn.dataset.title || btn.textContent.trim();
-        const desc = btn.dataset.desc || '';
-        if (typeof window.openPreviewModal === 'function') {
+        if (typeof startPaychanguCheckout === 'function') {
+          startPaychanguCheckout(id);
+        } else if (typeof window.openPreviewModal === 'function') {
+          // Fallback only if checkout is unavailable
+          const title = btn.dataset.title || btn.textContent.trim();
+          const desc = btn.dataset.desc || '';
           window.openPreviewModal({ scriptId: id, title, description: desc });
-        } else {
-          // Fallback: directly attempt checkout
-          if (typeof startPaychanguCheckout === 'function') startPaychanguCheckout(id);
         }
       });
     });
@@ -508,6 +646,64 @@ print("Sample River Segment Attributes (SHP Schema):", export_collection.limit(5
       panel.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); panel.click(); }
       });
+    });
+
+    const registerBar = document.getElementById('geeRegisterBar');
+    const registerSlide = document.getElementById('geeRegisterSlide');
+    const openRegisterSlide = document.getElementById('openRegisterSlide');
+    const closeRegisterSlide = document.getElementById('closeRegisterSlide');
+    const registerForm = document.getElementById('geeRegisterForm');
+    const registerStatus = document.getElementById('registerStatus');
+
+    function openRegisterPanel() {
+      registerSlide.classList.add('open');
+      registerSlide.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      document.getElementById('registerEmail').focus();
+    }
+
+    function closeRegisterPanel() {
+      registerSlide.classList.remove('open');
+      registerSlide.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      registerStatus.textContent = '';
+      registerStatus.classList.remove('register-error');
+    }
+
+    openRegisterSlide.addEventListener('click', openRegisterPanel);
+    registerBar.addEventListener('click', (event) => {
+      if (event.target !== openRegisterSlide) openRegisterPanel();
+    });
+    closeRegisterSlide.addEventListener('click', closeRegisterPanel);
+    registerSlide.addEventListener('click', (event) => {
+      if (event.target === registerSlide) closeRegisterPanel();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && registerSlide.classList.contains('open')) {
+        closeRegisterPanel();
+      }
+    });
+
+    registerForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const email = document.getElementById('registerEmail').value.trim();
+      const password = document.getElementById('registerPassword').value;
+
+      if (!email || password.length < 5) {
+        registerStatus.textContent = 'Please enter a valid email and a password with at least 5 characters.';
+        registerStatus.classList.add('register-error');
+        return;
+      }
+
+      const saved = {
+        email,
+        registeredAt: new Date().toISOString()
+      };
+      localStorage.setItem('geeElearnRegistration', JSON.stringify(saved));
+
+      registerStatus.textContent = 'Registration successful. Welcome to Google Earth Engine E-Learning!';
+      registerStatus.classList.remove('register-error');
+      registerForm.reset();
     });
   </script>
 </body>

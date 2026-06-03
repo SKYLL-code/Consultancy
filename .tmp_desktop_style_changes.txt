@@ -1,0 +1,6 @@
+Temporary notes:
+- Add @media (min-width:900px) block to styles.css
+- Set .feature-value-grid max-width and center
+- Make .feature-value-panel narrower, add subtle gradient, consistent padding, hover
+- Make .feature-card uniform height, center grid
+- Commit and push changes
