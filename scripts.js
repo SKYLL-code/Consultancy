@@ -1,4 +1,4 @@
-﻿// Premium GEE Panel Functionality
+// Premium GEE Panel Functionality
 (function() {
   const premiumFab = document.getElementById('premiumFab');
   const premiumOverlay = document.getElementById('premiumOverlay');
@@ -223,7 +223,7 @@
           btn.appendChild(badge);
         }
         badge.classList.add('pending');
-        badge.textContent = 'â³ Verifying...';
+        badge.textContent = '⏳ Verifying...';
       }
       console.log('Payment verification still pending after maximum polling attempts. Waiting silently until verification completes.');
       return;
@@ -246,9 +246,9 @@
           }
           badge.classList.remove('pending', 'locked');
           badge.classList.add('unlocked');
-          badge.textContent = 'âœ“ Unlocked';
+          badge.textContent = '✓ Unlocked';
           setTimeout(() => {
-            badge.textContent = 'ðŸ”“';
+            badge.textContent = '🔓';
           }, 2000);
         }
         return;
@@ -266,9 +266,9 @@
           }
           badge.classList.remove('pending', 'unlocked');
           badge.classList.add('locked');
-          badge.textContent = 'âŒ Failed';
+          badge.textContent = '❌ Failed';
           setTimeout(() => {
-            badge.textContent = 'ðŸ”’';
+            badge.textContent = '🔒';
             badge.classList.add('locked');
           }, 2000);
         }
@@ -1049,13 +1049,13 @@ leftMap.centerObject(AOI, 10);
 
 // 5. EMBED STYLED UI DESCRIPTIVE LABELS
 var leftLabel = ui.Label({
-  value: 'â¬… Low-Interval/Frequent Flood Hazard (10-Year RP)',
+  value: '⬅ Low-Interval/Frequent Flood Hazard (10-Year RP)',
   style: {position: 'top-left', padding: '8px', fontWeight: 'bold', backgroundColor: 'rgba(255,255,255,0.8)'}
 });
 leftMap.add(leftLabel);
 
 var rightLabel = ui.Label({
-  value: 'High-Severity/Extreme Flood Hazard (100-Year RP) âž¡',
+  value: 'High-Severity/Extreme Flood Hazard (100-Year RP) ➡',
   style: {position: 'top-right', padding: '8px', fontWeight: 'bold', backgroundColor: 'rgba(255,255,255,0.8)'}
 });
 rightMap.add(rightLabel);
@@ -1208,268 +1208,5 @@ Export.image.toDrive({
   resumePendingPaychanguStatus();
 })();
 
-(function() {
-  const ttsText = document.getElementById('ttsText');
-  const ttsReadBtn = document.getElementById('ttsReadBtn');
-  const ttsDownloadBtn = document.getElementById('ttsDownloadBtn');
-  const ttsStatus = document.getElementById('ttsStatus');
-  const ttsSpeed = document.getElementById('ttsSpeed');
-  const ttsSpeedValue = document.getElementById('ttsSpeedValue');
-  const ttsBackBtn = document.getElementById('ttsBackBtn');
-
-  function getTextToSpeechSettings() {
-    const gender = document.getElementById('voiceGender')?.value || 'male';
-    const style = document.getElementById('voiceStyle')?.value || 'neutral';
-    let pitch = gender === 'female' ? 1.2 : 0.8;
-    let rate = Number(ttsSpeed?.value) || 1.0;
-    let volume = 1.0;
-
-    switch (style) {
-      case 'deep':
-        pitch -= 0.2;
-        break;
-      case 'soft':
-        pitch += 0.18;
-        volume = 0.92;
-        break;
-      case 'warm':
-        pitch += 0.08;
-        rate *= 0.95;
-        break;
-      case 'bright':
-        pitch += 0.25;
-        rate *= 1.05;
-        break;
-      case 'calm':
-        pitch -= 0.1;
-        rate *= 0.88;
-        volume = 0.93;
-        break;
-      case 'energetic':
-        pitch += 0.3;
-        rate *= 1.2;
-        break;
-      case 'smooth':
-        pitch += 0.05;
-        rate *= 0.96;
-        break;
-      case 'dramatic':
-        pitch -= 0.05;
-        rate *= 0.96;
-        break;
-      case 'classic':
-        pitch += 0.0;
-        rate *= 0.98;
-        break;
-      default:
-        break;
-    }
-
-    return {
-      gender,
-      pitch: Math.min(Math.max(pitch, 0.5), 2),
-      rate: Math.min(Math.max(rate, 0.6), 2),
-      volume: Math.min(Math.max(volume, 0.4), 1),
-      style
-    };
-  }
-
-  function updateTtsStatus(message, isError = false) {
-    if (!ttsStatus) return;
-    ttsStatus.textContent = message;
-    ttsStatus.style.color = isError ? '#d0262f' : '#0b7a6f';
-  }
-
-  function speakText() {
-    const text = ttsText?.value.trim();
-    if (!text) {
-      updateTtsStatus('Please type or paste text to convert.', true);
-      return;
-    }
-
-    if (!('speechSynthesis' in window)) {
-      updateTtsStatus('Speech playback is not supported in this browser.', true);
-      return;
-    }
-
-    const settings = getTextToSpeechSettings();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.pitch = settings.pitch;
-    utterance.rate = settings.rate;
-    utterance.volume = settings.volume;
-
-    const voices = window.speechSynthesis.getVoices();
-    if (voices.length) {
-      const search = settings.gender === 'female'
-        ? /female|woman|girl/i
-        : /male|man|boy/i;
-      const match = voices.find(v => search.test(`${v.name} ${v.voiceURI} ${v.lang}`));
-      if (match) utterance.voice = match;
-    }
-
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(utterance);
-    updateTtsStatus('Playing audio now...');
-  }
-
-  function downloadTextAudio() {
-    const text = ttsText?.value.trim();
-    if (!text) {
-      updateTtsStatus('Please type or paste text to convert.', true);
-      return;
-    }
-
-    if (!(window.meSpeak && typeof meSpeak.getWavFile === 'function')) {
-      updateTtsStatus('Download requires the free browser speech library. Please reload the page.', true);
-      return;
-    }
-
-    const settings = getTextToSpeechSettings();
-    const options = {
-      amplitude: Math.round(settings.volume * 100),
-      pitch: Math.round(settings.pitch * 50),
-      wordgap: 0,
-      speed: Math.round(settings.rate * 180),
-      voice: 'en/en-us'
-    };
-
-    updateTtsStatus('Generating downloadable audio...');
-    try {
-      const wavData = meSpeak.getWavFile(text, options);
-      const blob = new Blob([new Uint8Array(wavData)], { type: 'audio/wav' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'text-to-audio.wav';
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      URL.revokeObjectURL(url);
-      updateTtsStatus('Download started. Your audio file is ready.');
-    } catch (error) {
-      console.error('Text to audio download failed:', error);
-      updateTtsStatus('Could not generate the audio file. Please try again.', true);
-    }
-  }
-
-  function toggleTextToAudioPanel(open) {
-    const overlay = document.getElementById('text-to-audio');
-    const showBtn = document.getElementById('showTextToAudioBtn');
-    let backdrop = document.getElementById('ttsBackdrop');
-    if (!backdrop) {
-      backdrop = document.createElement('div');
-      backdrop.id = 'ttsBackdrop';
-      backdrop.className = 'audio-backdrop';
-      overlay?.appendChild(backdrop);
-    }
-    if (backdrop && !backdrop.dataset.bound) {
-      backdrop.addEventListener('click', () => toggleTextToAudioPanel(false));
-      backdrop.dataset.bound = 'true';
-    }
-    if (!overlay) return;
-    if (open) {
-      overlay.classList.remove('audio-overlay-hidden');
-      overlay.classList.add('audio-overlay-visible');
-      overlay.setAttribute('aria-hidden', 'false');
-      if (showBtn) showBtn.hidden = true;
-      document.body.classList.add('modal-open');
-      _addScrollRouting();
-      const first = overlay.querySelector('textarea, button, select, input');
-      if (first) first.focus();
-    } else {
-      overlay.classList.remove('audio-overlay-visible');
-      overlay.classList.add('audio-overlay-hidden');
-      overlay.setAttribute('aria-hidden', 'true');
-      if (showBtn) showBtn.hidden = false;
-      document.body.classList.remove('modal-open');
-      _removeScrollRouting();
-    }
-  }
-  window.toggleTextToAudioPanel = toggleTextToAudioPanel;
-
-  // --- Route background wheel/touch to modal when open and prevent body scroll ---
-  let _touchStartY = null;
-  function _onWheel(e) {
-    const panel = document.getElementById('text-to-audio');
-    if (!panel) return;
-    // If the wheel event target is inside the panel, allow default so inner scroll works
-    if (panel.contains(e.target)) return;
-    // Otherwise, prevent body scroll and scroll the panel instead
-    e.preventDefault();
-    panel.scrollTop += e.deltaY;
-  }
-
-  function _onTouchStart(e) {
-    if (!e.touches || !e.touches.length) return;
-    _touchStartY = e.touches[0].clientY;
-  }
-
-  function _onTouchMove(e) {
-    const panel = document.getElementById('text-to-audio');
-    if (!panel) return;
-    if (!e.touches || !e.touches.length) return;
-    const y = e.touches[0].clientY;
-    // If the touch started inside the panel, allow normal modal scrolling
-    if (panel.contains(document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY))) return;
-    if (_touchStartY === null) {
-      _touchStartY = y;
-      return;
-    }
-    const delta = _touchStartY - y;
-    if (Math.abs(delta) > 2) {
-      e.preventDefault();
-      panel.scrollTop += delta;
-      _touchStartY = y;
-    }
-  }
-
-  function _addScrollRouting() {
-    document.addEventListener('wheel', _onWheel, { passive: false, capture: true });
-    document.addEventListener('touchstart', _onTouchStart, { passive: true, capture: true });
-    document.addEventListener('touchmove', _onTouchMove, { passive: false, capture: true });
-  }
-
-  function _removeScrollRouting() {
-    document.removeEventListener('wheel', _onWheel, { capture: true });
-    document.removeEventListener('touchstart', _onTouchStart, { capture: true });
-    document.removeEventListener('touchmove', _onTouchMove, { capture: true });
-    _touchStartY = null;
-  }
-
-  function bindTextToAudioUI() {
-    if (ttsReadBtn) ttsReadBtn.addEventListener('click', speakText);
-    if (ttsDownloadBtn) ttsDownloadBtn.addEventListener('click', downloadTextAudio);
-    if (ttsSpeed && ttsSpeedValue) {
-      ttsSpeed.addEventListener('input', () => {
-        ttsSpeedValue.textContent = \`\${parseFloat(ttsSpeed.value).toFixed(1)}x\`;
-      });
-    }
-    if (ttsBackBtn) {
-      ttsBackBtn.addEventListener('click', () => toggleTextToAudioPanel(false));
-    }
-    const ttsClose = document.getElementById('ttsCloseBtn');
-    if (ttsClose) ttsClose.addEventListener('click', () => toggleTextToAudioPanel(false));
-    // Close on Escape
-    document.addEventListener('keydown', (ev) => {
-      if (ev.key === 'Escape') toggleTextToAudioPanel(false);
-    });
-    const showBtn = document.getElementById('showTextToAudioBtn');
-    if (showBtn) {
-      showBtn.setAttribute('aria-expanded', 'false');
-      showBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const willOpen = showBtn.getAttribute('aria-expanded') !== 'true';
-        toggleTextToAudioPanel(willOpen);
-        showBtn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
-      });
-    }
-  }
-
-  if (document.readyState !== 'loading') {
-    bindTextToAudioUI();
-  } else {
-    document.addEventListener('DOMContentLoaded', bindTextToAudioUI);
-  }
-})();
 
 
