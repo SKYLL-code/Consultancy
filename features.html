@@ -183,7 +183,10 @@
           <span>GEE SATURDY'S E-LEARNING</span>
           <span class="account-banner-info" id="accountBannerInfo">Sign up or sign in to access the next Saturday topic.</span>
         </div>
-        <button type="button" id="openRegisterSlide">Register</button>
+        <div class="banner-actions">
+          <button type="button" id="openRegisterSlide">Register</button>
+          <button type="button" id="signOutBtn" class="btn secondary-button visually-hidden">Logout</button>
+        </div>
       </div>
     </div>
   </header>
@@ -744,6 +747,7 @@ print("Sample River Segment Attributes (SHP Schema):", export_collection.limit(5
     const registerStatus = document.getElementById('registerStatus');
     const registerTitle = document.getElementById('registerTitle');
     const accountBannerInfo = document.getElementById('accountBannerInfo');
+    const signOutBtn = document.getElementById('signOutBtn');
     const topicSection = document.getElementById('topicSection');
     const adminSection = document.getElementById('adminSection');
     const nextTopicText = document.getElementById('nextTopicText');
@@ -796,14 +800,26 @@ print("Sample River Segment Attributes (SHP Schema):", export_collection.limit(5
       const saved = getSavedRegistration();
       if (session) {
         openRegisterSlide.textContent = 'Account';
+        signOutBtn.classList.remove('visually-hidden');
         accountBannerInfo.textContent = `Signed in as ${session.email}`;
-      } else if (saved) {
-        openRegisterSlide.textContent = 'Sign In';
-        accountBannerInfo.textContent = 'You already have an account — sign in to view the next topic.';
       } else {
-        openRegisterSlide.textContent = 'Register';
-        accountBannerInfo.textContent = 'Register now to access the next Saturday topic.';
+        signOutBtn.classList.add('visually-hidden');
+        if (saved) {
+          openRegisterSlide.textContent = 'Sign In';
+          accountBannerInfo.textContent = 'You already have an account — sign in to view the next topic.';
+        } else {
+          openRegisterSlide.textContent = 'Register';
+          accountBannerInfo.textContent = 'Register now to access the next Saturday topic.';
+        }
       }
+    }
+
+    function signOutUser() {
+      clearCurrentSession();
+      refreshAccountBanner();
+      refreshTopicArea();
+      if (registerSlide.classList.contains('open')) closeRegisterPanel();
+      alert('You have been logged out.');
     }
 
     function refreshTopicArea() {
@@ -930,6 +946,8 @@ print("Sample River Segment Attributes (SHP Schema):", export_collection.limit(5
       refreshTopicArea();
     });
 
+    signOutBtn?.addEventListener('click', signOutUser);
+
     function openRegisterPanel() {
       const mode = getAuthMode();
       registerSlide.classList.add('open');
@@ -1024,7 +1042,8 @@ print("Sample River Segment Attributes (SHP Schema):", export_collection.limit(5
 
     openRegisterSlide.addEventListener('click', openRegisterPanel);
     registerBar.addEventListener('click', (event) => {
-      if (event.target !== openRegisterSlide) openRegisterPanel();
+      if (event.target === openRegisterSlide || event.target === signOutBtn) return;
+      openRegisterPanel();
     });
     closeRegisterSlide.addEventListener('click', closeRegisterPanel);
     registerSlide.addEventListener('click', (event) => {

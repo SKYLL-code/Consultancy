@@ -412,6 +412,12 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
   order: 3;
 }
 
+.banner-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
 @media (max-width: 768px) {
   .features-header .container { padding: 12px; }
   .features-header .container h1,
