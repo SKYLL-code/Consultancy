@@ -407,21 +407,18 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
   align-items: center;
   gap: 12px;
 }
-.features-header .container .gee-register-bar {
-  margin-left: auto;
-  order: 3;
+
+.account-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+  justify-content: center;
+  margin-bottom: 18px;
 }
 
 .visually-hidden {
   display: none !important;
-}
-
-.banner-actions {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
 }
 
 @media (max-width: 768px) {
@@ -429,26 +426,6 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
   .features-header .container h1,
   .features-header .container .muted { flex: 1 1 100%; }
   .features-header .container .btn { order: 1; }
-
-  .gee-register-bar {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-    width: 100%;
-    padding: 10px 14px;
-    border-radius: 10px;
-    margin-top: 8px;
-  }
-
-  .gee-register-bar button {
-    width: 100%;
-    padding: 12px;
-  }
-
-  .gee-register-bar span {
-    font-size: 1rem;
-    font-weight: 700;
-  }
 }
   /* Header adjustments for mobile */
   .site-header .container{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-start;padding:12px 16px;gap:8px}

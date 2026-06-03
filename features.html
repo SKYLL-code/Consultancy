@@ -7,35 +7,14 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" href="assets/LOGO2.png">
   <style>
-    /* Register banner — now a static header banner instead of floating */
-    .gee-register-bar {
-      position: static;
+    .account-actions {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
+      flex-wrap: wrap;
       gap: 12px;
-      width: 100%;
-      padding: 12px 18px;
-      border-radius: 12px;
-      background: linear-gradient(90deg, rgba(14,76,145,0.95), rgba(6,150,200,0.95));
-      color: #fff;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14);
-      font-size: 0.98rem;
-      line-height: 1.3;
-      cursor: pointer;
-      margin-top: 12px;
+      margin-bottom: 18px;
     }
-    .gee-register-bar span {
-      font-weight: 700;
-    }
-    .gee-register-bar button {
-      border: none;
-      border-radius: 999px;
-      padding: 10px 16px;
-      font-weight: 700;
-      background: #fff;
-      color: #0e4c91;
-      cursor: pointer;
+    .account-actions .btn {
+      min-width: 150px;
     }
     .gee-register-slide {
       position: fixed;
@@ -178,22 +157,16 @@
       <a class="btn" href="index.html" aria-label="Back to home">←</a>
 
       <!-- Moved register banner into the header as a static, non-floating banner -->
-      <div class="gee-register-bar" id="geeRegisterBar" role="region" aria-label="Register banner">
-        <div>
-          <span>SKYLL TECH</span>
-          <span class="account-banner-info" id="accountBannerInfo">Sign up or sign in to access the next Saturday topic.</span>
-        </div>
-        <div class="banner-actions">
-          <button type="button" id="openRegisterSlide">Register</button>
-          <button type="button" id="signOutBtn" class="btn secondary-button visually-hidden">Logout</button>
-        </div>
-      </div>
     </div>
   </header>
 
   <main class="features-main container">
     <section id="accountSection" class="account-section" aria-label="Account and upcoming topic">
       <div class="account-card">
+        <div class="account-actions">
+          <button type="button" id="openRegisterSlide" class="btn primary-button">Register / Sign In</button>
+          <button type="button" id="signOutBtn" class="btn secondary-button visually-hidden">Logout</button>
+        </div>
         <div id="topicSection" class="topic-section visually-hidden" aria-label="Next Saturday topic">
           <h3>Next Saturday Topic</h3>
           <p id="nextTopicText">No topic has been set yet. Check back after the admin sets the next subject.</p>
@@ -739,7 +712,6 @@ print("Sample River Segment Attributes (SHP Schema):", export_collection.limit(5
     const TOPIC_PAYCHANGU_PUBLIC_KEY = 'PUB-N7RITDglPYPRjEZDW3H3uwKtvQNqgsjR';
     const TOPIC_COST_MWK = 5000;
 
-    const registerBar = document.getElementById('geeRegisterBar');
     const registerSlide = document.getElementById('geeRegisterSlide');
     const openRegisterSlide = document.getElementById('openRegisterSlide');
     const closeRegisterSlide = document.getElementById('closeRegisterSlide');
@@ -1041,10 +1013,6 @@ print("Sample River Segment Attributes (SHP Schema):", export_collection.limit(5
     }
 
     openRegisterSlide.addEventListener('click', openRegisterPanel);
-    registerBar.addEventListener('click', (event) => {
-      if (event.target === openRegisterSlide || event.target === signOutBtn) return;
-      openRegisterPanel();
-    });
     closeRegisterSlide.addEventListener('click', closeRegisterPanel);
     registerSlide.addEventListener('click', (event) => {
       if (event.target === registerSlide) closeRegisterPanel();
