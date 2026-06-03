@@ -113,6 +113,59 @@
     .register-error {
       color: #b02a37;
     }
+    .account-section {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+      padding: 24px;
+      margin: 24px 0;
+      display: grid;
+      gap: 18px;
+    }
+    .account-card {
+      display: grid;
+      gap: 16px;
+      width: 100%;
+    }
+    .account-card h2,
+    .account-card h3 {
+      margin: 0;
+      color: #e0f2fe;
+    }
+    .account-card p {
+      margin: 0;
+      color: rgba(224,242,254,0.88);
+      line-height: 1.6;
+    }
+    .topic-section,
+    .admin-section {
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(11, 23, 44, 0.82);
+      border-radius: 16px;
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+    .admin-section textarea {
+      width: 100%;
+      min-height: 120px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.05);
+      color: #f8fafc;
+      padding: 12px 14px;
+      resize: vertical;
+      font: inherit;
+    }
+    .account-banner-info {
+      display: block;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.8);
+    }
+    .visual-hidden {
+      display: none !important;
+    }
   </style>
 </head>
   <body class="features-page">
@@ -126,13 +179,37 @@
 
       <!-- Moved register banner into the header as a static, non-floating banner -->
       <div class="gee-register-bar" id="geeRegisterBar" role="region" aria-label="GEE SATURDY'S E-LEARNING banner">
-        <span>GEE SATURDY'S E-LEARNING</span>
+        <div>
+          <span>GEE SATURDY'S E-LEARNING</span>
+          <span class="account-banner-info" id="accountBannerInfo">Sign up or sign in to access the next Saturday topic.</span>
+        </div>
         <button type="button" id="openRegisterSlide">Register</button>
       </div>
     </div>
   </header>
 
   <main class="features-main container">
+    <section id="accountSection" class="account-section" aria-label="Account and upcoming topic">
+      <div class="account-card">
+        <div>
+          <h2 id="accountHeading">Welcome to GEE SATURDY'S E-LEARNING</h2>
+          <p id="accountMessage">Please register or sign in to view the next Saturday topic and pay with Paychangu.</p>
+        </div>
+        <div id="topicSection" class="topic-section visually-hidden" aria-label="Next Saturday topic">
+          <h3>Next Saturday Topic</h3>
+          <p id="nextTopicText">No topic has been set yet. Check back after the admin sets the next subject.</p>
+          <button id="payForTopicBtn" class="btn primary-button">Pay with Paychangu</button>
+          <div id="topicStatus" class="muted"></div>
+        </div>
+        <div id="adminSection" class="admin-section visually-hidden" aria-label="Admin topic editor">
+          <h3>Admin: Set the next Saturday topic</h3>
+          <textarea id="adminTopicInput" placeholder="Type the next Saturday topic here"></textarea>
+          <button id="saveTopicBtn" class="btn">Save Topic</button>
+          <div id="adminStatus" class="muted"></div>
+        </div>
+      </div>
+    </section>
+
     <section class="feature-value-grid" aria-label="GEE capability highlights">
       <article class="feature-value-panel" data-target="#freePlanCard" role="button" tabindex="0" aria-label="Go to Free Plan">
         <p class="panel-label">Free Plan</p>
@@ -650,17 +727,137 @@ print("Sample River Segment Attributes (SHP Schema):", export_collection.limit(5
       });
     });
 
+    const ADMIN_EMAIL = 'deedoc90@gmail.com';
+    const TOPIC_PAYCHANGU_PUBLIC_KEY = 'PUB-N7RITDglPYPRjEZDW3H3uwKtvQNqgsjR';
+    const TOPIC_COST_MWK = 5000;
+
     const registerBar = document.getElementById('geeRegisterBar');
     const registerSlide = document.getElementById('geeRegisterSlide');
     const openRegisterSlide = document.getElementById('openRegisterSlide');
     const closeRegisterSlide = document.getElementById('closeRegisterSlide');
     const registerForm = document.getElementById('geeRegisterForm');
     const registerStatus = document.getElementById('registerStatus');
+    const registerTitle = document.getElementById('registerTitle');
+    const accountBannerInfo = document.getElementById('accountBannerInfo');
+    const accountHeading = document.getElementById('accountHeading');
+    const accountMessage = document.getElementById('accountMessage');
+    const topicSection = document.getElementById('topicSection');
+    const adminSection = document.getElementById('adminSection');
+    const nextTopicText = document.getElementById('nextTopicText');
+    const payForTopicBtn = document.getElementById('payForTopicBtn');
+    const topicStatus = document.getElementById('topicStatus');
+    const adminTopicInput = document.getElementById('adminTopicInput');
+    const saveTopicBtn = document.getElementById('saveTopicBtn');
+    const adminStatus = document.getElementById('adminStatus');
+
+    function getSavedRegistration() {
+      return JSON.parse(localStorage.getItem('geeElearnRegistration') || 'null');
+    }
+
+    function getCurrentSession() {
+      return JSON.parse(localStorage.getItem('geeElearnSession') || 'null');
+    }
+
+    function saveCurrentSession(session) {
+      localStorage.setItem('geeElearnSession', JSON.stringify(session));
+    }
+
+    function clearCurrentSession() {
+      localStorage.removeItem('geeElearnSession');
+    }
+
+    function getTopicData() {
+      return JSON.parse(localStorage.getItem('geeElearnNextTopic') || 'null');
+    }
+
+    function saveTopicData(topic) {
+      localStorage.setItem('geeElearnNextTopic', JSON.stringify({ topic, updatedAt: new Date().toISOString() }));
+    }
+
+    function getTopicPaid(email) {
+      return localStorage.getItem(`geeElearnTopicPaid_${email}`) === 'true';
+    }
+
+    function setTopicPaid(email) {
+      localStorage.setItem(`geeElearnTopicPaid_${email}`, 'true');
+    }
+
+    function getAuthMode() {
+      const session = getCurrentSession();
+      if (session) return 'account';
+      return getSavedRegistration() ? 'signin' : 'register';
+    }
+
+    function refreshAccountBanner() {
+      const session = getCurrentSession();
+      const saved = getSavedRegistration();
+      if (session) {
+        openRegisterSlide.textContent = 'Account';
+        accountBannerInfo.textContent = `Signed in as ${session.email}`;
+      } else if (saved) {
+        openRegisterSlide.textContent = 'Sign In';
+        accountBannerInfo.textContent = 'You already have an account — sign in to view the next topic.';
+      } else {
+        openRegisterSlide.textContent = 'Register';
+        accountBannerInfo.textContent = 'Register now to access the next Saturday topic.';
+      }
+    }
+
+    function refreshTopicArea() {
+      const session = getCurrentSession();
+      const topicData = getTopicData();
+      if (!session) {
+        accountHeading.textContent = 'Welcome to GEE SATURDY\'S E-LEARNING';
+        accountMessage.textContent = 'Please register or sign in to view the next Saturday topic and pay with Paychangu.';
+        topicSection.classList.add('visual-hidden');
+        adminSection.classList.add('visual-hidden');
+        return;
+      }
+
+      accountHeading.textContent = `Hello, ${session.email}`;
+      accountMessage.textContent = 'Below is the topic we will cover next Saturday. Click pay to confirm attendance.';
+      topicSection.classList.remove('visual-hidden');
+      topicStatus.textContent = '';
+
+      if (topicData?.topic) {
+        nextTopicText.textContent = topicData.topic;
+      } else {
+        nextTopicText.textContent = 'The next topic has not been set yet. Please check back soon.';
+      }
+
+      if (getTopicPaid(session.email)) {
+        payForTopicBtn.textContent = 'Topic paid — access granted';
+        payForTopicBtn.disabled = true;
+        topicStatus.textContent = 'Thank you! You already paid for this topic and access is confirmed.';
+      } else {
+        payForTopicBtn.textContent = `Pay MWK ${TOPIC_COST_MWK} with Paychangu`;
+        payForTopicBtn.disabled = false;
+      }
+
+      if (session.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+        adminSection.classList.remove('visual-hidden');
+        adminTopicInput.value = topicData?.topic || '';
+      } else {
+        adminSection.classList.add('visual-hidden');
+      }
+    }
 
     function openRegisterPanel() {
+      const mode = getAuthMode();
       registerSlide.classList.add('open');
       registerSlide.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
+
+      if (mode === 'signin') {
+        registerTitle.textContent = 'Sign in to GEE SATURDY\'S E-LEARNING';
+        registerForm.querySelector('button[type="submit"]').textContent = 'Sign In';
+      } else if (mode === 'register') {
+        registerTitle.textContent = 'Register for GEE SATURDY\'S E-LEARNING';
+        registerForm.querySelector('button[type="submit"]').textContent = 'Register';
+      } else {
+        registerTitle.textContent = `Signed in as ${getCurrentSession()?.email}`;
+        registerForm.querySelector('button[type="submit"]').textContent = 'Close';
+      }
       document.getElementById('registerEmail').focus();
     }
 
@@ -670,6 +867,71 @@ print("Sample River Segment Attributes (SHP Schema):", export_collection.limit(5
       document.body.style.overflow = '';
       registerStatus.textContent = '';
       registerStatus.classList.remove('register-error');
+    }
+
+    async function startTopicCheckout() {
+      const session = getCurrentSession();
+      const topicData = getTopicData();
+      if (!session) {
+        topicStatus.textContent = 'Please sign in first to pay for the topic.';
+        return;
+      }
+      if (!topicData?.topic) {
+        topicStatus.textContent = 'The next topic has not been set yet.';
+        return;
+      }
+
+      const txRef = `topic_${Date.now()}_${Math.floor(Math.random() * 100000)}`;
+      const accessPageUrl = `${window.location.origin}/features.html`;
+      const checkoutOptions = {
+        public_key: TOPIC_PAYCHANGU_PUBLIC_KEY,
+        tx_ref: txRef,
+        amount: TOPIC_COST_MWK,
+        currency: 'MWK',
+        country: 'MW',
+        payment_options: 'mobilemoney,card',
+        customer: {
+          email: session.email,
+          phonenumber: '+265880000000',
+          name: session.email
+        },
+        customization: {
+          title: 'Pay for next Saturday GEE topic',
+          description: topicData.topic,
+          logo: 'https://skyll-code.github.io/Consultancy/assets/LOGO2.png'
+        },
+        callback_url: accessPageUrl,
+        return_url: accessPageUrl,
+        callback: function(response) {
+          if (response?.status === 'success') {
+            setTopicPaid(session.email);
+            topicStatus.textContent = 'Payment confirmed! A mail window will open so you can notify the admin.';
+            payForTopicBtn.textContent = 'Topic paid — access granted';
+            payForTopicBtn.disabled = true;
+            const body = `User ${session.email} has paid for the next Saturday topic. Please follow up with them.`;
+            window.location.href = `mailto:${encodeURIComponent(ADMIN_EMAIL)}?subject=${encodeURIComponent('GEE Saturday topic payment')}&body=${encodeURIComponent(body)}`;
+          } else {
+            topicStatus.textContent = 'Payment was not completed. Please try again.';
+          }
+        }
+      };
+
+      if (window.PaychanguCheckout) {
+        window.PaychanguCheckout(checkoutOptions);
+      } else {
+        topicStatus.textContent = 'Paychangu is unavailable. Please refresh the page.';
+      }
+    }
+
+    function setAuthStateAfterLogin(email) {
+      const session = { email, signedInAt: new Date().toISOString() };
+      saveCurrentSession(session);
+      refreshAccountBanner();
+      refreshTopicArea();
+    }
+
+    function validateEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
     openRegisterSlide.addEventListener('click', openRegisterPanel);
@@ -690,23 +952,68 @@ print("Sample River Segment Attributes (SHP Schema):", export_collection.limit(5
       event.preventDefault();
       const email = document.getElementById('registerEmail').value.trim();
       const password = document.getElementById('registerPassword').value;
+      const saved = getSavedRegistration();
+      const mode = getAuthMode();
 
-      if (!email || password.length < 5) {
+      if (!email || password.length < 5 || !validateEmail(email)) {
         registerStatus.textContent = 'Please enter a valid email and a password with at least 5 characters.';
         registerStatus.classList.add('register-error');
         return;
       }
 
-      const saved = {
+      if (mode === 'account') {
+        closeRegisterPanel();
+        return;
+      }
+
+      if (mode === 'signin') {
+        if (!saved || saved.email.toLowerCase() !== email.toLowerCase()) {
+          registerStatus.textContent = 'No account found for that email. Please register first.';
+          registerStatus.classList.add('register-error');
+          return;
+        }
+        if (saved.password !== password) {
+          registerStatus.textContent = 'Incorrect password. Please try again.';
+          registerStatus.classList.add('register-error');
+          return;
+        }
+
+        setAuthStateAfterLogin(saved.email);
+        registerStatus.textContent = 'Sign in successful. Welcome back!';
+        registerStatus.classList.remove('register-error');
+        registerForm.reset();
+        closeRegisterPanel();
+        return;
+      }
+
+      const registration = {
         email,
+        password,
         registeredAt: new Date().toISOString()
       };
-      localStorage.setItem('geeElearnRegistration', JSON.stringify(saved));
-
+      localStorage.setItem('geeElearnRegistration', JSON.stringify(registration));
+      setAuthStateAfterLogin(email);
       registerStatus.textContent = 'Registration successful. Welcome to Google Earth Engine E-Learning!';
       registerStatus.classList.remove('register-error');
       registerForm.reset();
+      closeRegisterPanel();
     });
+
+    saveTopicBtn.addEventListener('click', () => {
+      const topic = adminTopicInput.value.trim();
+      if (!topic) {
+        adminStatus.textContent = 'Please type the next Saturday topic before saving.';
+        return;
+      }
+      saveTopicData(topic);
+      adminStatus.textContent = 'Topic saved. All signed-in users will see it now.';
+      refreshTopicArea();
+    });
+
+    payForTopicBtn.addEventListener('click', startTopicCheckout);
+
+    refreshAccountBanner();
+    refreshTopicArea();
   </script>
 </body>
 </html>
