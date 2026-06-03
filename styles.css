@@ -412,10 +412,16 @@ section#contact h3{color:#0b7a6f !important;font-weight:700} /* Match brand colo
   order: 3;
 }
 
+.visually-hidden {
+  display: none !important;
+}
+
 .banner-actions {
-  display: inline-flex;
+  display: flex;
+  justify-content: center;
   align-items: center;
   gap: 10px;
+  width: 100%;
 }
 
 @media (max-width: 768px) {
