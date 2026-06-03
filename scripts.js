@@ -6,7 +6,7 @@
   const tabButtons = Array.from(document.querySelectorAll('.tab-button'));
   const tabPanels = Array.from(document.querySelectorAll('.tab-panel'));
   const copyButtons = Array.from(document.querySelectorAll('.copy-button'));
-  const unlockButtons = Array.from(document.querySelectorAll('.unlock-button'));
+  const unlockButtons = Array.from(document.querySelectorAll('.unlock-btn'));
   const geminiEditor = document.getElementById('geminiEditor');
   const geminiCode = document.getElementById('geminiCode');
   const geminiPrompt = document.getElementById('geminiPrompt');
