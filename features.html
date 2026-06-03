@@ -828,7 +828,7 @@ print("Sample River Segment Attributes (SHP Schema):", export_collection.limit(5
         payForTopicBtn.disabled = true;
         topicStatus.textContent = 'Thank you! You already paid for this topic and access is confirmed.';
       } else {
-        payForTopicBtn.textContent = `Pay MWK ${TOPIC_COST_MWK} with Paychangu`;
+        payForTopicBtn.textContent = 'Pay with Paychangu';
         payForTopicBtn.disabled = false;
       }
 
@@ -869,9 +869,13 @@ print("Sample River Segment Attributes (SHP Schema):", export_collection.limit(5
       const code = Math.floor(100000 + Math.random() * 900000).toString();
       localStorage.setItem(`geeElearnReset_${email.toLowerCase()}`, code);
       const mailto = `mailto:${encodeURIComponent(email)}?subject=GEE%20E-Learning%20Password%20Reset%20Code&body=Your%20password%20reset%20code%20is%3A%20${code}`;
-      // Open the user's mail client so they can receive the code in their inbox
-      window.location.href = mailto;
-      const entered = prompt('Enter the verification code sent to your email:');
+      const openMailClient = confirm('A verification code was generated. Would you like to open your mail client to send it to your email? If your mail client is not configured, choose Cancel to view the code here.');
+      if (openMailClient) {
+        window.location.href = mailto;
+      }
+
+      // Show the code directly for users without a configured mail client.
+      const entered = prompt(`Your verification code is: ${code}\n\nEnter the verification code:`);
       if (!entered) return;
       const stored = localStorage.getItem(`geeElearnReset_${email.toLowerCase()}`);
       if (entered !== stored) {
