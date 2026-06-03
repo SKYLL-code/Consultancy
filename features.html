@@ -858,7 +858,7 @@ print("Sample River Segment Attributes (SHP Schema):", export_collection.limit(5
       p.focus();
     });
 
-    forgotPasswordLink?.addEventListener('click', () => {
+    forgotPasswordLink?.addEventListener('click', async () => {
       const email = prompt('Enter your registered email for password reset:');
       if (!email) return;
       const saved = getSavedRegistration();
@@ -868,14 +868,32 @@ print("Sample River Segment Attributes (SHP Schema):", export_collection.limit(5
       }
       const code = Math.floor(100000 + Math.random() * 900000).toString();
       localStorage.setItem(`geeElearnReset_${email.toLowerCase()}`, code);
-      const mailto = `mailto:${encodeURIComponent(email)}?subject=GEE%20E-Learning%20Password%20Reset%20Code&body=Your%20password%20reset%20code%20is%3A%20${code}`;
-      const openMailClient = confirm('A verification code was generated. Would you like to open your mail client to send it to your email? If your mail client is not configured, choose Cancel to view the code here.');
-      if (openMailClient) {
-        window.location.href = mailto;
+
+      // Try to send via server endpoint. If server SMTP is not configured or send fails,
+      // fall back to showing the code directly so users without a mail client can proceed.
+      let sendOk = false;
+      try {
+        const resp = await fetch('/send-reset-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, code })
+        });
+        const data = await resp.json().catch(() => null);
+        if (resp.ok && data && data.success) {
+          sendOk = true;
+          alert('A verification code was sent to your email. Check your inbox (or spam).');
+        } else {
+          console.warn('Email send not available or failed:', data);
+        }
+      } catch (err) {
+        console.warn('Error calling server send-reset-email:', err);
       }
 
-      // Show the code directly for users without a configured mail client.
-      const entered = prompt(`Your verification code is: ${code}\n\nEnter the verification code:`);
+      if (!sendOk) {
+        alert(`Email delivery is not available. Your verification code is: ${code}`);
+      }
+
+      const entered = prompt('Enter the verification code:');
       if (!entered) return;
       const stored = localStorage.getItem(`geeElearnReset_${email.toLowerCase()}`);
       if (entered !== stored) {

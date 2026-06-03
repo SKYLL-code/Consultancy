@@ -4,6 +4,26 @@ const express = require('express');
 const cors = require('cors');
 const crypto = require('crypto');
 const fetch = require('node-fetch');
+const nodemailer = require('nodemailer');
+
+const SMTP_HOST = process.env.SMTP_HOST || '';
+const SMTP_PORT = parseInt(process.env.SMTP_PORT || '587', 10);
+const SMTP_USER = process.env.SMTP_USER || '';
+const SMTP_PASS = process.env.SMTP_PASS || '';
+const FROM_EMAIL = process.env.FROM_EMAIL || SMTP_USER || 'no-reply@skyll-tech.local';
+
+let mailTransporter = null;
+if (SMTP_HOST && SMTP_USER && SMTP_PASS) {
+  mailTransporter = nodemailer.createTransport({
+    host: SMTP_HOST,
+    port: SMTP_PORT,
+    secure: SMTP_PORT === 465, // true for 465, false for other ports
+    auth: {
+      user: SMTP_USER,
+      pass: SMTP_PASS
+    }
+  });
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -410,6 +430,31 @@ app.post('/paychangu-webhook', (req, res) => {
   }
 
   return res.json({ success: true, message: 'Webhook received.' });
+});
+
+// Endpoint: send reset email with code (used by client-side forgot-password flow)
+app.post('/send-reset-email', async (req, res) => {
+  const { email, code } = req.body || {};
+  if (!email || !code) return res.status(400).json({ success: false, message: 'email and code are required' });
+
+  if (!mailTransporter) {
+    console.warn('SMTP not configured; cannot send email.');
+    return res.status(501).json({ success: false, message: 'SMTP not configured on server' });
+  }
+
+  try {
+    const info = await mailTransporter.sendMail({
+      from: FROM_EMAIL,
+      to: email,
+      subject: 'GEE E-Learning Password Reset Code',
+      text: `Your password reset code is: ${code}`
+    });
+    console.log('Password reset email sent:', info?.messageId || info);
+    return res.json({ success: true, message: 'Email sent' });
+  } catch (err) {
+    console.error('Error sending reset email:', err);
+    return res.status(500).json({ success: false, message: 'Failed to send email', error: err.message });
+  }
 });
 
 // Fallback route: serve the frontend page for any unknown GET requests.
